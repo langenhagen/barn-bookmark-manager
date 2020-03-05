@@ -1,3 +1,9 @@
+/* based on: http://mech.math.msu.su/~nap/2/GWindow/xintro.html
+   window decorations disabled based on:
+   https://stackoverflow.com/questions/31361859/simple-window-without-titlebar
+     - also helpful for possible program structure
+*/
+
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -5,6 +11,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xos.h>
+#include <X11/Xatom.h>
 
 #include <version_info.hpp>
 
@@ -29,8 +36,8 @@ void init_x() {
        This window will be have be 200 pixels across and 300 down.
        It will have the foreground white and background black
     */
-    win=XCreateSimpleWindow(dis,DefaultRootWindow(dis),0,0,
-        200, 300, 0, white, black);
+    win=XCreateSimpleWindow(dis,DefaultRootWindow(dis),100,100,
+        400, 200, 0, white, black);
 
     /* here is where some properties of the window can be set.
        The third and fourth items indicate the name which appears
@@ -38,6 +45,14 @@ void init_x() {
        respectively.
     */
     XSetStandardProperties(dis,win,"My Window","HI!",None,NULL,0,NULL);
+
+    /* disable window decorations
+       based on https://stackoverflow.com/questions/31361859/simple-window-without-titlebar
+       I had however to replace  _NET_WM_WINDOW_TYPE  with  _MOTIF_WM_HINTS
+    */
+    Atom window_type = XInternAtom(dis, "_MOTIF_WM_HINTS", False);
+    long value = XInternAtom(dis, "_NET_WM_WINDOW_TYPE_DOCK", False);
+    XChangeProperty(dis, win, window_type, XA_ATOM, 32, PropModeAppend, (unsigned char *) &value, 1);
 
     /* this routine determines which types of input are allowed in
        the input.  see the appropriate section for details...
@@ -70,7 +85,10 @@ void close_x() {
 
 unsigned long chartreuse;
 
+int i = 0;
+
 void redraw(const std::string& str) {
+    std::cout << "redrawing" << ++i << std::endl;
     XClearWindow(dis, win);
     XDrawString(dis,win,gc,10,20,str.c_str(),str.size());
 }
