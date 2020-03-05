@@ -14,14 +14,20 @@ execute_process(
 string(TIMESTAMP BBM_BUILD_TIMESTAMP "%Y-%m-%d-%H-%M" UTC)
 
 add_executable("${target}" "src/main.cpp")
+find_package(X11 REQUIRED)
 
 target_include_directories("${target}"
     PRIVATE
+        "${X11_INCLUDE_DIR}"
         "include")
-
-
-configure_file("templates/version_info.cpp.in" "version_info.cpp")
 
 target_sources("${target}"
     PRIVATE
         "${CMAKE_CURRENT_BINARY_DIR}/version_info.cpp")
+
+configure_file("templates/version_info.cpp.in" "version_info.cpp")
+
+link_directories("${X11_LIBRARIES}")  # TODO link_directories should be avoided
+target_link_libraries("${target}" "${X11_LIBRARIES}")
+
+
