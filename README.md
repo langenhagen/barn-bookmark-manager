@@ -1,5 +1,5 @@
 # Barn Bookmark Manager
-A simple, efficient & flexible website bookmark manager.
+A simple, efficient, flexible & standalone website bookmark manager.
 
 - author: Andreas Langenhagen (andreas@langenhagen.cc)
 
@@ -14,4 +14,5 @@ A simple, efficient & flexible website bookmark manager.
 - provide example .config folder structure
 - implement functionality
 - implement README.md
+- add a license
 - promote on reddit
