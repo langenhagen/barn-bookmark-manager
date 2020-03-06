@@ -4,15 +4,16 @@
      - also helpful for possible program structure
 
 - use the command line tool `xev` to find out x11 key codes
+- use the command line tool `xlsfonts` to find out which fonts exist
 
 - https://tronche.com/gui/x/xlib/events/structures.html
 - https://tronche.com/gui/x/xlib/events/keyboard-pointer/keyboard-pointer.html#XKeyEvent
 
 - https://tronche.com/gui/x/xlib/window-information/properties-and-atoms.html
 */
+#include <algorithm>
+#include <cstring>
 #include <iostream>
-#include <sstream>
-#include <string>
 
 /* order of X11 includes allegedlly important*/
 #include <X11/Xlib.h>
@@ -26,13 +27,27 @@ Display *display;
 int screen;
 Window window;
 GC gc;
+XFontStruct *font;
 
-int i = 0;
-std::stringstream ss;
-std::string str = "Hi There!";
+int n_redraws = 0;
+const int text_buffer_size = 255;
+char text_buffer[text_buffer_size];
+int text_cursor_pos = 0;
+
+void setup_font() {
+    /* found here: https://www.lemoda.net/c/xlib-text-box/
+    most fonts I see via `xlsfonts` dont works*/
+    const char *font_name = "fixed";
+    font = XLoadQueryFont(display, font_name);
+    if (!font) {
+        /* If the font could not be loaded, revert to the "fixed" font. */
+        std::cerr << "unable to load font " << font_name << " using default font \"fixed\"\n";
+        font = XLoadQueryFont(display, "fixed");
+    }
+    XSetFont(display, gc, font->fid);
+}
 
 void init_x() {
-
     /* use the information from the environment variable DISPLAY
        to create the X connection:*/
     display = XOpenDisplay(nullptr);
@@ -57,8 +72,7 @@ void init_x() {
     /* here is where some properties of the window can be set.
        The third and fourth items indicate the name which appears
        at the top of the window and the name of the minimized window
-       respectively.
-    */
+       respectively.*/
     XSetStandardProperties(
         display,
         window,
@@ -71,8 +85,7 @@ void init_x() {
 
     /* disable window decorations
        based on https://stackoverflow.com/questions/31361859/simple-window-without-titlebar
-       I had however to replace  _NET_WM_WINDOW_TYPE  with  _MOTIF_WM_HINTS
-    */
+       I had however to replace  _NET_WM_WINDOW_TYPE  with  _MOTIF_WM_HINTS*/
     Atom window_type = XInternAtom(
         display,
         "_MOTIF_WM_HINTS" /*atom name*/,
@@ -92,18 +105,19 @@ void init_x() {
         1);
 
     /* this routine determines which types of input are allowed in
-       the input.  see the appropriate section for details...
-    */
+       the input.  see the appropriate section for details...*/
     XSelectInput(display, window, ExposureMask|ButtonPressMask|KeyPressMask);
 
     /* create the Graphics Context */
     gc = XCreateGC(display, window, 0, 0);
 
+
     /* here is another routine to set the foreground and background
-       colors _currently_ in use in the window.
-    */
+       colors _currently_ in use in the window.*/
     XSetBackground(display, gc, white);
     XSetForeground(display, gc, black);
+
+    setup_font();
 
     /* clear the window and bring it on top of the other windows */
     XClearWindow(display, window);
@@ -117,9 +131,8 @@ void close_x() {
     XCloseDisplay(display);
 }
 
-
-void redraw(const std::string& str) {
-    std::cout << "redrawing " << ++i << std::endl;
+void redraw(const char* text) {
+    std::cout << "redrawing " << ++n_redraws << std::endl;
     XClearWindow(display, window);
     XDrawString(
         display,
@@ -127,14 +140,15 @@ void redraw(const std::string& str) {
         gc,
         10 /*pos x*/,
         20 /*pos y*/,
-        str.c_str(),
-        str.size());
+        text_buffer,
+        text_cursor_pos);
 }
-
 
 int main(int argc, const char* argv[]) {
     std::string build_timestamp = bbm::get_build_timestamp();
     std::cout << "Hello, World!\nVersion: " << build_timestamp << std::endl;
+
+    text_buffer[0] = '\0';
 
     init_x();
 
@@ -149,62 +163,56 @@ int main(int argc, const char* argv[]) {
         | ButtonPressMask
         | KeyPressMask);
 
-
     XEvent event;  /* the XEvent declaration */
-    const int buffer_length = 32;
-    char text_buffer[buffer_length];  /* a char buffer for KeyPress Events, the size is arbitrary */
-
+    const int input_buffer_size = 32;
+    char input_buffer[input_buffer_size];  /* a char buffer for KeyPress Events, the size is arbitrary */
 
     while(true) {
         /* get the next event and stuff it into our event variable.
            Note: only events we set the mask for are detected!
         */
         XNextEvent(display, &event);
-
         if (event.type == Expose && event.xexpose.count == 0) {
             /* the window was exposed redraw it!
                see: https://tronche.com/gui/x/xlib/events/exposure/expose.html*/
-            redraw(str);
+            redraw(text_buffer);
         }
-        else if (event.type == KeyPress &&
-            XLookupString(
-                &event.xkey /*event struct*/,
-                text_buffer /*output buffer*/,
-                buffer_length /*buffer length*/,
-                nullptr /*output keysym or nullptr*/,
-                nullptr /*status_in_out or nullptr*/) == 1) {
-            /* use the XLookupString routine to convert the KeyPress data into regular text.
-               see: https://tronche.com/gui/x/xlib/utilities/XLookupString.html
-            */
+        else if (event.type == KeyPress) {
             std::cout << event.xkey.keycode;
             if( event.xkey.keycode == 9 /*esc*/) {
                 break;
             }
             else if( event.xkey.keycode == 22 /*delete*/) {
-                const std::string str = ss.str();
-                const std::string substr = str.substr(0, str.size()-1);
-                ss.str(std::string());
-                ss << substr;
+                text_cursor_pos = std::max(--text_cursor_pos, 0);
+                text_buffer[text_cursor_pos] = '\0';
             }
-            else {
+            else if(XLookupString(
+                    &event.xkey /*event struct*/,
+                    input_buffer /*output buffer*/,
+                    input_buffer_size /*buffer length*/,
+                    nullptr /*output keysym or nullptr*/,
+                    nullptr /*status_in_out or nullptr*/) > 0) {
                 /* normal text input*/
-                ss << text_buffer[0];
+
+                /* use XLookupString() to convert the KeyPress data into regular text.
+                   see: https://tronche.com/gui/x/xlib/utilities/XLookupString.html*/
+                text_buffer[text_cursor_pos] = input_buffer[0];
+                ++text_cursor_pos;
+                text_buffer[text_cursor_pos] = '\0';
             }
-            redraw(ss.str());
+            redraw(text_buffer);
         }
         else if (event.type == ButtonPress) {
-            /* tell where the mouse Button was pressed */
-            // std::stringstream ss;
-            ss.str(std::string());
-            ss << "You pressed a mouse button at ("
-                << event.xbutton.x
-                << ","
-                << event.xbutton.y
-                << ")\n";
-            redraw(ss.str());
+            /* tell where the mouse Button was pressed*/
+            sprintf(
+                text_buffer,
+                "You pressed a mouse button at (%d. %d)",
+                event.xbutton.x,
+                event.xbutton.y);
+            text_cursor_pos = strlen(text_buffer);
+            redraw(text_buffer);
         }
     }
-
     close_x();
     return 0;
 }
