@@ -1,13 +1,20 @@
 /* based on: http://mech.math.msu.su/~nap/2/GWindow/xintro.html
-   window decorations disabled based on:
+   window decorations displayabled based on:
    https://stackoverflow.com/questions/31361859/simple-window-without-titlebar
      - also helpful for possible program structure
-*/
 
+- use the command line tool `xev` to find out x11 key codes
+
+- https://tronche.com/gui/x/xlib/events/structures.html
+- https://tronche.com/gui/x/xlib/events/keyboard-pointer/keyboard-pointer.html#XKeyEvent
+
+- https://tronche.com/gui/x/xlib/window-information/properties-and-atoms.html
+*/
 #include <iostream>
 #include <sstream>
 #include <string>
 
+/* order of X11 includes allegedlly important*/
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xos.h>
@@ -15,94 +22,115 @@
 
 #include <version_info.hpp>
 
-Display *dis;
+Display *display;
 int screen;
-Window win;
+Window window;
 GC gc;
 
+int i = 0;
+std::stringstream ss;
+std::string str = "Hi There!";
+
 void init_x() {
-    /* get the colors black and white (see section for details) */
-    unsigned long black,white;
 
     /* use the information from the environment variable DISPLAY
-       to create the X connection:
-    */
-    dis=XOpenDisplay((char *)0);
-    screen=DefaultScreen(dis);
-    black=BlackPixel(dis,screen),   /* get color black */
-    white=WhitePixel(dis, screen);  /* get color white */
+       to create the X connection:*/
+    display = XOpenDisplay(nullptr);
+    screen = DefaultScreen(display);
 
-    /* once the display is initialized, create the window.
-       This window will be have be 200 pixels across and 300 down.
-       It will have the foreground white and background black
-    */
-    win=XCreateSimpleWindow(dis,DefaultRootWindow(dis),100,100,
-        400, 200, 0, white, black);
+    /* get the colors black and white*/
+    unsigned long black = BlackPixel(display, screen);
+    unsigned long white = WhitePixel(display, screen);
+
+    /* once the display is initialized, create the window.*/
+    window = XCreateSimpleWindow(
+        display,
+        DefaultRootWindow(display),
+        100 /*pos x*/,
+        100 /*pos y*/,
+        400 /*width*/,
+        200 /*height*/,
+        0 /*border width*/,
+        white /*border*/,
+        black /*background*/);
 
     /* here is where some properties of the window can be set.
        The third and fourth items indicate the name which appears
        at the top of the window and the name of the minimized window
        respectively.
     */
-    XSetStandardProperties(dis,win,"My Window","HI!",None,NULL,0,NULL);
+    XSetStandardProperties(
+        display,
+        window,
+        "My Window",
+        "HI!",
+        None,
+        nullptr,
+        0,
+        nullptr);
 
     /* disable window decorations
        based on https://stackoverflow.com/questions/31361859/simple-window-without-titlebar
        I had however to replace  _NET_WM_WINDOW_TYPE  with  _MOTIF_WM_HINTS
     */
-    Atom window_type = XInternAtom(dis, "_MOTIF_WM_HINTS", False);
-    long value = XInternAtom(dis, "_NET_WM_WINDOW_TYPE_DOCK", False);
-    XChangeProperty(dis, win, window_type, XA_ATOM, 32, PropModeAppend, (unsigned char *) &value, 1);
+    Atom window_type = XInternAtom(
+        display,
+        "_MOTIF_WM_HINTS" /*atom name*/,
+        False /*only if exists*/);
+    Atom value = XInternAtom(
+        display,
+        "_NET_WM_WINDOW_TYPE_DOCK" /*atom name*/,
+        False /*only if exists*/);
+    XChangeProperty(
+        display,
+        window,
+        window_type,
+        XA_ATOM,
+        32,
+        PropModeAppend,
+        (unsigned char*)&value,
+        1);
 
     /* this routine determines which types of input are allowed in
        the input.  see the appropriate section for details...
     */
-    XSelectInput(dis, win, ExposureMask|ButtonPressMask|KeyPressMask);
+    XSelectInput(display, window, ExposureMask|ButtonPressMask|KeyPressMask);
 
     /* create the Graphics Context */
-    gc=XCreateGC(dis, win, 0,0);
+    gc = XCreateGC(display, window, 0, 0);
 
     /* here is another routine to set the foreground and background
        colors _currently_ in use in the window.
     */
-    XSetBackground(dis,gc,white);
-    XSetForeground(dis,gc,black);
+    XSetBackground(display, gc, white);
+    XSetForeground(display, gc, black);
 
     /* clear the window and bring it on top of the other windows */
-    XClearWindow(dis, win);
-    XMapRaised(dis, win);
+    XClearWindow(display, window);
+    XMapRaised(display, window);
 };
 
 void close_x() {
-    /* it is good programming practice to return system resources to the
-       system...
-    */
-    XFreeGC(dis, gc);
-    XDestroyWindow(dis,win);
-    XCloseDisplay(dis);
-    exit(1);
+    /* it is good programming practice to return system resources to the system...*/
+    XFreeGC(display, gc);
+    XDestroyWindow(display, window);
+    XCloseDisplay(display);
 }
 
-unsigned long chartreuse;
-
-int i = 0;
 
 void redraw(const std::string& str) {
-    std::cout << "redrawing" << ++i << std::endl;
-    XClearWindow(dis, win);
-    XDrawString(dis,win,gc,10,20,str.c_str(),str.size());
+    std::cout << "redrawing " << ++i << std::endl;
+    XClearWindow(display, window);
+    XDrawString(
+        display,
+        window,
+        gc,
+        10 /*pos x*/,
+        20 /*pos y*/,
+        str.c_str(),
+        str.size());
 }
 
-void get_colors() {
-    XColor tmp;
-
-    XParseColor(dis, DefaultColormap(dis,screen), "chartreuse", &tmp);
-    XAllocColor(dis,DefaultColormap(dis,screen),&tmp);
-    chartreuse=tmp.pixel;
-};
-
-std::stringstream ss;
-std::string str = "Hi There!";
 
 int main(int argc, const char* argv[]) {
     std::string build_timestamp = bbm::get_build_timestamp();
@@ -110,50 +138,73 @@ int main(int argc, const char* argv[]) {
 
     init_x();
 
-    XSelectInput(dis, win, ExposureMask|ButtonPressMask|KeyPressMask);
+    unsigned long white = WhitePixel(display, screen);
+    XSetForeground(display, gc, white);  // dunno but necessary
 
-    XEvent event;       /* the XEvent declaration !!! */
-    KeySym key;     /* a dealie-bob to handle KeyPress Events */
-    char text[255];     /* a char buffer for KeyPress Events */
+    /* listen to given event types*/
+    XSelectInput(
+        display,
+        window,
+        ExposureMask /*when portions of the window are exposed that were hidden by another window*/
+        | ButtonPressMask
+        | KeyPressMask);
 
-    // get_colors();
-    // XSetForeground(dis,gc,chartreuse);
-    unsigned long white = WhitePixel(dis, screen);
-    XSetForeground(dis,gc,white);
 
-    /* look for events forever... */
-    while(1) {
+    XEvent event;  /* the XEvent declaration */
+    const int buffer_length = 32;
+    char text_buffer[buffer_length];  /* a char buffer for KeyPress Events, the size is arbitrary */
+
+
+    while(true) {
         /* get the next event and stuff it into our event variable.
-           Note:  only events we set the mask for are detected!
+           Note: only events we set the mask for are detected!
         */
-        XNextEvent(dis, &event);
+        XNextEvent(display, &event);
 
-        if (event.type==Expose && event.xexpose.count==0) {
-            /* the window was exposed redraw it! */
+        if (event.type == Expose && event.xexpose.count == 0) {
+            /* the window was exposed redraw it!
+               see: https://tronche.com/gui/x/xlib/events/exposure/expose.html*/
             redraw(str);
         }
-        if (event.type==KeyPress&&
-            XLookupString(&event.xkey,text,255,&key,0)==1) {
-            /* use the XLookupString routine to convert the invent
-               KeyPress data into regular text.  Weird but necessary...
+        else if (event.type == KeyPress &&
+            XLookupString(
+                &event.xkey /*event struct*/,
+                text_buffer /*output buffer*/,
+                buffer_length /*buffer length*/,
+                nullptr /*output keysym or nullptr*/,
+                nullptr /*status_in_out or nullptr*/) == 1) {
+            /* use the XLookupString routine to convert the KeyPress data into regular text.
+               see: https://tronche.com/gui/x/xlib/utilities/XLookupString.html
             */
-            if (text[0]=='q') {
-                close_x();
+            std::cout << event.xkey.keycode;
+            if( event.xkey.keycode == 9 /*esc*/) {
+                break;
             }
-            // std::stringstream ss;
-            ss << text[0];
-            // ss << "You pressed the " << text[0] << " key!\n";
+            else if( event.xkey.keycode == 22 /*delete*/) {
+                const std::string str = ss.str();
+                const std::string substr = str.substr(0, str.size()-1);
+                ss.str(std::string());
+                ss << substr;
+            }
+            else {
+                /* normal text input*/
+                ss << text_buffer[0];
+            }
             redraw(ss.str());
         }
-        if (event.type==ButtonPress) {
-            /* tell where the mouse Button was Pressed */
+        else if (event.type == ButtonPress) {
+            /* tell where the mouse Button was pressed */
             // std::stringstream ss;
-            ss << "You pressed a button at (" << event.xbutton.x << "," << event.xbutton.y <<")\n";
+            ss.str(std::string());
+            ss << "You pressed a mouse button at ("
+                << event.xbutton.x
+                << ","
+                << event.xbutton.y
+                << ")\n";
             redraw(ss.str());
         }
     }
 
     close_x();
-
     return 0;
 }
