@@ -16,9 +16,12 @@ string(TIMESTAMP BBM_BUILD_TIMESTAMP "%Y-%m-%d-%H-%M" UTC)
 add_executable("${target}" "src/main.cpp")
 find_package(X11 REQUIRED)
 
+# necessary for X11/Xft/Xft.h to find ft2build.h
+set( FREETTYPE2_INCLUDE_DIR "/usr/include/freetype2")
 target_include_directories("${target}"
     PRIVATE
         "${X11_INCLUDE_DIR}"
+        "${FREETTYPE2_INCLUDE_DIR}"
         "include")
 
 target_sources("${target}"
@@ -27,7 +30,8 @@ target_sources("${target}"
 
 configure_file("templates/version_info.cpp.in" "version_info.cpp")
 
-link_directories("${X11_LIBRARIES}")  # TODO link_directories should be avoided
-target_link_libraries("${target}" "${X11_LIBRARIES}")
+target_link_libraries("${target}"
+    "${X11_LIBRARIES}"
+    "Xft")
 
 
