@@ -120,13 +120,8 @@ static void init_x() {
         (unsigned char*)&value,
         1);
 
-    /* this routine determines which types of input are allowed in
-       the input.  see the appropriate section for details...*/
-    XSelectInput(display, window, ExposureMask|ButtonPressMask|KeyPressMask);
-
     /* create the Graphics Context */
     gc = XCreateGC(display, window, 0, 0);
-
 
     /* here is another routine to set the foreground and background
        colors _currently_ in use in the window.*/
