@@ -3,6 +3,10 @@ A simple, efficient, flexible & standalone website bookmark manager.
 
 - author: Andreas Langenhagen (andreas@langenhagen.cc)
 
+## Design Decisions
+Use `X11` in order to have a fast and suckless UI without bloat, decorations and stylistic elements.
+Use `C strings` rather than `std::strings` since `C strings` are allegedly 20-30 percent faster than
+`std::strings`.
 
 ## TODO
 - look into dmenu how to load window instantaneously
