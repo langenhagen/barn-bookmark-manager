@@ -18,5 +18,4 @@ Abbreviate variable names for the sake of readability with conventional abbrevia
 - provide example .config folder structure
 - implement functionality
 - implement README.md
-- add a license
 - promote on reddit
