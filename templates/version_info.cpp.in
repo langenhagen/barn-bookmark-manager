@@ -1,16 +1,14 @@
-#include <string>
+/*Generic application information.
+author: andreasl*/
 #include "version_info.hpp"
 
 namespace bbm {
 
-// TODO make const & constexpr
-std::string get_bbm_version() {
+constexpr const char* get_app_version() {
     return "@BBM_VERSION@";
 }
 
-
-// TODO make const & constexpr
-std::string get_build_timestamp() {
+constexpr const char* get_build_timestamp() {
     return "@BBM_BUILD_TIMESTAMP@";
 }
 
