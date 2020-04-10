@@ -13,7 +13,9 @@ Abbreviate variable names for the sake of readability with conventional abbrevia
 ## TODO
 - setup project structure
 - setup which compiler, linker, etc
-- add .clang-format
+- adjust .clang-format
+- adjust .gitignore
+- adjust THIRD_PARTY
 - implement gui
 - provide example .config folder structure
 - implement functionality
