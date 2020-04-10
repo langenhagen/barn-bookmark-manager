@@ -4,6 +4,6 @@
 # author: andreasl
 
 project_dir="$(git rev-parse --show-toplevel)"
-if "${project_dir}/scripts/build.sh" ; then
+if "${project_dir}/scripts/configure-and-build.sh" ; then
     "${project_dir}/build/barn-bookmark-manager"
 fi

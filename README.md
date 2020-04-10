@@ -13,6 +13,7 @@ Abbreviate variable names for the sake of readability with conventional abbrevia
 ## TODO
 - setup project structure
 - setup which compiler, linker, etc
+- refactor scripts
 - adjust .clang-format
 - adjust .gitignore
 - adjust THIRD_PARTY
