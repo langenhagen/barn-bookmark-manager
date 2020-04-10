@@ -1,1 +1,4 @@
-/build/
+# consider using https://www.gitignore.io
+
+*.DS_Store
+build*/
