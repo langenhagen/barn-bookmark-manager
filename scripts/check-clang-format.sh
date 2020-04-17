@@ -1,4 +1,8 @@
 #!/bin/bash
+# TODO refactor
+# TODO doc
+#
+# author: andreasl
 
 if [ "$1" == "--all" ]
 then

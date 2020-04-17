@@ -1,6 +1,7 @@
 /*Generic application information.
+
 author: andreasl*/
-#include "version_info.hpp"
+#pragma once
 
 namespace bbm {
 
@@ -12,4 +13,4 @@ constexpr const char* get_build_timestamp() {
     return "@BBM_BUILD_TIMESTAMP@";
 }
 
-} //namespace bbm
+} // namespace bbm

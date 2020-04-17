@@ -1,18 +1,11 @@
+# Main CMakeLists.txt file for Barn's Bookmark Manager.
+#
+# author: andreasl
+
 cmake_minimum_required(VERSION 3.10)
 
-set(target "barn-bookmark-manager")
 
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 1)
-set(VERSION_PATCH 0)
-set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
-
-project("${target}" VERSION ${VERSION})
-
-# set(CMAKE_CXX_STANDARD 20) # TODO make possible
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-
+# version and timestamp
 execute_process(
     COMMAND git describe --tags
     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
@@ -20,26 +13,53 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE)
 string(TIMESTAMP BBM_BUILD_TIMESTAMP "%Y-%m-%d-%H-%M" UTC)
 
-add_executable("${target}" "src/main.cpp")
+project("barn-bookmark-manager" VERSION "${BBM_SEM_VER}")
 
+# set(CMAKE_CXX_STANDARD 20) # TODO make possible
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# TODO revisit when threading becomes a topic
 #set(THREADS_PREFER_PTHREAD_FLAG ON)
 #find_package(Threads REQUIRED)
 find_package(X11 REQUIRED)
+find_package(Freetype REQUIRED)
+include("cmake/yaml-cpp.cmake")
 
-# necessary for X11/Xft/Xft.h to find ft2build.h
-set(FREETTYPE2_INCLUDE_DIR "/usr/include/freetype2")
-target_include_directories("${target}"
+configure_file("templates/version_info.hpp.in" "include/version_info.hpp")
+
+# Add bookmark app
+include("cmake/bbm_add_sources.cmake")
+add_executable(bbm-add "${BBM_ADD_SOURCES}")
+
+
+target_include_directories(bbm-add
     PRIVATE
-        "${X11_INCLUDE_DIR}"
-        "${FREETTYPE2_INCLUDE_DIR}"
+        "${CMAKE_CURRENT_BINARY_DIR}/include"
+        "${FREETYPE_INCLUDE_DIRS}"
+        "${X11_INCLUDE_PATH}"
+        "${YAML_CPP_INCLUDE_PATH}"
         "include")
 
-target_sources("${target}"
-    PRIVATE
-        "${CMAKE_CURRENT_BINARY_DIR}/version_info.cpp")
-
-configure_file("templates/version_info.cpp.in" "version_info.cpp")
-
-target_link_libraries("${target}"
+target_link_libraries(bbm-add
     "${X11_LIBRARIES}"
-    "Xft")
+    "xdo"
+    "Xft"
+    "${YAML_CPP_LIB}")
+
+# Fetch bookmark app
+include("cmake/bbm_fetch_sources.cmake")
+add_executable(bbm-fetch "${BBM_FETCH_SOURCES}")
+
+target_include_directories(bbm-fetch
+    PRIVATE
+        "${CMAKE_CURRENT_BINARY_DIR}/include"
+        "${FREETYPE_INCLUDE_DIRS}"
+        "${X11_INCLUDE_PATH}"
+        "${YAML_CPP_INCLUDE_PATH}"
+        "include")
+
+target_link_libraries(bbm-fetch
+    "${X11_LIBRARIES}"
+    "Xft"
+    "${YAML_CPP_LIB}")

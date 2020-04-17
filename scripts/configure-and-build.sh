@@ -1,14 +1,15 @@
 #!/bin/bash
-# If the build folder is missing, call cmake
+# If the build folder is missing, create it.
+# Then run cmake configure and build the application.
 #
 # author: andreasl
 
-build_dir="$(git rev-parse --show-toplevel)/build"
+set -e
 
-if [ ! -e "$build_dir" ]; then
-    mkdir -p "$build_dir"
-    cd "$build_dir"
-    cmake ..
-fi
+build_dir="$(git rev-parse --show-toplevel)/build/"
 
+[ -e "$build_dir" ] || mkdir -p "$build_dir"
+cd "$build_dir"
+
+cmake .. -GNinja
 cmake --build "$build_dir"

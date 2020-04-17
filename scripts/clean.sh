@@ -3,5 +3,4 @@
 #
 # author: andreasl
 
-cd "$(git rev-parse --show-toplevel)"
-rm -fr "build/";
+rm -fr "$(git rev-parse --show-toplevel)/build/";
