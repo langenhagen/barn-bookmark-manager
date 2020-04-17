@@ -1,5 +1,17 @@
-wordcount uses:
-===============
+Barns Bookmark Manager uses:
+============================
+
+- libxdo
+
+
+- x11
+
+
+- xft
+
+
+- yaml-cpp
+
 
 - Google Test
 
