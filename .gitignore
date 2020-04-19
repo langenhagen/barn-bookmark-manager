@@ -1,4 +1,7 @@
+# Gitignore for Barn's Bookmark Manager
 # consider using https://www.gitignore.io
+# author: andreasl
 
 *.DS_Store
 build*/
+.vscodde/
