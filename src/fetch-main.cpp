@@ -15,8 +15,8 @@ int main(int argc, const char* argv[]) {
 
     // TODO add...
 
-    const std::string app_version = ::bbm::get_app_version();
-    const std::string build_timestamp = ::bbm::get_build_timestamp();
+    const std::string app_version = ::barn::bbm::get_app_version();
+    const std::string build_timestamp = ::barn::bbm::get_build_timestamp();
 
     std::cout << "app version: " <<  app_version << std::endl;
     std::cout << "build timestamp: " << build_timestamp << std::endl;

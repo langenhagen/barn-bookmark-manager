@@ -3,6 +3,7 @@
 author: andreasl*/
 #pragma once
 
+namespace barn {
 namespace bbm {
 
 constexpr const char* get_app_version() {
@@ -14,3 +15,4 @@ constexpr const char* get_build_timestamp() {
 }
 
 } // namespace bbm
+} // namespace barn
