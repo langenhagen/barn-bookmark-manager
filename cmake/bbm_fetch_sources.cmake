@@ -5,4 +5,5 @@
 set(BBM_FETCH_SOURCES
     "src/fetch-main.cpp"
     "src/BBMFetchSettings.cpp"
+    "src/settings_util.cpp"
 )

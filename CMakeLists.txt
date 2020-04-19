@@ -4,7 +4,6 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-
 # version and timestamp
 execute_process(
     COMMAND git describe --tags
@@ -15,9 +14,14 @@ string(TIMESTAMP BBM_BUILD_TIMESTAMP "%Y-%m-%d-%H-%M" UTC)
 
 project("barn-bookmark-manager" VERSION "${BBM_SEM_VER}")
 
-# set(CMAKE_CXX_STANDARD 20) # TODO make possible
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(experimental_libraries c++experimental)
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    set(experimental_libraries stdc++fs)
+endif()
 
 # TODO revisit when threading becomes a topic
 #set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -32,7 +36,6 @@ configure_file("templates/version_info.hpp.in" "include/version_info.hpp")
 include("cmake/bbm_add_sources.cmake")
 add_executable(bbm-add "${BBM_ADD_SOURCES}")
 
-
 target_include_directories(bbm-add
     PRIVATE
         "${CMAKE_CURRENT_BINARY_DIR}/include"
@@ -42,6 +45,7 @@ target_include_directories(bbm-add
         "include")
 
 target_link_libraries(bbm-add
+    "${experimental_libraries}"
     "${X11_LIBRARIES}"
     "xdo"
     "Xft"
@@ -60,6 +64,7 @@ target_include_directories(bbm-fetch
         "include")
 
 target_link_libraries(bbm-fetch
+    "${experimental_libraries}"
     "${X11_LIBRARIES}"
     "Xft"
     "${YAML_CPP_LIB}")
