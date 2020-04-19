@@ -11,14 +11,15 @@ Abbreviate variable names for the sake of readability with conventional abbrevia
 
 
 ## TODO
-- setup project structure
 - setup which compiler, linker, etc
 - refactor scripts
 - adjust .clang-format
 - adjust .gitignore
+- implement functionality
+- add an optimized Release build
 - adjust THIRD_PARTY
 - implement gui
 - provide example .config folder structure
-- implement functionality
+- watch out for TODOs
 - implement README.md
 - promote on reddit
