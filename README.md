@@ -21,5 +21,6 @@ Abbreviate variable names for the sake of readability with conventional abbrevia
 - implement gui
 - provide example .config folder structure
 - watch out for TODOs
+- preceed namespace std with scope resolution operator, like ::std
 - implement README.md
 - promote on reddit
