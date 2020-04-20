@@ -4,6 +4,8 @@ author: andreasl
 */
 #include "BBMAddSettings.hpp"
 
+#include "settings_util.hpp"
+
 #include <yaml-cpp/yaml.h>
 
 #include <iostream>
@@ -14,9 +16,8 @@ namespace barn {
 namespace bbm {
 
 /*Load AddSettings from file.*/
-bool load_settings(const std::string& path, AddSettings* settings) {
+static void load(const std::string& path, AddSettings* settings) {
     const YAML::Node& node = YAML::LoadFile(path);
-
     settings->bookmarks_root_path = node["bookmarks_root_path"].as<std::string>();
     settings->editor = node["editor"].as<std::string>();
 
@@ -34,10 +35,14 @@ bool load_settings(const std::string& path, AddSettings* settings) {
             settings->dialog_sequence.push_back(dialog);
         } catch (const std::out_of_range& e) {
             std::cerr
-                << "Error: Unknown setting for add bookmark dialog \"" << node << "\"" << std::endl;
+                << "Warning: Unknown setting for add bookmark dialog \"" << node << "\"" << std::endl;
         }
     }
-    return true;
+}
+
+/*Load AddSettings from file.*/
+void load_settings(const std::string& path, AddSettings* settings) {
+    load_settings<AddSettings, load>(path, settings);
 }
 
 } // namespace bbm

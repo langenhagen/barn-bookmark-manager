@@ -26,7 +26,7 @@ struct AddSettings {
 };
 
 /*Load AddSettings from file.*/
-bool load_settings(const std::string& path, AddSettings* settings);
+void load_settings(const std::string& path, AddSettings* settings);
 
 } // namespace bbm
 } // namespace barn

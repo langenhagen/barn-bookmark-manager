@@ -4,6 +4,8 @@ author: andreasl
 */
 #include "BBMFetchSettings.hpp"
 
+#include "settings_util.hpp"
+
 #include <yaml-cpp/yaml.h>
 
 #include <string>
@@ -11,12 +13,15 @@ author: andreasl
 namespace barn {
 namespace bbm {
 
-/*Load FetchSettings from file.*/
-bool load_settings(const std::string& path, FetchSettings* settings) {
+static void load(const std::string& path, FetchSettings* settings) {
     const YAML::Node& node = YAML::LoadFile(path);
     settings->bookmarks_root_path = node["bookmarks_root_path"].as<std::string>();
     settings->editor = node["editor"].as<std::string>();
-    return true;
+}
+
+/*Load FetchSettings from file.*/
+void load_settings(const std::string& path, FetchSettings* settings) {
+    load_settings<FetchSettings, load>(path, settings);
 }
 
 } // namespace bbm

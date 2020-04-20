@@ -16,7 +16,7 @@ struct FetchSettings {
 };
 
 /*Load FetchSettings from file.*/
-bool load_settings(const std::string& path, FetchSettings* settings);
+void load_settings(const std::string& path, FetchSettings* settings);
 
 } // namespace bbm
 } // namespace barn

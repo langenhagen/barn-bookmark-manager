@@ -5,5 +5,4 @@
 set(BBM_ADD_SOURCES
     "src/add-main.cpp"
     "src/BBMAddSettings.cpp"
-    "src/settings_util.cpp"
 )
