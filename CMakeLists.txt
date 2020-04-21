@@ -33,7 +33,7 @@ include("cmake/yaml-cpp.cmake")
 configure_file("templates/version_info.hpp.in" "include/version_info.hpp")
 
 # Add bookmark app
-include("cmake/bbm_add_sources.cmake")
+include("cmake/bbm-add_sources.cmake")
 add_executable(bbm-add "${BBM_ADD_SOURCES}")
 
 target_include_directories(bbm-add
@@ -52,7 +52,7 @@ target_link_libraries(bbm-add
     "${YAML_CPP_LIB}")
 
 # Fetch bookmark app
-include("cmake/bbm_fetch_sources.cmake")
+include("cmake/bbm-fetch_sources.cmake")
 add_executable(bbm-fetch "${BBM_FETCH_SOURCES}")
 
 target_include_directories(bbm-fetch
