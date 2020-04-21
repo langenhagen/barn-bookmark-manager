@@ -11,6 +11,7 @@ Abbreviate variable names for the sake of readability with conventional abbrevia
 
 
 ## TODO
+- come up with solution that allows building offline, i.e. provide yaml-cpp version as .tar.gz file
 - setup which compiler, linker, etc
 - refactor scripts
 - adjust .clang-format
