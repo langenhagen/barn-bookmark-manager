@@ -18,6 +18,8 @@ namespace bbm {
 
 /*Write the default settings to the given file paths.*/
 bool write_default_settings(const std::string& path) {
+
+    // TODO also mkdir
     namespace fs = std::experimental::filesystem;
 
     const fs::path bookmarks_path = fs::path(std::getenv("HOME")) / ".config/barn-bookmarks/";
