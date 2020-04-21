@@ -11,17 +11,18 @@ Abbreviate variable names for the sake of readability with conventional abbrevia
 
 
 ## TODO
-- come up with solution that allows building offline, i.e. provide yaml-cpp version as .tar.gz file
 - setup which compiler, linker, etc
 - refactor scripts
 - adjust .clang-format
 - adjust .gitignore
 - implement functionality
+- meaningful exit codes, maybe from enum
 - add an optimized Release build
 - adjust THIRD_PARTY
 - implement gui
 - provide example .config folder structure
 - watch out for TODOs
 - preceed namespace std with scope resolution operator, like ::std
+- come up with solution that allows building offline, i.e. provide yaml-cpp version as .tar.gz file
 - implement README.md
 - promote on reddit
