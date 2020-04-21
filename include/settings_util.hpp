@@ -38,7 +38,6 @@ bool write_default_settings(const std::string& path) {
     std::ofstream fout(path);
     fout << node;
     if(!fout) {
-        // TODO refactor into another layer?
         std::cerr << "Error: could not write settings to file: " << path << std::endl;
         return false;
     }
