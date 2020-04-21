@@ -13,6 +13,7 @@ namespace bbm {
 struct FetchSettings {
     std::string bookmarks_root_path;  /*root directory to the bookmarks*/
     std::string editor;  /*text editor to drop in for modification of bookmarks*/
+    std::string open_browser_command;  /*system command to open the browser*/
 };
 
 /*Load FetchSettings from file.*/
