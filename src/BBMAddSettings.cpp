@@ -28,7 +28,7 @@ static void load(const std::string& path, AddSettings* settings) {
         {"ask_for_rating", AddBookmarkDialog::ask_for_rating},
         {"ask_for_tags", AddBookmarkDialog::ask_for_tags}
     };
-    const auto& sequence_node = node["add_bookmark_dialog_sequence"];
+    const auto& sequence_node = node["add_bookmark_sequence"];
     for(const auto& node : sequence_node) {
         try {
             const auto dialog = str_to_dialog.at(node.as<std::string>());
