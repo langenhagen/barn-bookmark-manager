@@ -25,10 +25,15 @@ int main(int argc, const char* argv[]) {
     std::cout << "app version: " <<  app_version << std::endl;
     std::cout << "build timestamp: " << build_timestamp << std::endl;
 
+    ::barn::bbm::FetchSettings settings;
     const fs::path settings_path =
         fs::path(std::getenv("HOME")) / ".config/barn-bookmarks/settings.yaml";
-    ::barn::bbm::FetchSettings settings;
     ::barn::bbm::load_settings(settings_path.string(), &settings);
+
+    std::cout << "settings:"
+        << "\n  bookmark-root-path: " << settings.bookmarks_root_path
+        << "\n  editor: " << settings.editor
+        << "\n  open-browser-command: " << settings.open_browser_command;
 
     std::cout << "\nBye!" << std::endl;
     return 0;

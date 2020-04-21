@@ -25,10 +25,18 @@ int main(int argc, const char* argv[]) {
     std::cout << "app version: " <<  app_version << std::endl;
     std::cout << "build timestamp: " << build_timestamp << std::endl;
 
+    ::barn::bbm::AddSettings settings;
     const fs::path settings_path =
         fs::path(std::getenv("HOME")) / ".config/barn-bookmarks/settings.yaml";
-    ::barn::bbm::AddSettings settings;
     ::barn::bbm::load_settings(settings_path.string(), &settings);
+
+    std::cout << "settings:"
+        << "\n  bookmark-root-path: " << settings.bookmarks_root_path
+        << "\n  editor: " << settings.editor
+        << "\n  dialog_sequence: " << settings.dialog_sequence.size() << " items.";
+    for(const auto& dialog : settings.dialog_sequence) {
+        std::cout << "\n    " << (int)dialog;
+    }
 
     std::cout << "\nBye!" << std::endl;
     return 0;
