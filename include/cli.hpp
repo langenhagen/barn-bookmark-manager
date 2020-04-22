@@ -1,4 +1,4 @@
-/*Command line option-related functions.
+/* Command line option-related functions.
 
 author: andreasl
 */
