@@ -17,6 +17,7 @@ Abbreviate variable names for the sake of readability with conventional abbrevia
 - adjust .gitignore
 - implement functionality
 - meaningful exit codes, maybe from enum
+- consider cleanup() function for x11 and stuff prior to exit
 - add an optimized Release build
 - adjust THIRD_PARTY
 - implement gui
