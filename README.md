@@ -3,10 +3,12 @@ A simple, efficient, flexible & standalone website bookmark manager.
 
 - author: Andreas Langenhagen (andreas@langenhagen.cc)
 
+
 ## Design Decisions
 Use `X11` for a fast and suckless UI without bloat, decorations and without stylistic elements.  
-Use `C strings` rather than `std::strings` since `C strings` are allegedly 20-30 percent faster than
-`std::strings`.  
+
+Use for the X11 GUI part, use `C strings` rather than `std::strings` since `C strings` are allegedly
+20-30 percent faster than `std::strings`.  
 Abbreviate variable names for the sake of readability with conventional abbreviations.  
 
 
