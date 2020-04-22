@@ -1,4 +1,4 @@
-# Source file listings for Barn's Bookmark Mamanger Fetch Bookmark app.
+# Source file listings for Barn's Bookmark Manager Fetch Bookmark app.
 #
 # author: andreasl
 
