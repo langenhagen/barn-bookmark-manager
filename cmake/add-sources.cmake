@@ -6,4 +6,5 @@ set(BBM_ADD_SOURCES
     "src/main_add.cpp"
     "src/add_settings.cpp"
     "src/cli.cpp"
+    "src/datetime.cpp"
 )
