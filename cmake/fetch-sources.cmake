@@ -7,4 +7,5 @@ set(BBM_FETCH_SOURCES
     "src/fetch_settings.cpp"
     "src/cli.cpp"
     "src/datetime.cpp"
+    "src/fetch.cpp"
 )
