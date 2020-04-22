@@ -2,7 +2,7 @@
 
 author: andreasl
 */
-#include "BBMFetchSettings.hpp"
+#include "fetch_settings.hpp"
 #include "cli.hpp"
 
 #include <iostream>

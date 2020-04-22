@@ -1,6 +1,7 @@
 /*Command line option-related functions.
 
-author: andreasl*/
+author: andreasl
+*/
 #pragma once
 
 #include <string>

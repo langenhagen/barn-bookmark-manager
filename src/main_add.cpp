@@ -2,7 +2,7 @@
 
 author: andreasl
 */
-#include "BBMAddSettings.hpp"
+#include "add_settings.hpp"
 #include "cli.hpp"
 
 #include <iostream>

@@ -1,10 +1,10 @@
-/* Implementation for BBMFetchSettings.hpp.
+/* Implementation for fetch_settings.hpp.
 
 author: andreasl
 */
-#include "BBMFetchSettings.hpp"
+#include "fetch_settings.hpp"
 
-#include "settings_util.hpp"
+#include "settings.hpp"
 
 #include <yaml-cpp/yaml.h>
 

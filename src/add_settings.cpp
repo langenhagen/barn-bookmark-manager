@@ -1,10 +1,10 @@
-/* Implementation for BBMAddSettings.hpp.
+/* Implementation for add_settings.hpp.
 
 author: andreasl
 */
-#include "BBMAddSettings.hpp"
+#include "add_settings.hpp"
 
-#include "settings_util.hpp"
+#include "settings.hpp"
 
 #include <yaml-cpp/yaml.h>
 

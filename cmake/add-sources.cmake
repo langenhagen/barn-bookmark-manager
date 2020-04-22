@@ -3,7 +3,7 @@
 # author: andreasl
 
 set(BBM_ADD_SOURCES
-    "src/add-main.cpp"
-    "src/BBMAddSettings.cpp"
+    "src/main_add.cpp"
+    "src/add_settings.cpp"
     "src/cli.cpp"
 )

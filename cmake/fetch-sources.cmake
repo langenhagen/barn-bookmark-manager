@@ -3,7 +3,7 @@
 # author: andreasl
 
 set(BBM_FETCH_SOURCES
-    "src/fetch-main.cpp"
-    "src/BBMFetchSettings.cpp"
+    "src/main_fetch.cpp"
+    "src/fetch_settings.cpp"
     "src/cli.cpp"
 )
