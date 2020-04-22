@@ -9,6 +9,7 @@ author: andreasl
 namespace barn {
 namespace bbm {
 
+/*Representation of the app's command line options.*/
 struct Options {
     std::string settings_path;  /*path to the settings file*/
 };
