@@ -7,7 +7,7 @@ Barns Bookmark Manager uses:
 - x11
 
 
-- xft
+- xdotool
 
 
 - yaml-cpp

@@ -15,6 +15,7 @@ that the following packages must be installed on your system:
 - the C++ 17 standard library from the compiler (tested with `GNU` `7.5.0.`)
 - CMake
 - the X11 development libraries (`libx11-dev` on `Ubuntu`)
+- the xdo development libraries (`libxdo-dev` on `Ubuntu`)
 
 Barn's Bookmark Manager also downloads source code of 3rd-party libraries during the CMake configure
 step:
