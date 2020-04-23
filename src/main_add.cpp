@@ -2,6 +2,7 @@
 
 author: andreasl
 */
+#include "add.hpp"
 #include "add_settings.hpp"
 #include "cli.hpp"
 
@@ -20,5 +21,8 @@ int main(int argc, const char* argv[]) {
         std::cout << "\n    " << (int)dialog;
     }
 
+
+    const std::string url(::barn::bbm::fetch_url());
+    std::cout << "\n\nURL: " << url << std::endl;
     return 0;
 }
