@@ -5,10 +5,10 @@ author: andreasl
 #include "add_settings.hpp"
 
 #include "settings.hpp"
+#include "util.hpp"
 
 #include <yaml-cpp/yaml.h>
 
-#include <iostream>
 #include <string>
 #include <unordered_map>
 
@@ -34,7 +34,7 @@ static void load(const std::string& path, AddSettings* settings) {
             const auto dialog = str_to_dialog.at(node.as<std::string>());
             settings->dialog_sequence.push_back(dialog);
         } catch (const std::out_of_range& e) {
-            std::cerr
+            log(WARN)
                 << "Warning: Unknown setting for add bookmark dialog \"" << node << "\"" << std::endl;
         }
     }

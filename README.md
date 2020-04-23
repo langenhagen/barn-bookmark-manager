@@ -60,6 +60,7 @@ Abbreviate variable names for the sake of readability with conventional abbrevia
 
 
 ## TODO
+- handle compile time options nicely
 - refactor scripts
 - adjust .clang-format
 - adjust .gitignore

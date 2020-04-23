@@ -4,14 +4,14 @@ author: andreasl
 */
 #pragma once
 
+#include "util.hpp"
+
 #include <yaml-cpp/yaml.h>
 
-#include <iostream>
 #include <cstdlib>
 #include <exception>
 #include <experimental/filesystem>
 #include <fstream>
-#include <iostream>
 #include <string>
 
 namespace barn {
@@ -25,7 +25,7 @@ bool write_default_settings(const std::string& path) {
     try {
         fs::create_directories(directory);
     } catch (const std::exception& e) {
-        std::cerr << "Error: could not create directory \"" << directory << "\":\n"
+        log(ERROR) << "Could not create directory \"" << directory << "\":\n"
             << e.what() << std::endl;
         exit(1);
     }
@@ -44,7 +44,7 @@ bool write_default_settings(const std::string& path) {
     std::ofstream fout(path);
     fout << node;
     if(!fout) {
-        std::cerr << "Error: could not write settings to file: " << path << std::endl;
+        log(ERROR) << "Could not write settings to file: " << path << std::endl;
         return false;
     }
     return true;
@@ -57,19 +57,19 @@ void load_settings(const std::string& path, SettingsType* settings) {
     try {
         LoadFunction(path, settings);
     } catch (const YAML::BadFile& e) {
-        std::cerr << "Error: Could not read file \"" << path << "\"" << std::endl;
+        log(ERROR) << "Could not read file \"" << path << "\"" << std::endl;
         try {
             if(!fs::exists(path)) {
-                std::cerr << "Creating file \"" << path << "\"..." << std::endl;
+                log(INFO) << "Creating file \"" << path << "\"..." << std::endl;
                 write_default_settings(path);
                 LoadFunction(path, settings);
             }
         } catch (const std::exception& e) {
-            std::cerr << "Error: " << e.what() << std::endl;
+            log(ERROR) << e.what() << std::endl;
             exit(1);
         }
     } catch (const YAML::Exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        log(ERROR) << e.what() << std::endl;
         exit(1);
     }
 }
