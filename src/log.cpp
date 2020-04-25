@@ -1,11 +1,10 @@
-/* Implementation for util.hpp.
+/* Implementation for log.hpp.
 
 author: andreasl
 */
-#include "util.hpp"
+#include "log.hpp"
 
 #include <iostream>
-#include <string>
 
 #define BBM_ENABLE_LOGGING
 

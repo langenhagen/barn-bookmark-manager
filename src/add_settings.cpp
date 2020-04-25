@@ -5,7 +5,7 @@ author: andreasl
 #include "add_settings.hpp"
 
 #include "settings.hpp"
-#include "util.hpp"
+#include "log.hpp"
 
 #include <yaml-cpp/yaml.h>
 

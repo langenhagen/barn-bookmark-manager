@@ -4,7 +4,7 @@ author: andreasl
 */
 #pragma once
 
-#include "util.hpp"
+#include "log.hpp"
 
 #include <yaml-cpp/yaml.h>
 

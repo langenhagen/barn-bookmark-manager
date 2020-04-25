@@ -1,4 +1,4 @@
-/* Common utility functions.
+/* Common logging functionality.
 
 author: andreasl
 */
