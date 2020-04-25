@@ -51,8 +51,8 @@ bool write_default_settings(const std::string& path) {
 }
 
 /*Common template function to load settings from file.*/
-template<class SettingsType, void LoadFunction(const std::string&, SettingsType*)>
-void load_settings(const std::string& path, SettingsType* settings) {
+template<class SettingsType, void LoadFunction(const std::string&, SettingsType&)>
+void load_settings(const std::string& path, SettingsType& settings) {
     namespace fs = std::experimental::filesystem;
     try {
         LoadFunction(path, settings);

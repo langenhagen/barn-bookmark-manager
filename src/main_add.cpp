@@ -11,7 +11,7 @@ author: andreasl
 int main(int argc, const char* argv[]) {
     const auto options = ::barn::bbm::parse_options(argc,argv);
     ::barn::bbm::AddSettings settings;
-    ::barn::bbm::load_settings(options.settings_path, &settings);
+    ::barn::bbm::load_settings(options.settings_path, settings);
 
     std::cout << "settings:"
         << "\n  bookmark-root-path: " << settings.bookmarks_root_path
@@ -20,7 +20,6 @@ int main(int argc, const char* argv[]) {
     for(const auto& dialog : settings.dialog_sequence) {
         std::cout << "\n    " << (int)dialog;
     }
-
 
     const std::string url(::barn::bbm::fetch_url());
     std::cout << "\n\nURL: " << url << std::endl;
