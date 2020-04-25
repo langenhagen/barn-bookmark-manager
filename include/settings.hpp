@@ -41,9 +41,9 @@ bool write_default_settings(const fs::path& path) {
     node["add_bookmark_sequence"].push_back("ask_for_comment");
     node["add_bookmark_sequence"].push_back("ask_for_rating");
 
-    std::ofstream fout(path);
-    fout << node;
-    if (!fout) {
+    std::ofstream out(path);
+    out << node;
+    if (!out) {
         log(ERROR) << "Could not write settings to file: " << path << std::endl;
         return false;
     }
