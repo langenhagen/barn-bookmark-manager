@@ -77,3 +77,6 @@ Abbreviate variable names for the sake of readability with conventional abbrevia
 - come up with solution that allows building offline, i.e. provide yaml-cpp version as .tar.gz file
 - implement README.md
 - promote on reddit
+Allow every string to be accepted an address in order to avoid expensive validity checks and
+maximize flexibility.  
+
