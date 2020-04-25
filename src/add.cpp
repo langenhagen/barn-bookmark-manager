@@ -4,6 +4,7 @@ author: andreasl
 */
 #include "add.hpp"
 
+#include "add_settings.hpp"
 #include "bookmark.hpp"
 #include "log.hpp"
 #include "x_copy_paste.hpp"
@@ -21,8 +22,6 @@ author: andreasl
 extern "C" {
 #include <xdo.h>
 }
-
-namespace fs = std::experimental::filesystem;
 
 namespace barn {
 namespace bbm {
@@ -70,8 +69,24 @@ const std::string fetch_url() {
 }
 
 /*Store Bookmark on disk.*/
-bool store_bookmark(const Bookmark& bookmark, const fs::path& path) {
+bool save_bookmark(const Bookmark& bookmark, const AddSettings& settings) {
+    namespace fs = std::experimental::filesystem;
+
+    const fs::path root_path = settings.bookmarks_root_path;
     const std::string hash = generate_hash(bookmark.url + bookmark.created.str());
+    fs::path bookmark_folder(root_path / hash);
+    try {
+        if (fs::exists(bookmark_folder)) {
+            log(ERROR) << "Bookmark folder \"" << bookmark_folder << "\" does already exist."
+                << std::endl;
+            return false;
+        }
+        fs::create_directories(bookmark_folder);
+    } catch (const std::exception& e) {
+        log(ERROR) << "Could not read or create directory \"" << root_path << "\"\n"
+            << e.what() << std::endl;
+        return false;
+    }
 
     return true;
 }
