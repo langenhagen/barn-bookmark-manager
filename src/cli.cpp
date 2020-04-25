@@ -27,14 +27,15 @@ void show_version(const std::string& app_name) {
 /*Parse command line options.*/
 Options parse_options(int argc, const char* argv[]) {
     namespace fs = std::experimental::filesystem;
+
     const auto app_name = fs::path(argv[0]).filename().string();
     if (argc > 2) {
         show_help(app_name);
         exit(1);
     }
     if (argc == 1) {
-        std::string path(std::getenv("HOME"));
-        path += "/.config/barn-bookmarks/settings.yaml";
+        const fs::path path = fs::path(std::getenv("HOME"))
+            / ".config" / "barn-bookmarks" / "settings.yaml";
         return Options{path};
     }
     if (std::strcmp(argv[1], "--version") == 0 || std::strcmp(argv[1], "-v") == 0) {

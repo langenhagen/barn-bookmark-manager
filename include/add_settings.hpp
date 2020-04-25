@@ -4,8 +4,11 @@ author: andreasl
 */
 #pragma once
 
+#include <experimental/filesystem>
 #include <string>
 #include <vector>
+
+namespace fs = std::experimental::filesystem;
 
 namespace barn {
 namespace bbm {
@@ -20,13 +23,13 @@ enum class AddBookmarkDialog {
 
 /*Settings for the BBM Add app.*/
 struct AddSettings {
-    std::string bookmarks_root_path;  /*root directory to the bookmarks*/
+    fs::path bookmarks_root_path;  /*root directory to the bookmarks*/
     std::string editor;  /*text editor to drop in for modification of bookmarks*/
     std::vector<AddBookmarkDialog> dialog_sequence;  /*ordered selection of applied dialogs*/
 };
 
 /*Load AddSettings from file.*/
-void load_settings(const std::string& path, AddSettings& settings);
+void load_settings(const fs::path& path, AddSettings& settings);
 
 } // namespace bbm
 } // namespace barn

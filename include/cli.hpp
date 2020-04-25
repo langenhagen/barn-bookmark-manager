@@ -4,14 +4,16 @@ author: andreasl
 */
 #pragma once
 
-#include <string>
+#include <experimental/filesystem>
+
+namespace fs = std::experimental::filesystem;
 
 namespace barn {
 namespace bbm {
 
 /*Representation of the app's command line options.*/
 struct Options {
-    std::string settings_path;  /*path to the settings file*/
+    fs::path settings_path;  /*path to the settings file*/
 };
 
 /*Parse command line options.*/

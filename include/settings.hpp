@@ -14,13 +14,13 @@ author: andreasl
 #include <fstream>
 #include <string>
 
+namespace fs = std::experimental::filesystem;
+
 namespace barn {
 namespace bbm {
 
 /*Write the default settings to the given file paths.*/
-bool write_default_settings(const std::string& path) {
-    namespace fs = std::experimental::filesystem;
-
+bool write_default_settings(const fs::path& path) {
     const auto directory = fs::path(path).remove_filename();
     try {
         fs::create_directories(directory);
@@ -30,7 +30,7 @@ bool write_default_settings(const std::string& path) {
         exit(1);
     }
     YAML::Node node;
-    const auto bookmarks_path = fs::path(std::getenv("HOME")) / ".config/barn-bookmarks/";
+    const auto bookmarks_path = directory / "bookmarks";
     node["bookmarks_root_path"] = bookmarks_path.string();  /*root directory to the bookmarks*/
     node["editor"] = "vim";  /*text editor to drop in for modification of bookmarks*/
     node["open_browser_command"] = "xdg-open";  /*command to open a hyperlink*/
@@ -51,9 +51,8 @@ bool write_default_settings(const std::string& path) {
 }
 
 /*Common template function to load settings from file.*/
-template<class SettingsType, void LoadFunction(const std::string&, SettingsType&)>
-void load_settings(const std::string& path, SettingsType& settings) {
-    namespace fs = std::experimental::filesystem;
+template<class SettingsType, void LoadFunction(const fs::path&, SettingsType&)>
+void load_settings(const fs::path& path, SettingsType& settings) {
     try {
         LoadFunction(path, settings);
     } catch (const YAML::BadFile& e) {

@@ -9,15 +9,18 @@ author: andreasl
 
 #include <yaml-cpp/yaml.h>
 
+#include <experimental/filesystem>
 #include <string>
 #include <unordered_map>
+
+namespace fs = std::experimental::filesystem;
 
 namespace barn {
 namespace bbm {
 
 /*Load AddSettings from file.*/
-static void load(const std::string& path, AddSettings& settings) {
-    const YAML::Node& node = YAML::LoadFile(path);
+static void load(const fs::path& path, AddSettings& settings) {
+    const YAML::Node& node = YAML::LoadFile(path.string());
     settings.bookmarks_root_path = node["bookmarks_root_path"].as<std::string>();
     settings.editor = node["editor"].as<std::string>();
 
@@ -41,7 +44,7 @@ static void load(const std::string& path, AddSettings& settings) {
 }
 
 /*Load AddSettings from file.*/
-void load_settings(const std::string& path, AddSettings& settings) {
+void load_settings(const fs::path& path, AddSettings& settings) {
     load_settings<AddSettings, load>(path, settings);
 }
 
