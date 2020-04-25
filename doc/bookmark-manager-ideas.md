@@ -230,7 +230,7 @@ https://en.cppreference.com/w/cpp/regex
 Finding files in C++ may be done via std::filesystem:
 https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c
 
-Hashes in Cpp: https://en.cppreference.com/w/cpp/utility/hash
+For hashes in Cpp see: https://en.cppreference.com/w/cpp/utility/hash
 
 ## Getting the URL From the Browser
 
