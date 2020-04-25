@@ -4,12 +4,17 @@ author: andreasl
 */
 #include "add.hpp"
 
+#include "bookmark.hpp"
 #include "log.hpp"
 #include "x_copy_paste.hpp"
 
 #include <chrono>
 #include <cstring>
+#include <experimental/filesystem>
+#include <functional>
+#include <iomanip>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <thread>
 
@@ -17,8 +22,23 @@ extern "C" {
 #include <xdo.h>
 }
 
+namespace fs = std::experimental::filesystem;
+
 namespace barn {
 namespace bbm {
+
+namespace {
+
+/*Create a hash to a given string.*/
+static const std::string generate_hash(const std::string& str) {
+    static const std::hash<std::string> hash_function;
+    const size_t hash = hash_function(str) % 0xffffff;
+    std::stringstream ss;
+    ss << std::setfill('0') << std::setw(6)  << std::hex << hash;
+    return ss.str();
+}
+
+} // namespace
 
 /*Fetch the url of the focused Chrome top window.*/
 const std::string fetch_url() {
@@ -47,6 +67,13 @@ const std::string fetch_url() {
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
 
     return ::barn::x11::cp::get_text_from_clipboard();
+}
+
+/*Store Bookmark on disk.*/
+bool store_bookmark(const Bookmark& bookmark, const fs::path& path) {
+    const std::string hash = generate_hash(bookmark.url + bookmark.created.str());
+
+    return true;
 }
 
 } // namespace bbm
