@@ -43,7 +43,7 @@ bool write_default_settings(const std::string& path) {
 
     std::ofstream fout(path);
     fout << node;
-    if(!fout) {
+    if (!fout) {
         log(ERROR) << "Could not write settings to file: " << path << std::endl;
         return false;
     }
@@ -59,7 +59,7 @@ void load_settings(const std::string& path, SettingsType& settings) {
     } catch (const YAML::BadFile& e) {
         log(ERROR) << "Could not read file \"" << path << "\"" << std::endl;
         try {
-            if(!fs::exists(path)) {
+            if (!fs::exists(path)) {
                 log(INFO) << "Creating file \"" << path << "\"..." << std::endl;
                 write_default_settings(path);
                 LoadFunction(path, settings);

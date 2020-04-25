@@ -24,12 +24,12 @@ namespace detail {
 /*Call popen() & pclose() and return its output.*/
 std::string call_popen(const char* cmd) {
     std::string result;
-    std::unique_ptr<FILE, decltype(&pclose)> pipe( popen(cmd, "r"), pclose);
-    if(!pipe) {
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+    if (!pipe) {
         throw std::runtime_error("Error: call to popen() failed");
     }
     std::array<char, 128> buf;
-    while(std::fgets(buf.data(), buf.size(), pipe.get()) != nullptr) {
+    while (std::fgets(buf.data(), buf.size(), pipe.get()) != nullptr) {
         result += buf.data();
     }
     return result;

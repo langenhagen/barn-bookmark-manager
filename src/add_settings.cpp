@@ -29,7 +29,7 @@ static void load(const std::string& path, AddSettings& settings) {
         {"ask_for_tags", AddBookmarkDialog::ask_for_tags}
     };
     const auto& sequence_node = node["add_bookmark_sequence"];
-    for(const auto& node : sequence_node) {
+    for (const auto& node : sequence_node) {
         try {
             const auto dialog = str_to_dialog.at(node.as<std::string>());
             settings.dialog_sequence.push_back(dialog);

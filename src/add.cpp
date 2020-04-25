@@ -33,7 +33,7 @@ const std::string fetch_url() {
     xdo_get_window_name(xdo.get(), win, &win_name, &name_len, &win_type);
 
     constexpr const unsigned char chrome_win_suffix[17] = " - Google Chrome";
-    if(std::memcmp(win_name + name_len - 16, chrome_win_suffix, 16)) {
+    if (std::memcmp(win_name + name_len - 16, chrome_win_suffix, 16)) {
         log(ERROR) << "Window \"" << win_name << "\" is not a Google Chrome window." << std::endl;
         return "";
     }

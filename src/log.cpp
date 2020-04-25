@@ -27,11 +27,11 @@ std::ostream null_stream(&null_buffer);
 /* Write a log message to console.*/
 std::ostream& log(const Severity level) {
 #ifdef BBM_ENABLE_LOGGING
-    if(level == Severity::INFO) {
+    if (level == Severity::INFO) {
         return std::cout;
-    } else if(level == Severity::WARN) {
+    } else if (level == Severity::WARN) {
         return std::cout << "Warning: ";
-    } if(level == Severity::ERROR) {
+    } if (level == Severity::ERROR) {
         return std::cout << "Error: ";
     }
 #else

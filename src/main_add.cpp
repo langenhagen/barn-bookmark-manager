@@ -17,7 +17,7 @@ int main(int argc, const char* argv[]) {
         << "\n  bookmark-root-path: " << settings.bookmarks_root_path
         << "\n  editor: " << settings.editor
         << "\n  dialog_sequence: " << settings.dialog_sequence.size() << " items.";
-    for(const auto& dialog : settings.dialog_sequence) {
+    for (const auto& dialog : settings.dialog_sequence) {
         std::cout << "\n    " << (int)dialog;
     }
 

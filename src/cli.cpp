@@ -37,11 +37,11 @@ Options parse_options(int argc, const char* argv[]) {
         path += "/.config/barn-bookmarks/settings.yaml";
         return Options{path};
     }
-    if(std::strcmp(argv[1], "--version") == 0 || std::strcmp(argv[1], "-v") == 0) {
+    if (std::strcmp(argv[1], "--version") == 0 || std::strcmp(argv[1], "-v") == 0) {
         show_version(app_name);
         exit(0);
     }
-    if(std::strcmp(argv[1], "--help") == 0 || std::strcmp(argv[1], "-h") == 0) {
+    if (std::strcmp(argv[1], "--help") == 0 || std::strcmp(argv[1], "-h") == 0) {
         show_help(app_name);
         exit(0);
     }
