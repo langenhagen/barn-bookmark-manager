@@ -58,9 +58,13 @@ Use for the X11 GUI part, use `C strings` rather than `std::strings` since `C st
 20-30 percent faster than `std::strings`.  
 Abbreviate variable names for the sake of readability with conventional abbreviations.  
 
+Allow every string to be accepted an address in order to avoid expensive validity checks and
+maximize flexibility.  
+
 
 ## TODO
 - handle compile time options nicely
+- remove querystring feature
 - refactor scripts
 - adjust .clang-format
 - adjust .gitignore
@@ -77,6 +81,3 @@ Abbreviate variable names for the sake of readability with conventional abbrevia
 - come up with solution that allows building offline, i.e. provide yaml-cpp version as .tar.gz file
 - implement README.md
 - promote on reddit
-Allow every string to be accepted an address in order to avoid expensive validity checks and
-maximize flexibility.  
-
