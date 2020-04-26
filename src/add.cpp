@@ -35,7 +35,6 @@ namespace {
 /*Create random id to a given string.*/
 static const std::string generate_id() {
     std::stringstream ss;
-
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 35);
@@ -85,14 +84,11 @@ bool save_bookmark(const Bookmark& bookmark, const AddSettings& settings, const 
     /*create bookmark folder*/
     fs::path bookmark_folder(settings.bookmarks_root_path / subpath);
     try {
-        if (fs::exists(bookmark_folder)) {
-            log(ERROR) << "Bookmark folder \"" << bookmark_folder << "\" does already exist."
-                << std::endl;
-            return false;
+        if (!fs::exists(bookmark_folder)) {
+            fs::create_directories(bookmark_folder);
         }
-        fs::create_directories(bookmark_folder);
     } catch (const std::exception& e) {
-        log(ERROR) << "Could not read or create directory \"" << bookmark_folder << "\"\n"
+        log(ERROR) << "Could not read or create directory " << bookmark_folder << "\n"
             << e.what() << std::endl;
         return false;
     }
@@ -116,6 +112,16 @@ bool save_bookmark(const Bookmark& bookmark, const AddSettings& settings, const 
     /*write yaml*/
     const std::string filename = generate_id() + ".yaml";
     const fs::path file = bookmark_folder / filename;
+    try {
+        if (fs::exists(file)) {
+            log(ERROR) << "Bookmark under " << file << " already exists." << std::endl;
+            return false;
+        }
+    } catch (const std::exception& e) {
+        log(ERROR) << "Could not read or create file " << file << "\n"
+            << e.what() << std::endl;
+        return false;
+    }
     std::ofstream out(file);
     out << yaml.c_str();
     if (!out) {
