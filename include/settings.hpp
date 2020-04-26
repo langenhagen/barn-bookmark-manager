@@ -26,7 +26,7 @@ bool write_default_settings(const fs::path& path) {
     try {
         fs::create_directories(directory);
     } catch (const std::exception& e) {
-        log(ERROR) << "Could not create directory \"" << directory << "\":\n"
+        log(ERROR) << "Could not create directory " << directory << ":\n"
             << e.what() << std::endl;
         exit(exitcode::SYSTEM_ERROR);
     }
@@ -57,10 +57,10 @@ void load_settings(const fs::path& path, SettingsType& settings) {
     try {
         LoadFunction(path, settings);
     } catch (const YAML::BadFile& e) {
-        log(ERROR) << "Could not read file \"" << path << "\"" << std::endl;
+        log(ERROR) << "Could not read file " << path << std::endl;
         try {
             if (!fs::exists(path)) {
-                log(INFO) << "Creating file \"" << path << "\"..." << std::endl;
+                log(INFO) << "Creating file " << path << "..." << std::endl;
                 write_default_settings(path);
                 LoadFunction(path, settings);
             }
