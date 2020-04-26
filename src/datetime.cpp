@@ -17,6 +17,12 @@ DateTime::DateTime(int year_, int month_, int day_of_month_, int hour_, int minu
     : year(year_), month(month_), day_of_month(day_of_month_), hour(hour_), minute(minute_)
 {}
 
+/*Constructor from tm.*/
+DateTime::DateTime(const std::tm& tm)
+    : year(tm.tm_year + 1900), month(tm.tm_mon + 1), day_of_month(tm.tm_mday),
+    hour(tm.tm_hour), minute(tm.tm_min)
+{}
+
 /*Constructor from string.*/
 DateTime::DateTime(const std::string& str, const char* fmt) {
     std::stringstream ss(str);
@@ -28,6 +34,13 @@ DateTime::DateTime(const std::string& str, const char* fmt) {
     this->day_of_month = tm.tm_mday;
     this->hour = tm.tm_hour;
     this->minute = tm.tm_min;
+}
+
+/*Create a DateTime object representing the current date & time.*/
+DateTime DateTime::now() {
+    const time_t now = time(0);
+    const std::tm* const local_time = std::localtime(&now);
+    return DateTime(*local_time);
 }
 
 /*Convert to std::tm struct.*/

@@ -21,8 +21,14 @@ struct DateTime {
     /*Constructor*/
     explicit DateTime(int year_, int month_, int day_of_month_, int hour_ = 0, int minute_ = 0);
 
+    /*Constructor from tm.*/
+    explicit DateTime(const std::tm& tm);
+
     /*Constructor from string.*/
     explicit DateTime(const std::string& str, const char* fmt = "%Y-%m-%d %H:%M");
+
+    /*Create a DateTime object representing the current date & time.*/
+    static DateTime now();
 
     /*Convert to std::tm struct.*/
     std::tm tm() const;
