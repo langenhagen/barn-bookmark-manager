@@ -79,8 +79,7 @@ bool fetch_url_and_title(std::string& url, std::string& title) {
 bool save_bookmark(const Bookmark& bookmark, const AddSettings& settings, const fs::path& subpath) {
 
     /*create bookmark folder*/
-    const std::string hash = generate_hash(bookmark.url + bookmark.created.str());
-    fs::path bookmark_folder(settings.bookmarks_root_path / subpath / ("b" + hash));
+    fs::path bookmark_folder(settings.bookmarks_root_path / subpath);
     try {
         if (fs::exists(bookmark_folder)) {
             log(ERROR) << "Bookmark folder \"" << bookmark_folder << "\" does already exist."
@@ -111,7 +110,9 @@ bool save_bookmark(const Bookmark& bookmark, const AddSettings& settings, const 
         yaml << YAML::EndSeq << YAML::EndMap;
 
     /*write yaml*/
-    const fs::path file = bookmark_folder / "info.yaml";
+    const std::string hash = generate_hash(bookmark.url + bookmark.created.str());
+    const std::string filename = hash + ".yaml";
+    const fs::path file = bookmark_folder / filename;
     std::ofstream out(file);
     out << yaml.c_str();
     if (!out) {

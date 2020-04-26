@@ -31,8 +31,7 @@ Leave maintenance of folder structure to the user, i.e. leave empty folders unto
 - [ask for 1-5 star rating (keys: `1`, `2`, `3`, `4`, `5`, `<ENTER>` means no rating)]
 - create bookmark hash `<hash>`
 - add bookmark hash `<hash>` to file `ids` as most recent entry, i.e. add it to the end
-- create bookmark folder `b<hash>`
-- store the bookmark info into `info.yaml` and download the website's text to `site.txt`
+- store the bookmark info into `<hash>.yaml` and download the website's text to `<hash>.site.txt`
 - `ctrl+<ENTER>` or `<ENTER>` is Ok/Continue, `<ESC>` is Abort
 
 
@@ -44,7 +43,7 @@ Leave maintenance of folder structure to the user, i.e. leave empty folders unto
   end
 - remove entries from `ids` array for bookmarks that are missing on file system and give a warning
 - add entries to `ids` array for bookmarks that are missing from `ids` and give a warning
-- search with fuzzy search and incorporate `tags`, `site.txt` files, bookmark paths, bookmark urls,
+- search with fuzzy search and include `tags`, `*.site.txt` files, bookmark paths, bookmark urls,
   names, recency
 - show list view of matches browseable with up-down arrow keys keys
 - show preview of the currently selected bookmark with url, name, comment, rating, and excerpt of
@@ -55,7 +54,7 @@ Leave maintenance of folder structure to the user, i.e. leave empty folders unto
 
 ## Maintain Bookmarks
 - to edit a bookmark, query a bookmark and select edit (press `e`).
-- drop into the bookmark's `info.yaml` file with your set text editor.
+- drop into the bookmark's `<hash>.yaml` file with your set text editor.
 
 - to move a bookmark, query a bookmark and select move (press `m`).
 - drop into a file explorer with the current bookmark folder open
@@ -65,7 +64,7 @@ Leave maintenance of folder structure to the user, i.e. leave empty folders unto
 ## Remove Bookmarks
 - query a bookmark and select delete (key: `d`)
 - remove the bookmark from the file `ids`
-- delete the bookmark folder
+- delete the bookmark files `<hash>.{yaml,site.txt}`
 - keep possibly empty filesystem folders and entries in `folders` and `tags`, i.e. don't touch them
 
 
@@ -82,21 +81,17 @@ A `mysql` or `mongodb` database may make sense when implementing mobile apps.
         ├── tags
         └── bookmarks/
             ├── some/
-            │   ├── b1A2B3C/
-            │   │   ├── info.yaml
-            │   │   └── site.txt
-            │   ├── b2B3C/
-            │   │   ├── info.yaml
-            │   │   └── site.txt
+            │   ├── 1A2B3C.yaml
+            │   ├── 1A2B3C.site.txt
+            │   ├── 2B3C4D.yaml
+            │   ├── 2B3C4D.site.txt
             │   └── folder/
             │       └── structure/
-            │           └── b3C4D5E/
-            │               ├── info.yaml
-            │               └── site.txt
+            │           ├── 3C4D5E.yaml
+            │           └── 3C4D5E.site.txt
             ├── emptyfolder/
-            └── b4D5E6F/
-                ├── info.yaml
-                └── site.txt
+            ├── 4D5E6F.yaml
+            └── 4D5E6F.site.txt
 ```
 
 
@@ -110,7 +105,7 @@ Store all id hashes of all available bookmark folders sorted by recency from old
 Recency entails adding, modifying and fetching.
 Every hash id should be unique.
 
-Ideally, hashes should be short hex-values, 6 hex digits should suffice to reliably store all data.
+Hashes should be short hex-values. 6 hex digits should suffice to reliably store all data.
 
 Example:
 ```
@@ -121,7 +116,7 @@ b4D5E6F
 ```
 
 ### folders
-Store all available folders, but not bookmark folders, sorted by recency from old to most recent.
+Store all available folders, sorted by recency from old to most recent.
 Every folder is unique.
 Example:
 ```
@@ -141,11 +136,11 @@ mgmt
 py
 ```
 
-### b<hash>
-Store every info to a certain bookmark in such a folder.
+### <hash>.{yaml,site.txt}
+Store every info to a certain bookmark in such files.
 
-#### info.yaml
-Store all bookmark info in `info.yaml`.
+#### <hash>.yaml
+Store all bookmark info in `<hash>.yaml`.
 ```yaml
 name: A Nice Blog Post!
 url: https://andiweb.com/2020/02/28/a-nice-blogpost#even-nicer
@@ -158,7 +153,7 @@ comment: |
   The article was very nice and might help in doing x.
 ```
 
-#### site.txt
+#### <hash>.site.txt
 Store the scraped text of the bookmarked web page in this file for later full text search.
 ```
 A Nice Blog Post!
