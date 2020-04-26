@@ -29,9 +29,9 @@ Leave maintenance of folder structure to the user, i.e. leave empty folders unto
 - [ask for tags with fuzzy suggestions and 5 recent history choices]
 - [ask for markdown comment]
 - [ask for 1-5 star rating (keys: `1`, `2`, `3`, `4`, `5`, `<ENTER>` means no rating)]
-- create bookmark hash `<hash>`
-- add bookmark hash `<hash>` to file `ids` as most recent entry, i.e. add it to the end
-- store the bookmark info into `<hash>.yaml` and download the website's text to `<hash>.site.txt`
+- create bookmark id `<id>`
+- add bookmark id `<id>` to file `ids` as most recent entry, i.e. add it to the end
+- store the bookmark info into `<id>.yaml` and download the website's text to `<id>.site.txt`
 - `ctrl+<ENTER>` or `<ENTER>` is Ok/Continue, `<ESC>` is Abort
 
 
@@ -54,7 +54,7 @@ Leave maintenance of folder structure to the user, i.e. leave empty folders unto
 
 ## Maintain Bookmarks
 - to edit a bookmark, query a bookmark and select edit (press `e`).
-- drop into the bookmark's `<hash>.yaml` file with your set text editor.
+- drop into the bookmark's `<id>.yaml` file with your set text editor.
 
 - to move a bookmark, query a bookmark and select move (press `m`).
 - drop into a file explorer with the current bookmark folder open
@@ -64,7 +64,7 @@ Leave maintenance of folder structure to the user, i.e. leave empty folders unto
 ## Remove Bookmarks
 - query a bookmark and select delete (key: `d`)
 - remove the bookmark from the file `ids`
-- delete the bookmark files `<hash>.{yaml,site.txt}`
+- delete the bookmark files `<id>.{yaml,site.txt}`
 - keep possibly empty filesystem folders and entries in `folders` and `tags`, i.e. don't touch them
 
 
@@ -81,17 +81,17 @@ A `mysql` or `mongodb` database may make sense when implementing mobile apps.
         ├── tags
         └── bookmarks/
             ├── some/
-            │   ├── 1A2B3C.yaml
-            │   ├── 1A2B3C.site.txt
-            │   ├── 2B3C4D.yaml
-            │   ├── 2B3C4D.site.txt
+            │   ├── 1a2b3c.yaml
+            │   ├── 1a2b3c.site.txt
+            │   ├── 2b3c4d.yaml
+            │   ├── 2b3c4d.site.txt
             │   └── folder/
             │       └── structure/
-            │           ├── 3C4D5E.yaml
-            │           └── 3C4D5E.site.txt
+            │           ├── 3c4d5e.yaml
+            │           └── 3c4d5e.site.txt
             ├── emptyfolder/
-            ├── 4D5E6F.yaml
-            └── 4D5E6F.site.txt
+            ├── 4d5e6f.yaml
+            └── 4d5e6f.site.txt
 ```
 
 
@@ -101,18 +101,18 @@ A `mysql` or `mongodb` database may make sense when implementing mobile apps.
 See implementation.
 
 ### ids
-Store all id hashes of all available bookmark folders sorted by recency from old to most recent.
+Store all ids of all available bookmark folders sorted by recency from old to most recent.
 Recency entails adding, modifying and fetching.
-Every hash id should be unique.
+Every id should be unique.
 
-Hashes should be short hex-values. 6 hex digits should suffice to reliably store all data.
+Ids should be short alphanumeric strings. 6 characters should suffice to reliably store all data.
 
 Example:
 ```
-some/b1A2B3C
-some/b2B3C4D
-some/folder/structure/b3C4D5E
-b4D5E6F
+some/1a2b3c
+some/2b3c4d
+some/folder/structure/3c4d5e
+4x5y6z
 ```
 
 ### folders
@@ -136,11 +136,11 @@ mgmt
 py
 ```
 
-### <hash>.{yaml,site.txt}
+### <id>.{yaml,site.txt}
 Store every info to a certain bookmark in such files.
 
-#### <hash>.yaml
-Store all bookmark info in `<hash>.yaml`.
+#### <id>.yaml
+Store all bookmark info in `<id>.yaml`.
 ```yaml
 name: A Nice Blog Post!
 url: https://andiweb.com/2020/02/28/a-nice-blogpost#even-nicer
@@ -153,7 +153,7 @@ comment: |
   The article was very nice and might help in doing x.
 ```
 
-#### <hash>.site.txt
+#### <id>.site.txt
 Store the scraped text of the bookmarked web page in this file for later full text search.
 ```
 A Nice Blog Post!
@@ -193,7 +193,7 @@ Cover mobile use case first with a website. Later, consider a dedicated app.
 - read & write files & folders
 - iterate the file system
 - create & delete files & folders
-- hash function of a string
+- id function of a string
 - present a UI with focus
 - listen to keyboard input
 - invoke external commands with how-to-call-an-external-program-with-parameters
@@ -224,8 +224,6 @@ https://en.cppreference.com/w/cpp/regex
 
 Finding files in C++ may be done via std::filesystem:
 https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c
-
-For hashes in Cpp see: https://en.cppreference.com/w/cpp/utility/hash
 
 ## Getting the URL From the Browser
 

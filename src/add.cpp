@@ -15,9 +15,8 @@ author: andreasl
 #include <cstring>
 #include <experimental/filesystem>
 #include <fstream>
-#include <functional>
-#include <iomanip>
 #include <memory>
+#include <random>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -33,12 +32,17 @@ namespace bbm {
 
 namespace {
 
-/*Create a hash to a given string.*/
-static const std::string generate_hash(const std::string& str) {
-    static const std::hash<std::string> hash_function;
-    const size_t hash = hash_function(str) % 0xffffff;
+/*Create random id to a given string.*/
+static const std::string generate_id() {
     std::stringstream ss;
-    ss << std::setfill('0') << std::setw(6)  << std::hex << hash;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 35);
+    constexpr static const char alphanum[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+    for (int i = 0; i < 6; ++i) {
+        ss << alphanum[dis(gen)];
+    }
     return ss.str();
 }
 
@@ -110,8 +114,7 @@ bool save_bookmark(const Bookmark& bookmark, const AddSettings& settings, const 
         yaml << YAML::EndSeq << YAML::EndMap;
 
     /*write yaml*/
-    const std::string hash = generate_hash(bookmark.url + bookmark.created.str());
-    const std::string filename = hash + ".yaml";
+    const std::string filename = generate_id() + ".yaml";
     const fs::path file = bookmark_folder / filename;
     std::ofstream out(file);
     out << yaml.c_str();
