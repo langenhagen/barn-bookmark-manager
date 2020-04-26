@@ -9,9 +9,12 @@ author: andreasl
 #include "log.hpp"
 #include "x_copy_paste.hpp"
 
+#include "yaml-cpp/yaml.h"
+
 #include <chrono>
 #include <cstring>
 #include <experimental/filesystem>
+#include <fstream>
 #include <functional>
 #include <iomanip>
 #include <memory>
@@ -22,6 +25,8 @@ author: andreasl
 extern "C" {
 #include <xdo.h>
 }
+
+namespace fs = std::experimental::filesystem;
 
 namespace barn {
 namespace bbm {
@@ -39,8 +44,8 @@ static const std::string generate_hash(const std::string& str) {
 
 } // namespace
 
-/*Fetch the url of the focused Chrome top window.*/
-const std::string fetch_url() {
+/*Fetch the url and the website tile from the focused Chrome top window.*/
+bool fetch_url_and_title(std::string& url, std::string& title) {
     std::unique_ptr<xdo_t, decltype(&xdo_free)> xdo(xdo_new(nullptr), &xdo_free);
 
     Window win;
@@ -54,7 +59,7 @@ const std::string fetch_url() {
     constexpr const unsigned char chrome_win_suffix[17] = " - Google Chrome";
     if (std::memcmp(win_name + name_len - 16, chrome_win_suffix, 16)) {
         log(ERROR) << "Window \"" << win_name << "\" is not a Google Chrome window." << std::endl;
-        return "";
+        return false;
     }
 
     /*focus the chrome address bar*/
@@ -65,16 +70,17 @@ const std::string fetch_url() {
     xdo_send_keysequence_window(xdo.get(), win, "Control_L+c", 0);
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
 
-    return ::barn::x11::cp::get_text_from_clipboard();
+    url = ::barn::x11::cp::get_text_from_clipboard();
+    title = std::string(reinterpret_cast<const char*>(win_name));
+    return true;
 }
 
 /*Store Bookmark on disk.*/
-bool save_bookmark(const Bookmark& bookmark, const AddSettings& settings) {
-    namespace fs = std::experimental::filesystem;
+bool save_bookmark(const Bookmark& bookmark, const AddSettings& settings, const fs::path& subpath) {
 
-    const fs::path root_path = settings.bookmarks_root_path;
+    /*create bookmark folder*/
     const std::string hash = generate_hash(bookmark.url + bookmark.created.str());
-    fs::path bookmark_folder(root_path / hash);
+    fs::path bookmark_folder(settings.bookmarks_root_path / subpath / ("b" + hash));
     try {
         if (fs::exists(bookmark_folder)) {
             log(ERROR) << "Bookmark folder \"" << bookmark_folder << "\" does already exist."
@@ -83,11 +89,35 @@ bool save_bookmark(const Bookmark& bookmark, const AddSettings& settings) {
         }
         fs::create_directories(bookmark_folder);
     } catch (const std::exception& e) {
-        log(ERROR) << "Could not read or create directory \"" << root_path << "\"\n"
+        log(ERROR) << "Could not read or create directory \"" << bookmark_folder << "\"\n"
             << e.what() << std::endl;
         return false;
     }
 
+    /*create yaml*/
+    YAML::Emitter yaml;
+    yaml.SetIndent(4);
+    yaml << YAML::BeginMap
+        << YAML::Key << "name" << YAML::Value << bookmark.name
+        << YAML::Key << "url" << YAML::Value << bookmark.url
+        << YAML::Key << "created" << YAML::Value << bookmark.created.str()
+        << YAML::Key << "last_access" << YAML::Value << bookmark.last_access.str()
+        << YAML::Key << "rating" << YAML::Value << bookmark.rating
+        << YAML::Key << "comment" << YAML::Value << YAML::Literal << bookmark.comment
+        << YAML::Key << "tags" << YAML::Value << YAML::Flow << YAML::BeginSeq;
+        for( const std::string& tag : bookmark.tags) {
+            yaml << tag;
+        }
+        yaml << YAML::EndSeq << YAML::EndMap;
+
+    /*write yaml*/
+    const fs::path file = bookmark_folder / "info.yaml";
+    std::ofstream out(file);
+    out << yaml.c_str();
+    if (!out) {
+        log(ERROR) << "Could not write bookmark to file: " << file << std::endl;
+        return false;
+    }
     return true;
 }
 
