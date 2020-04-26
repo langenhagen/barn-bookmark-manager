@@ -31,14 +31,13 @@ static void load(const fs::path& path, AddSettings& settings) {
         {"ask_for_rating", AddBookmarkDialog::ask_for_rating},
         {"ask_for_tags", AddBookmarkDialog::ask_for_tags}
     };
-    const auto& sequence_node = node["add_bookmark_sequence"];
+    const auto& sequence_node(node["add_bookmark_sequence"]);
     for (const auto& node : sequence_node) {
         try {
             const auto dialog = str_to_dialog.at(node.as<std::string>());
-            settings.dialog_sequence.push_back(dialog);
+            settings.dialog_sequence.emplace_back(dialog);
         } catch (const std::out_of_range& e) {
-            log(WARN)
-                << "Warning: Unknown setting for add bookmark dialog \"" << node << "\"" << std::endl;
+            log(WARN) << "Unknown setting for add bookmark dialog \"" << node << "\"" << std::endl;
         }
     }
 }

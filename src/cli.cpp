@@ -9,6 +9,7 @@ author: andreasl
 #include <experimental/filesystem>
 #include <iostream>
 #include <string>
+#include <utility>
 
 namespace barn {
 namespace bbm {
@@ -30,20 +31,20 @@ Options parse_options(int argc, const char* argv[]) {
 
     const auto app_name = fs::path(argv[0]).filename().string();
     if (argc > 2) {
-        show_help(app_name);
+        show_help(std::move(app_name));
         exit(1);
     }
     if (argc == 1) {
         const fs::path path = fs::path(std::getenv("HOME"))
             / ".config" / "barn-bookmarks" / "settings.yaml";
-        return Options{path};
+        return Options{std::move(path)};
     }
     if (std::strcmp(argv[1], "--version") == 0 || std::strcmp(argv[1], "-v") == 0) {
-        show_version(app_name);
+        show_version(std::move(app_name));
         exit(0);
     }
     if (std::strcmp(argv[1], "--help") == 0 || std::strcmp(argv[1], "-h") == 0) {
-        show_help(app_name);
+        show_help(std::move(app_name));
         exit(0);
     }
     return Options{argv[1]};

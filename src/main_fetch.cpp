@@ -8,7 +8,7 @@ author: andreasl
 #include <iostream>
 
 int main(int argc, const char* argv[]) {
-    const auto options = ::barn::bbm::parse_options(argc,argv);
+    const auto options = ::barn::bbm::parse_options(argc, argv);
     ::barn::bbm::FetchSettings settings;
     ::barn::bbm::load_settings(options.settings_path, settings);
 

@@ -11,6 +11,7 @@ author: andreasl
 
 #include <iostream>
 #include <vector>
+#include <utility>
 
 int main(int argc, const char* argv[]) {
     const auto options = ::barn::bbm::parse_options(argc,argv);
@@ -27,22 +28,22 @@ int main(int argc, const char* argv[]) {
 
     std::string url;
     std::string title;
-    if( ! ::barn::bbm::fetch_url_and_title(url, title)) {
+    if( !::barn::bbm::fetch_url_and_title(url, title)) {
         ::barn::bbm::log(::barn::bbm::ERROR) << "Could not fetch url and title." << std::endl;
     }
 
     ::barn::bbm::Bookmark bookmark{
-        url,
+        std::move(url),
         ::barn::bbm::DateTime::now(),
         ::barn::bbm::DateTime::now(),
-        title,
+        std::move(title),
         0,
         {"hi", "there!"},
         "Here goes\na comment.\nJustfor you :)",
         nullptr
     };
 
-    ::barn::bbm::save_bookmark(bookmark, settings, "");
+    ::barn::bbm::save_bookmark(std::move(bookmark), settings, "");
 
     return 0;
 }
