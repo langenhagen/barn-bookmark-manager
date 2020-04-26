@@ -17,5 +17,5 @@ int main(int argc, const char* argv[]) {
         << "\n  editor: " << settings.editor
         << "\n  open-browser-command: " << settings.open_browser_command;
 
-    return 0;
+    return ::barn::bbm::exitcode::SUCCESS;
 }

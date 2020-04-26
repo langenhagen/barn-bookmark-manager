@@ -5,6 +5,7 @@ author: andreasl
 #pragma once
 
 #include "log.hpp"
+#include "cli.hpp"
 
 #include <yaml-cpp/yaml.h>
 
@@ -27,7 +28,7 @@ bool write_default_settings(const fs::path& path) {
     } catch (const std::exception& e) {
         log(ERROR) << "Could not create directory \"" << directory << "\":\n"
             << e.what() << std::endl;
-        exit(1);
+        exit(exitcode::SYSTEM_ERROR);
     }
     YAML::Node node;
     const auto bookmarks_path = directory / "bookmarks";
@@ -65,11 +66,11 @@ void load_settings(const fs::path& path, SettingsType& settings) {
             }
         } catch (const std::exception& e) {
             log(ERROR) << e.what() << std::endl;
-            exit(1);
+            exit(exitcode::SYSTEM_ERROR);
         }
     } catch (const YAML::Exception& e) {
         log(ERROR) << e.what() << std::endl;
-        exit(1);
+        exit(exitcode::SYSTEM_ERROR);
     }
 }
 

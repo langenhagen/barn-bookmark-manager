@@ -30,6 +30,7 @@ int main(int argc, const char* argv[]) {
     std::string title;
     if( !::barn::bbm::fetch_url_and_title(url, title)) {
         ::barn::bbm::log(::barn::bbm::ERROR) << "Could not fetch url and title." << std::endl;
+        exit(::barn::bbm::exitcode::WRONG_INPUT);
     }
 
     ::barn::bbm::Bookmark bookmark{
@@ -45,5 +46,5 @@ int main(int argc, const char* argv[]) {
 
     ::barn::bbm::save_bookmark(std::move(bookmark), settings, "");
 
-    return 0;
+    return ::barn::bbm::exitcode::SUCCESS;
 }

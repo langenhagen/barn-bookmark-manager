@@ -32,7 +32,7 @@ Options parse_options(int argc, const char* argv[]) {
     const auto app_name = fs::path(argv[0]).filename().string();
     if (argc > 2) {
         show_help(std::move(app_name));
-        exit(1);
+        exit(exitcode::WRONG_CLI_ARGUMENTS);
     }
     if (argc == 1) {
         const fs::path path = fs::path(std::getenv("HOME"))
@@ -41,11 +41,11 @@ Options parse_options(int argc, const char* argv[]) {
     }
     if (std::strcmp(argv[1], "--version") == 0 || std::strcmp(argv[1], "-v") == 0) {
         show_version(std::move(app_name));
-        exit(0);
+        exit(exitcode::SUCCESS);
     }
     if (std::strcmp(argv[1], "--help") == 0 || std::strcmp(argv[1], "-h") == 0) {
         show_help(std::move(app_name));
-        exit(0);
+        exit(exitcode::SUCCESS);
     }
     return Options{argv[1]};
 }
