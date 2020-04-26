@@ -44,7 +44,7 @@ int main(int argc, const char* argv[]) {
         nullptr
     };
 
-    ::barn::bbm::save_bookmark(std::move(bookmark), settings, "");
+    ::barn::bbm::save_bookmark(std::move(bookmark), settings.bookmarks_root_path / "subpath");
 
     return ::barn::bbm::exitcode::SUCCESS;
 }

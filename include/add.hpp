@@ -19,7 +19,7 @@ class Bookmark;
 bool fetch_url_and_title(std::string& url, std::string& title);
 
 /*Store Bookmark on disk.*/
-bool save_bookmark(const Bookmark& bookmark, const AddSettings&, const fs::path& subpath);
+bool save_bookmark(const Bookmark& bookmark, const fs::path& directory);
 
 } // namespace bbm
 } // namespace barn

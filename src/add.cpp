@@ -33,7 +33,7 @@ namespace bbm {
 namespace {
 
 /*Create random id to a given string.*/
-static const std::string generate_id() {
+const std::string generate_id() {
     std::stringstream ss;
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -43,6 +43,30 @@ static const std::string generate_id() {
         ss << alphanum[dis(gen)];
     }
     return ss.str();
+}
+
+/*Write Yaml to file.*/
+bool write(const YAML::Emitter& yaml, const fs::path& directory) {
+    const std::string filename = generate_id() + ".yaml";
+    const fs::path file = directory / filename;
+    try {
+        if (fs::exists(file)) {
+            log(WARN) << "Bookmark file " << file << " already exists. Writing with new id..."
+                << std::endl;
+            return write(yaml, directory);
+        }
+    } catch (const std::exception& e) {
+        log(ERROR) << "Could not read or create file " << file << "\n"
+            << e.what() << std::endl;
+        return false;
+    }
+    std::ofstream out(file);
+    out << yaml.c_str();
+    if (!out) {
+        log(ERROR) << "Could not write bookmark to file: " << file << std::endl;
+        return false;
+    }
+    return true;
 }
 
 } // namespace
@@ -79,16 +103,12 @@ bool fetch_url_and_title(std::string& url, std::string& title) {
 }
 
 /*Store Bookmark on disk.*/
-bool save_bookmark(const Bookmark& bookmark, const AddSettings& settings, const fs::path& subpath) {
-
+bool save_bookmark(const Bookmark& bookmark, const fs::path& directory) {
     /*create bookmark folder*/
-    fs::path bookmark_folder(settings.bookmarks_root_path / subpath);
     try {
-        if (!fs::exists(bookmark_folder)) {
-            fs::create_directories(bookmark_folder);
-        }
+        fs::create_directories(directory);
     } catch (const std::exception& e) {
-        log(ERROR) << "Could not read or create directory " << bookmark_folder << "\n"
+        log(ERROR) << "Could not read or create directory " << directory << "\n"
             << e.what() << std::endl;
         return false;
     }
@@ -109,26 +129,7 @@ bool save_bookmark(const Bookmark& bookmark, const AddSettings& settings, const 
         }
         yaml << YAML::EndSeq << YAML::EndMap;
 
-    /*write yaml*/
-    const std::string filename = generate_id() + ".yaml";
-    const fs::path file = bookmark_folder / filename;
-    try {
-        if (fs::exists(file)) {
-            log(ERROR) << "Bookmark under " << file << " already exists." << std::endl;
-            return false;
-        }
-    } catch (const std::exception& e) {
-        log(ERROR) << "Could not read or create file " << file << "\n"
-            << e.what() << std::endl;
-        return false;
-    }
-    std::ofstream out(file);
-    out << yaml.c_str();
-    if (!out) {
-        log(ERROR) << "Could not write bookmark to file: " << file << std::endl;
-        return false;
-    }
-    return true;
+    return write(yaml, directory);
 }
 
 } // namespace bbm
