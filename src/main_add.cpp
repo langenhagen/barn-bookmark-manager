@@ -8,6 +8,7 @@ author: andreasl
 #include "cli.hpp"
 #include "datetime.hpp"
 #include "log.hpp"
+#include "x11.hpp"
 
 #include <iostream>
 #include <vector>
@@ -45,6 +46,9 @@ int main(int argc, const char* argv[]) {
     };
 
     ::barn::bbm::save_bookmark(std::move(bookmark), settings.bookmarks_root_path / "subpath");
+
+    ::barn::bbm::ui::App app;
+    app.run();
 
     return ::barn::bbm::exitcode::SUCCESS;
 }
