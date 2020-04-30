@@ -4,14 +4,38 @@ author: andreasl
 */
 #pragma once
 
+#include <memory>
+#include <vector>
+
 #include <X11/Xlib.h>
 #include <X11/Xft/Xft.h>
 
 namespace barn {
 namespace bbm {
-namespace ui {
 
-/*Simple x11 window application for for text I/O.*/
+class Bookmark;
+
+namespace x11 {
+
+/*Represents dialogs.*/
+struct Dialog {
+
+    /*the bookmark*/
+    std::shared_ptr<Bookmark> bookmark;
+
+    Dialog(std::shared_ptr<Bookmark> bm);
+
+    /*Draw the dialog.*/
+    virtual void draw() = 0;
+
+    /*Handle key press events.*/
+    virtual int handle_key_press(XEvent& evt) = 0;
+
+    /*Handle key release events.*/
+    virtual int handle_key_release(XEvent& evt) = 0;
+};
+
+/*Simple single-window x11 application for dialog sequences.*/
 struct App {
     /*x11 essentials*/
     Display* display;
@@ -25,6 +49,10 @@ struct App {
     XftFont* font;
 
     /*application stuff*/
+    using DialogVector = std::vector<std::shared_ptr<Dialog>>;
+    DialogVector dialogs;
+    typeof(DialogVector::iterator) current_dialog;
+    constexpr static const float font_size = 16.0;
     unsigned int line_height;
 
     /*input stuff*/
@@ -49,9 +77,6 @@ struct App {
     /*Resize the window.*/
     void resize_window(int rows, int cols);
 
-    /*Draw the text.*/
-    void draw_text();
-
     /*Clear the view and redraw the app's elements.*/
     void redraw();
 
@@ -65,6 +90,6 @@ struct App {
     int run();
 };
 
-} // namespace ui
+} // namespace x11
 } // namespace bbm
 } // namespace barn

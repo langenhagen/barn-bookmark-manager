@@ -10,4 +10,5 @@ set(BBM_FETCH_SOURCES
     "src/fetch.cpp"
     "src/log.cpp"
     "src/x11.cpp"
+    "src/fetch_dialogs.cpp"
 )

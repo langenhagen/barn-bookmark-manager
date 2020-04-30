@@ -10,4 +10,5 @@ set(BBM_ADD_SOURCES
     "src/add.cpp"
     "src/log.cpp"
     "src/x11.cpp"
+    "src/add_dialogs.cpp"
 )

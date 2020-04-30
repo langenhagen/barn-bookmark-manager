@@ -4,27 +4,24 @@ author: andreasl
 */
 #include "x11.hpp"
 
+#include "bookmark.hpp"
 #include "log.hpp"
 
 #include <X11/Xlib.h>
 #include <X11/Xft/Xft.h>
 
 #include <chrono>
+#include <memory>
 #include <string>
 #include <thread>
 
-#include <iostream>
-
 namespace barn {
 namespace bbm {
-namespace ui {
+namespace x11 {
 
-namespace {
-
-/*UI font size.*/
-constexpr const float font_size = 16.0;
-
-} // namespace
+/*Constructor.*/
+Dialog::Dialog(std::shared_ptr<Bookmark> bm) : bookmark(bm)
+{}
 
 /*Constructor.*/
 App::App() {
@@ -55,11 +52,10 @@ App::App() {
         CWOverrideRedirect | CWBackPixel | CWEventMask,
         &attrs);
 
-    std::string win_name = "Barn's Bookmark Manager";
     XSetStandardProperties(
         this->display,
         this->win,
-        win_name.c_str(),
+        "Barn's Bookmark Manager",
         "",
         None,
         nullptr,
@@ -67,13 +63,13 @@ App::App() {
         nullptr);
 
     setup_xft_font();
-    resize_window(1, win_name.length());
 
     this->gc = XCreateGC(this->display, this->win, 0, 0);
     XClearWindow(this->display, this->win);
-    XMapRaised(this->display, this->win);
+    // XMapRaised(this->display, this->win);
 
     grab_keyboard();
+    // XUnmapWindow(this->display, this->win);
 }
 
 /*Desctructor.*/
@@ -140,38 +136,9 @@ void App::resize_window(int rows, int cols) {
         height);
 }
 
-/*Draw text.*/
-void App::draw_text() {
-    XRenderColor x_color = {65535, 65535, 65535, 65535};
-
-    XftColor xft_color;
-    XftColorAllocValue(
-        this->display,
-        DefaultVisual(this->display, this->screen),
-        DefaultColormap(this->display, this->screen),
-        &x_color,
-        &xft_color);
-
-        std::string text = "Barn's Bookmark Manager";
-        XftDrawString8(
-            this->xft_drawable,
-            &xft_color,
-            this->font,
-            0,
-            this->font->ascent,
-            (unsigned char*)text.c_str(),
-            text.length());
-    XftColorFree(
-        this->display,
-        DefaultVisual(this->display, 0),
-        DefaultColormap(this->display, 0),
-        &xft_color);
-}
-
 /*Clear the view and redraw the app's elements.*/
 void App::redraw() {
     XClearWindow(this->display, this->win);
-    draw_text();
 }
 
 /*Handle key press events.*/
@@ -183,11 +150,15 @@ int App::handle_key_press(XEvent& evt) {
 /*Handle key release events.*/
 int App::handle_key_release(XEvent& evt) {
     log(INFO) << "handle_key_release" << std::endl;
-    return 0;
+    return 1;
 }
 
 /*Run the application loop and exit with an error code.*/
 int App::run() {
+    XMapRaised(this->display, this->win);
+
+    // TODO show the dialogs
+
     XEvent evt;
     while(!XNextEvent(this->display, &evt)) {
         switch(evt.type) {
@@ -215,6 +186,6 @@ int App::run() {
     }
 }
 
-} // namespace ui
+} // namespace x11
 } // namespace bbm
 } // namespace barn
