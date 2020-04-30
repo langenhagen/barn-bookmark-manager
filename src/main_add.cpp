@@ -16,16 +16,7 @@ author: andreasl
 
 int main(int argc, const char* argv[]) {
     const auto options = ::barn::bbm::parse_options(argc,argv);
-    ::barn::bbm::AddSettings settings;
-    ::barn::bbm::load_settings(options.settings_path, settings);
-
-    std::cout << "settings:"
-        << "\n  bookmark-root-path: " << settings.bookmarks_root_path
-        << "\n  editor: " << settings.editor
-        << "\n  dialog_sequence: " << settings.dialog_sequence.size() << " items.";
-    for (const auto& dialog : settings.dialog_sequence) {
-        std::cout << "\n    " << (int)dialog;
-    }
+    auto settings = ::barn::bbm::load_settings(options.settings_path);
 
     std::string url;
     std::string title;
@@ -33,21 +24,14 @@ int main(int argc, const char* argv[]) {
         ::barn::bbm::log(::barn::bbm::ERROR) << "Could not fetch url and title." << std::endl;
         exit(::barn::bbm::exitcode::WRONG_INPUT);
     }
-
     ::barn::bbm::Bookmark bookmark{
         std::move(url),
         ::barn::bbm::DateTime::now(),
         ::barn::bbm::DateTime::now(),
-        std::move(title),
-        0,
-        {"hi", "there!"},
-        "Here goes\na comment.\nJustfor you :)",
-        nullptr
-    };
-
+        std::move(title)};
     ::barn::bbm::save_bookmark(std::move(bookmark), settings.bookmarks_root_path / "subpath");
 
-    ::barn::bbm::ui::App app;
+    ::barn::bbm::x11::App app;
     app.run();
 
     return ::barn::bbm::exitcode::SUCCESS;

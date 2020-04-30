@@ -29,7 +29,7 @@ struct AddSettings {
 };
 
 /*Load AddSettings from file.*/
-void load_settings(const fs::path& path, AddSettings& settings);
+AddSettings load_settings(const fs::path& path);
 
 } // namespace bbm
 } // namespace barn

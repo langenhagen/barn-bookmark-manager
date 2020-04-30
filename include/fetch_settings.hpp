@@ -20,7 +20,7 @@ struct FetchSettings {
 };
 
 /*Load FetchSettings from file.*/
-void load_settings(const fs::path& path, FetchSettings& settings);
+FetchSettings load_settings(const fs::path& path);
 
 } // namespace bbm
 } // namespace barn

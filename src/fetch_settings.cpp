@@ -16,16 +16,22 @@ namespace fs = std::experimental::filesystem;
 namespace barn {
 namespace bbm {
 
-static void load(const fs::path& path, FetchSettings& settings) {
+namespace {
+
+static FetchSettings load(const fs::path& path) {
     const YAML::Node& node = YAML::LoadFile(path.string());
+    FetchSettings settings;
     settings.bookmarks_root_path = node["bookmarks_root_path"].as<std::string>();
     settings.editor = node["editor"].as<std::string>();
     settings.open_browser_command = node["open_browser_command"].as<std::string>();
+    return settings;
 }
 
+} // namespace
+
 /*Load FetchSettings from file.*/
-void load_settings(const fs::path& path, FetchSettings& settings) {
-    load_settings<FetchSettings, load>(path, settings);
+FetchSettings load_settings(const fs::path& path) {
+    return load_settings<FetchSettings, load>(path);
 }
 
 } // namespace bbm

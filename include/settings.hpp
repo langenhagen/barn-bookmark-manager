@@ -52,17 +52,17 @@ bool write_default_settings(const fs::path& path) {
 }
 
 /*Common template function to load settings from file.*/
-template<class SettingsType, void LoadFunction(const fs::path&, SettingsType&)>
-void load_settings(const fs::path& path, SettingsType& settings) {
+template<class SettingsType, SettingsType LoadFunction(const fs::path&)>
+SettingsType load_settings(const fs::path& path) {
     try {
-        LoadFunction(path, settings);
+        return LoadFunction(path);
     } catch (const YAML::BadFile& e) {
         log(ERROR) << "Could not read file " << path << std::endl;
         try {
             if (!fs::exists(path)) {
                 log(INFO) << "Creating file " << path << "..." << std::endl;
                 write_default_settings(path);
-                LoadFunction(path, settings);
+                return LoadFunction(path);
             }
         } catch (const std::exception& e) {
             log(ERROR) << e.what() << std::endl;

@@ -18,9 +18,12 @@ namespace fs = std::experimental::filesystem;
 namespace barn {
 namespace bbm {
 
+namespace {
+
 /*Load AddSettings from file.*/
-static void load(const fs::path& path, AddSettings& settings) {
+static AddSettings load(const fs::path& path) {
     const YAML::Node& node = YAML::LoadFile(path.string());
+    AddSettings settings;
     settings.bookmarks_root_path = node["bookmarks_root_path"].as<std::string>();
     settings.editor = node["editor"].as<std::string>();
 
@@ -40,11 +43,14 @@ static void load(const fs::path& path, AddSettings& settings) {
             log(WARN) << "Unknown setting for add bookmark dialog \"" << node << "\"" << std::endl;
         }
     }
+    return settings;
 }
 
+} // namespace
+
 /*Load AddSettings from file.*/
-void load_settings(const fs::path& path, AddSettings& settings) {
-    load_settings<AddSettings, load>(path, settings);
+AddSettings load_settings(const fs::path& path) {
+    return load_settings<AddSettings, load>(path);
 }
 
 } // namespace bbm
