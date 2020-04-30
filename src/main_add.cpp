@@ -15,24 +15,22 @@ author: andreasl
 #include <utility>
 
 int main(int argc, const char* argv[]) {
-    const auto options = ::barn::bbm::parse_options(argc,argv);
-    auto settings = ::barn::bbm::load_settings(options.settings_path);
+    using namespace ::barn::bbm;
+
+    const auto options = parse_options(argc,argv);
+    auto settings = load_settings(options.settings_path);
 
     std::string url;
     std::string title;
-    if( !::barn::bbm::fetch_url_and_title(url, title)) {
-        ::barn::bbm::log(::barn::bbm::ERROR) << "Could not fetch url and title." << std::endl;
-        exit(::barn::bbm::exitcode::WRONG_INPUT);
+    if( !fetch_url_and_title(url, title)) {
+        log(ERROR) << "Could not fetch url and title." << std::endl;
+        exit(exitcode::WRONG_INPUT);
     }
-    ::barn::bbm::Bookmark bookmark{
-        std::move(url),
-        ::barn::bbm::DateTime::now(),
-        ::barn::bbm::DateTime::now(),
-        std::move(title)};
-    ::barn::bbm::save_bookmark(std::move(bookmark), settings.bookmarks_root_path / "subpath");
+    Bookmark bookmark{std::move(url), DateTime::now(), DateTime::now(), std::move(title)};
+    save_bookmark(std::move(bookmark), settings.bookmarks_root_path / "subpath");
 
-    ::barn::bbm::x11::App app;
+    x11::App app;
     app.run();
 
-    return ::barn::bbm::exitcode::SUCCESS;
+    return exitcode::SUCCESS;
 }

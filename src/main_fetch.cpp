@@ -8,8 +8,10 @@ author: andreasl
 #include <iostream>
 
 int main(int argc, const char* argv[]) {
-    const auto options = ::barn::bbm::parse_options(argc, argv);
-    auto settings = ::barn::bbm::load_settings(options.settings_path);
+    using namespace ::barn::bbm;
 
-    return ::barn::bbm::exitcode::SUCCESS;
+    const auto options = parse_options(argc, argv);
+    auto settings = load_settings(options.settings_path);
+
+    return exitcode::SUCCESS;
 }
