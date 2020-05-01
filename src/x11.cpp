@@ -28,29 +28,8 @@ App::App() {
     this->display = XOpenDisplay(nullptr);
     this->screen = DefaultScreen(this->display);
     this->root_win = RootWindow(this->display, this->screen);
-
-    XSetWindowAttributes attrs;
-    attrs.override_redirect = True;
-    attrs.background_pixel = 0x222222;
-    attrs.event_mask =
-        ExposureMask
-        | KeyPressMask
-        | KeyReleaseMask
-        | VisibilityChangeMask;
-
-    this->win = XCreateWindow(
-        this->display,
-        this->root_win,
-        1,
-        1,
-        1,
-        1,
-        0,
-        CopyFromParent,
-        CopyFromParent,
-        CopyFromParent,
-        CWOverrideRedirect | CWBackPixel | CWEventMask,
-        &attrs);
+    this->win = setup_window();
+    this->gc = XCreateGC(this->display, this->win, 0, 0);
 
     XSetStandardProperties(
         this->display,
@@ -63,13 +42,6 @@ App::App() {
         nullptr);
 
     setup_xft_font();
-
-    this->gc = XCreateGC(this->display, this->win, 0, 0);
-    XClearWindow(this->display, this->win);
-    // XMapRaised(this->display, this->win);
-
-    grab_keyboard();
-    // XUnmapWindow(this->display, this->win);
 }
 
 /*Desctructor.*/
@@ -77,6 +49,32 @@ App::~App() {
     XFreeGC(this->display, this->gc);
     XDestroyWindow(this->display, this->win);
     XCloseDisplay(this->display);
+}
+
+/*Setup x11 window.*/
+Window App::setup_window() {
+    XSetWindowAttributes attrs;
+    attrs.override_redirect = True;
+    attrs.background_pixel = 0x222222;
+    attrs.event_mask =
+        ExposureMask
+        | KeyPressMask
+        | KeyReleaseMask
+        | VisibilityChangeMask;
+
+    return XCreateWindow(
+        this->display,
+        this->root_win,
+        1,
+        1,
+        1,
+        1,
+        0,
+        CopyFromParent,
+        CopyFromParent,
+        CopyFromParent,
+        CWOverrideRedirect | CWBackPixel | CWEventMask,
+        &attrs);
 }
 
 /*Specify and load the xft font.*/

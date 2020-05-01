@@ -68,6 +68,9 @@ struct App {
 
     /*methods*/
 
+    /*Setup x11 window.*/
+    Window setup_window();
+
     /*Specify and load the xft font.*/
     void setup_xft_font();
 
