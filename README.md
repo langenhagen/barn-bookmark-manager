@@ -69,7 +69,6 @@ maximize flexibility.
 - adjust .clang-format
 - adjust .gitignore
 - implement functionality
-- meaningful exit codes, maybe from enum
 - consider cleanup() function for x11 and stuff prior to exit
 - add an optimized Release build
 - adjust THIRD_PARTY
