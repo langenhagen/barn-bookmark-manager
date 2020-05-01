@@ -11,7 +11,7 @@ int main(int argc, const char* argv[]) {
     using namespace ::barn::bbm;
 
     const auto options = parse_options(argc, argv);
-    auto settings = load_settings(options.settings_path);
+    const auto settings = load_settings(options.settings_path);
 
     return exitcode::SUCCESS;
 }
