@@ -4,13 +4,23 @@ author: andreasl
 */
 #include "fetch.hpp"
 
-#include "fetch_settings.hpp"
-
 namespace barn {
 namespace bbm {
 
-FetchBookmarkApp::FetchBookmarkApp(const FetchSettings& s) : settings(s)
+SearchBookmarkDialog::SearchBookmarkDialog(x11::App& app) : x11::Dialog(app)
 {}
+
+void SearchBookmarkDialog::draw() {
+    // TODO
+}
+int SearchBookmarkDialog::handle_key_press(XEvent& evt) {
+    // TODO
+    return 0;
+}
+int SearchBookmarkDialog::handle_key_release(XEvent& evt) {
+    // TODO
+    return 0;
+}
 
 } // namespace bbm
 } // namespace barn

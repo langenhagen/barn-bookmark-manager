@@ -8,7 +8,6 @@ author: andreasl
 #include "cli.hpp"
 #include "datetime.hpp"
 #include "log.hpp"
-#include "x_app.hpp"
 
 #include <utility>
 #include <vector>
@@ -17,9 +16,9 @@ int main(int argc, const char* argv[]) {
     using namespace ::barn::bbm;
 
     const auto options = parse_options(argc,argv);
-    const auto settings = load_settings(options.settings_path);
+    auto settings = load_settings(options.settings_path);
 
-    x11::App app;
+    x11::App app(settings);
     app.run();
 
     return exitcode::SUCCESS;

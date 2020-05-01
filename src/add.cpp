@@ -4,7 +4,6 @@ author: andreasl
 */
 #include "add.hpp"
 
-#include "add_settings.hpp"
 #include "bookmark.hpp"
 #include "log.hpp"
 #include "x_app.hpp"
@@ -131,10 +130,7 @@ bool save_bookmark(const Bookmark& bookmark, const fs::path& directory) {
     return write(yaml, directory);
 }
 
-AddBookmarkApp::AddBookmarkApp(const AddSettings& s) : settings(s)
-{}
-
-AddCommentDialog::AddCommentDialog(x11::App& app) : Dialog(app)
+AddCommentDialog::AddCommentDialog(x11::App& app) : x11::Dialog(app)
 {}
 
 void AddCommentDialog::draw() {
@@ -144,12 +140,13 @@ int AddCommentDialog::handle_key_press(XEvent& evt) {
     // TODO
     return 0;
 }
+
 int AddCommentDialog::handle_key_release(XEvent& evt) {
     // TODO
     return 0;
 }
 
-AddPathDialog::AddPathDialog(x11::App& app) : Dialog(app)
+AddPathDialog::AddPathDialog(x11::App& app) : x11::Dialog(app)
 {}
 
 void AddPathDialog::draw() {
@@ -165,7 +162,7 @@ int AddPathDialog::handle_key_release(XEvent& evt) {
     return 0;
 }
 
-AddRatingDialog::AddRatingDialog(x11::App& app) : Dialog(app)
+AddRatingDialog::AddRatingDialog(x11::App& app) : x11::Dialog(app)
 {}
 
 void AddRatingDialog::draw() {
@@ -182,7 +179,7 @@ int AddRatingDialog::handle_key_release(XEvent& evt) {
     return 0;
 }
 
-AddTagsDialog::AddTagsDialog(x11::App& app) : Dialog(app)
+AddTagsDialog::AddTagsDialog(x11::App& app) : x11::Dialog(app)
 {}
 
 void AddTagsDialog::draw() {

@@ -4,17 +4,16 @@ author: andreasl
 */
 #pragma once
 
-#include "fetch_settings.hpp"
 #include "x_app.hpp"
 
 namespace barn {
 namespace bbm {
 
-/*Fetch bookmark x11 window application.*/
-struct FetchBookmarkApp : x11::App {
-    FetchSettings settings;  /*Application settings.*/
-
-    FetchBookmarkApp(const FetchSettings& settings); /*Constructor.*/
+struct SearchBookmarkDialog : x11::Dialog {
+    SearchBookmarkDialog(x11::App& app);
+    void draw();
+    int handle_key_press(XEvent& evt);
+    int handle_key_release(XEvent& evt);
 };
 
 } // namespace bbm

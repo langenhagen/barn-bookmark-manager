@@ -14,7 +14,7 @@ namespace barn {
 namespace bbm {
 
 /*Dialogues for the add bookmark application flow.*/
-enum class AddBookmarkDialog {
+enum class Dialog {
     ask_for_comment  /*bookmark comment dialog*/,
     ask_for_path  /*bookmark folder dialog*/,
     ask_for_rating  /*bookmark rating dialog*/,
@@ -22,16 +22,16 @@ enum class AddBookmarkDialog {
 };
 
 /*Settings for the BBM Add app.*/
-struct AddSettings {
-    using DialogVector = std::vector<AddBookmarkDialog>;
+struct Settings {
+    using DialogVector = std::vector<Dialog>;
 
     fs::path bookmarks_root_path;  /*Root directory to the bookmarks.*/
     std::string editor;  /*Text editor to drop in for modification of bookmarks.*/
     DialogVector dialog_sequence;  /*Ordered selection of applied dialogS*/
 };
 
-/*Load AddSettings from file.*/
-AddSettings load_settings(const fs::path& path);
+/*Load Settings from file.*/
+Settings load_settings(const fs::path& path);
 
 } // namespace bbm
 } // namespace barn
