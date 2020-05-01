@@ -29,7 +29,7 @@ enum class Action {
 
 /*Represents dialogs.*/
 struct Dialog {
-    App& app;  /*Enclosing application*/
+    App& app;  /*Enclosing application.*/
 
     Dialog(App& app);  /*Constructor.*/
     virtual void draw() = 0;  /*Draw the window.*/
