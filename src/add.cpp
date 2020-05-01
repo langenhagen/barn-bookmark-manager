@@ -8,6 +8,7 @@ author: andreasl
 #include "bookmark.hpp"
 #include "log.hpp"
 #include "x_copy_paste.hpp"
+#include "x11.hpp"
 
 #include "yaml-cpp/yaml.h"
 
@@ -128,6 +129,72 @@ bool save_bookmark(const Bookmark& bookmark, const fs::path& directory) {
         yaml << YAML::EndSeq << YAML::EndMap;
 
     return write(yaml, directory);
+}
+
+AddBookmarkApp::AddBookmarkApp(const AddSettings& s) : settings(s)
+{}
+
+AddCommentDialog::AddCommentDialog(x11::App& app) : Dialog(app)
+{}
+
+void AddCommentDialog::draw() {
+    // TODO
+}
+int AddCommentDialog::handle_key_press(XEvent& evt) {
+    // TODO
+    return 0;
+}
+int AddCommentDialog::handle_key_release(XEvent& evt) {
+    // TODO
+    return 0;
+}
+
+AddPathDialog::AddPathDialog(x11::App& app) : Dialog(app)
+{}
+
+void AddPathDialog::draw() {
+    // TODO
+}
+int AddPathDialog::handle_key_press(XEvent& evt) {
+    // TODO
+    return 0;
+}
+
+int AddPathDialog::handle_key_release(XEvent& evt) {
+    // TODO
+    return 0;
+}
+
+AddRatingDialog::AddRatingDialog(x11::App& app) : Dialog(app)
+{}
+
+void AddRatingDialog::draw() {
+    // TODO
+}
+
+int AddRatingDialog::handle_key_press(XEvent& evt) {
+    // TODO
+    return 0;
+}
+
+int AddRatingDialog::handle_key_release(XEvent& evt) {
+    // TODO
+    return 0;
+}
+
+AddTagsDialog::AddTagsDialog(x11::App& app) : Dialog(app)
+{}
+
+void AddTagsDialog::draw() {
+    // TODO
+}
+
+int AddTagsDialog::handle_key_press(XEvent& evt) {
+    // TODO
+}
+
+int AddTagsDialog::handle_key_release(XEvent& evt) {
+    // TODO
 }
 
 } // namespace bbm
