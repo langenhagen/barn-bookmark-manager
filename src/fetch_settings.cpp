@@ -29,7 +29,6 @@ static FetchSettings load(const fs::path& path) {
 
 } // namespace
 
-/*Load FetchSettings from file.*/
 FetchSettings load_settings(const fs::path& path) {
     return load_settings<FetchSettings, load>(path);
 }

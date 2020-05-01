@@ -24,7 +24,6 @@ std::ostream null_stream(&null_buffer);
 
 } // namespace
 
-/* Write a log message to console.*/
 std::ostream& log(const Severity level) {
 #ifdef BBM_ENABLE_LOGGING
     if (level == Severity::INFO) {

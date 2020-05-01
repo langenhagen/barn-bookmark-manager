@@ -71,7 +71,6 @@ bool write(const YAML::Emitter& yaml, const fs::path& directory) {
 
 } // namespace
 
-/*Fetch the url and the website tile from the focused Chrome top window.*/
 bool fetch_url_and_title(std::string& url, std::string& title) {
     std::unique_ptr<xdo_t, decltype(&xdo_free)> xdo(xdo_new(nullptr), &xdo_free);
 
@@ -102,7 +101,6 @@ bool fetch_url_and_title(std::string& url, std::string& title) {
     return true;
 }
 
-/*Store Bookmark on disk.*/
 bool save_bookmark(const Bookmark& bookmark, const fs::path& directory) {
     /*create bookmark folder*/
     try {

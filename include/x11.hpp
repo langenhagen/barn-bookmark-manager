@@ -12,85 +12,51 @@ author: andreasl
 
 namespace barn {
 namespace bbm {
-
 namespace x11 {
 
-class App;
+struct App;
 
 /*Represents dialogs.*/
 struct Dialog {
+    App& app;  /*Surrounding application.*/
 
-    /*The surrounding app.*/
-    App& app;
+    Dialog(App& app);  /*Constructor.*/
 
-    Dialog(App& app);
-
-    /*Draw the dialog.*/
-    virtual void draw() = 0;
-
-    /*Handle key press events.*/
-    virtual int handle_key_press(XEvent& evt) = 0;
-
-    /*Handle key release events.*/
-    virtual int handle_key_release(XEvent& evt) = 0;
+    virtual void draw() = 0;  /*Draw the window.*/
+    virtual int handle_key_press(XEvent& evt) = 0;  /*Handle key press events.*/
+    virtual int handle_key_release(XEvent& evt) = 0;  /*Handle key release events.*/
 };
 
 /*Simple single-window x11 application for dialog sequences.*/
 struct App {
-    /*x11 essentials*/
-    Display* display;
-    int screen;
-    Window root_win;
-    Window win;
-    GC gc;
-
-    /*Xft stuff*/
-    XftDraw* xft_drawable;
-    XftFont* font;
-
-    /*application stuff*/
     using DialogVector = std::vector<std::shared_ptr<Dialog>>;
-    DialogVector dialogs;
-    DialogVector::iterator::iterator_type dialog_it;
-    constexpr static const float font_size = 16.0;
-    unsigned int line_height;
+    using DialogVectorIter = DialogVector::iterator::iterator_type;
 
-    /*input stuff*/
-    bool is_ctrl_pressed = false;
+    Display* display;  /*X11 display.*/
+    int screen;  /*X11 screen number.*/
+    Window root_win;  /*X11 root window.*/
+    Window win;  /*X11 application window.*/
+    GC gc;  /*X11 graphics context*/
+    XftDraw* xft_drawable;  /*Xft text drawable.*/
+    XftFont* font;   /*Xft text font.*/
+    constexpr static const float font_size = 16.0;  /*Font size.*/
+    unsigned int line_height;  /*Font-dependent line height*/
+    DialogVector dialogs;  /*Application Dialog list*/
+    DialogVectorIter dialog_it;  /*Current application dialog.*/
 
-    /*constructors & destructor*/
+    bool is_ctrl_pressed = false;  /*Specifies if a ctrl button is pressed.*/
 
-    /*Constructor.*/
-    App();
+    App();  /*Constructor.*/
+    ~App();  /*Destructor.*/
 
-    /*Desctructor.*/
-    ~App();
-
-    /*methods*/
-
-    /*Setup x11 window.*/
-    Window setup_window();
-
-    /*Specify and load the xft font.*/
-    void setup_xft_font();
-
-    /*Attempt to grab the keyboard.*/
-    int grab_keyboard();
-
-    /*Resize the window.*/
-    void resize_window(int rows, int cols);
-
-    /*Clear the view and redraw the app's elements.*/
-    void redraw();
-
-    /*Handle key press events.*/
-    int handle_key_press(XEvent& evt);
-
-    /*Handle key release events.*/
-    int handle_key_release(XEvent& evt);
-
-    /*Run the application loop and exit with an error code.*/
-    int run();
+    Window setup_window();  /*Create an x11 window.*/
+    void setup_xft_font();  /*Setup Xft and font related variables.*/
+    int grab_keyboard();  /*Grab keyboard focus.*/
+    void resize_window(int rows, int cols);  /*Resize the application window.*/
+    void redraw();  /*Clean redraw the window.*/
+    int handle_key_press(XEvent& evt);  /*Handle key press events.*/
+    int handle_key_release(XEvent& evt);  /*Handle key release events.*/
+    int run();  /*.Start and run the application.*/
 };
 
 } // namespace x11

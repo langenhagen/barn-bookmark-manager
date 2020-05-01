@@ -22,7 +22,7 @@ constexpr const int WRONG_INPUT = 4;
 
 /*Representation of the app's command line options.*/
 struct Options {
-    fs::path settings_path;  /*path to the settings file*/
+    fs::path settings_path;  /*Path to the settings file.*/
 };
 
 /*Parse command line options.*/

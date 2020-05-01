@@ -14,7 +14,6 @@ author: andreasl
 namespace barn {
 namespace bbm {
 
-/*Print a help message to stdout.*/
 void show_help(const std::string& app_name) {
     std::cout << "Usage:\n" << app_name << " <path-to-settings>" << std::endl;
 }
@@ -25,7 +24,6 @@ void show_version(const std::string& app_name) {
     std::cout << app_name << " version: " << version << " build: " << build_timestamp << std::endl;
 }
 
-/*Parse command line options.*/
 Options parse_options(int argc, const char* argv[]) {
     namespace fs = std::experimental::filesystem;
 

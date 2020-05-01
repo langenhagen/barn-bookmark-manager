@@ -12,11 +12,11 @@ namespace bbm {
 
 /*Simple datetime structure that can parse and output simple datetime strings.*/
 struct DateTime {
-    int year;           /*4 digit year, e.g. 2020.*/
-    int month;          /*Number of mont in [1, 12].*/
-    int day_of_month;   /*Number of day in [1, 31].*/
-    int hour;           /*Hour of day in 24-hours in [0, 23].*/
-    int minute;         /*Minute of hour in [0, 59].*/
+    int year;  /*4 digit year, e.g. 2020.*/
+    int month;  /*Number of mont in [1, 12].*/
+    int day_of_month;  /*Number of day in [1, 31].*/
+    int hour;  /*Hour of day in 24-hours in [0, 23].*/
+    int minute;  /*Minute of hour in [0, 59].*/
 
     /*Constructor*/
     explicit DateTime(int year_, int month_, int day_of_month_, int hour_ = 0, int minute_ = 0);

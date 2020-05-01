@@ -12,18 +12,15 @@ author: andreasl
 namespace barn {
 namespace bbm {
 
-/*Constructor*/
 DateTime::DateTime(int year_, int month_, int day_of_month_, int hour_, int minute_)
     : year(year_), month(month_), day_of_month(day_of_month_), hour(hour_), minute(minute_)
 {}
 
-/*Constructor from tm.*/
 DateTime::DateTime(const std::tm& tm)
     : year(tm.tm_year + 1900), month(tm.tm_mon + 1), day_of_month(tm.tm_mday),
     hour(tm.tm_hour), minute(tm.tm_min)
 {}
 
-/*Constructor from string.*/
 DateTime::DateTime(const std::string& str, const char* fmt) {
     std::stringstream ss(str);
     std::tm tm;
@@ -36,14 +33,12 @@ DateTime::DateTime(const std::string& str, const char* fmt) {
     this->minute = tm.tm_min;
 }
 
-/*Create a DateTime object representing the current date & time.*/
 DateTime DateTime::now() {
     const time_t now = time(0);
     const std::tm* const local_time = std::localtime(&now);
     return DateTime(*local_time);
 }
 
-/*Convert to std::tm struct.*/
 std::tm DateTime::tm() const {
     std::tm tm;
     tm.tm_year = this->year - 1900;
@@ -54,13 +49,11 @@ std::tm DateTime::tm() const {
     return tm;
 }
 
-/*Convert to c string.*/
 void DateTime::c_str(char* str, const size_t max_size, const char* fmt) const {
     std::tm tm(this->tm());
     std::strftime(str, max_size, fmt, &tm);
 }
 
-/*Convert to string.*/
 std::string DateTime::str(const char* fmt) const {
     char dt_c_str[255];
     this->c_str(dt_c_str, sizeof(dt_c_str), fmt);

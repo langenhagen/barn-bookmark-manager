@@ -16,7 +16,7 @@ enum Severity {
     ERROR
 };
 
-/* Write a log message.*/
+/* Write a log message to console.*/
 std::ostream& log(const Severity level);
 
 } // namespace bbm

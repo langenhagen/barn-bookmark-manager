@@ -19,11 +19,9 @@ namespace barn {
 namespace bbm {
 namespace x11 {
 
-/*Constructor.*/
 Dialog::Dialog(App& application) : app(application)
 {}
 
-/*Constructor.*/
 App::App() {
     this->display = XOpenDisplay(nullptr);
     this->screen = DefaultScreen(this->display);
@@ -44,14 +42,12 @@ App::App() {
     setup_xft_font();
 }
 
-/*Desctructor.*/
 App::~App() {
     XFreeGC(this->display, this->gc);
     XDestroyWindow(this->display, this->win);
     XCloseDisplay(this->display);
 }
 
-/*Setup x11 window.*/
 Window App::setup_window() {
     XSetWindowAttributes attrs;
     attrs.override_redirect = True;
@@ -77,7 +73,6 @@ Window App::setup_window() {
         &attrs);
 }
 
-/*Specify and load the xft font.*/
 void App::setup_xft_font() {
     this->xft_drawable = XftDrawCreate(
         this->display,
@@ -93,13 +88,12 @@ void App::setup_xft_font() {
         "monospace",
         XFT_SIZE,
         XftTypeDouble,
-        font_size,
+        this->font_size,
         nullptr);
 
     this->line_height = this->font->ascent + this->font->descent;
 }
 
-/*Attempt to grab the keyboard.*/
 int App::grab_keyboard() {
     /*try to grab keyboard 1000 times.
     We may have to wait for another process to ungrab.*/
@@ -120,7 +114,6 @@ int App::grab_keyboard() {
     return 1;
 }
 
-/*Resize the window.*/
 void App::resize_window(int rows, int cols) {
     const Screen* const screen DefaultScreenOfDisplay(this->display);
     const auto width = this->font->max_advance_width * cols;
@@ -134,24 +127,20 @@ void App::resize_window(int rows, int cols) {
         height);
 }
 
-/*Clear the view and redraw the app's elements.*/
 void App::redraw() {
     XClearWindow(this->display, this->win);
 }
 
-/*Handle key press events.*/
 int App::handle_key_press(XEvent& evt) {
     log(INFO) << "handle_key_press" << std::endl;
     return 1;
 }
 
-/*Handle key release events.*/
 int App::handle_key_release(XEvent& evt) {
     log(INFO) << "handle_key_release" << std::endl;
     return 1;
 }
 
-/*Run the application loop and exit with an error code.*/
 int App::run() {
     XMapRaised(this->display, this->win);
 

@@ -48,7 +48,6 @@ static AddSettings load(const fs::path& path) {
 
 } // namespace
 
-/*Load AddSettings from file.*/
 AddSettings load_settings(const fs::path& path) {
     return load_settings<AddSettings, load>(path);
 }
