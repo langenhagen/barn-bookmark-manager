@@ -2,10 +2,8 @@
 
 author: andreasl
 */
-#include "fetch_settings.hpp"
 #include "cli.hpp"
-
-#include <iostream>
+#include "fetch_settings.hpp"
 
 int main(int argc, const char* argv[]) {
     using namespace ::barn::bbm;

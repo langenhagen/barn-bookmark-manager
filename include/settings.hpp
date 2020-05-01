@@ -4,8 +4,8 @@ author: andreasl
 */
 #pragma once
 
-#include "log.hpp"
 #include "cli.hpp"
+#include "log.hpp"
 
 #include <yaml-cpp/yaml.h>
 

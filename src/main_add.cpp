@@ -10,9 +10,8 @@ author: andreasl
 #include "log.hpp"
 #include "x_app.hpp"
 
-#include <iostream>
-#include <vector>
 #include <utility>
+#include <vector>
 
 int main(int argc, const char* argv[]) {
     using namespace ::barn::bbm;

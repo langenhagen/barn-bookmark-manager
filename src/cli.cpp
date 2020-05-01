@@ -3,6 +3,7 @@
 author: andreasl
 */
 #include "cli.hpp"
+
 #include "version_info.hpp"
 
 #include <cstring>

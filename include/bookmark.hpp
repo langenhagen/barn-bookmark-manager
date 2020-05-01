@@ -6,8 +6,8 @@ author: andreasl
 
 #include "datetime.hpp"
 
-#include <string>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace barn {
