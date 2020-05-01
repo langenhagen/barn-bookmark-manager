@@ -12,8 +12,8 @@ namespace fs = std::experimental::filesystem;
 namespace barn {
 namespace bbm {
 
-class AddSettings;
-class Bookmark;
+struct AddSettings;
+struct Bookmark;
 
 /*Fetch the url and the website tile from the focused Chrome top window.*/
 bool fetch_url_and_title(std::string& url, std::string& title);
