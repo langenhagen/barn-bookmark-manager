@@ -5,7 +5,7 @@ author: andreasl
 #pragma once
 
 #include "fetch_settings.hpp"
-#include "x11.hpp"
+#include "x_app.hpp"
 
 namespace barn {
 namespace bbm {

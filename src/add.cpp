@@ -8,7 +8,7 @@ author: andreasl
 #include "bookmark.hpp"
 #include "log.hpp"
 #include "x_copy_paste.hpp"
-#include "x11.hpp"
+#include "x_app.hpp"
 
 #include "yaml-cpp/yaml.h"
 

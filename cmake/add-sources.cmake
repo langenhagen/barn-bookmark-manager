@@ -9,5 +9,5 @@ set(BBM_ADD_SOURCES
     "src/datetime.cpp"
     "src/add.cpp"
     "src/log.cpp"
-    "src/x11.cpp"
+    "src/x_app.cpp"
 )

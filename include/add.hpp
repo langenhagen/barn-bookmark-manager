@@ -5,7 +5,7 @@ author: andreasl
 #pragma once
 
 #include "add_settings.hpp"
-#include "x11.hpp"
+#include "x_app.hpp"
 
 #include <experimental/filesystem>
 #include <memory>

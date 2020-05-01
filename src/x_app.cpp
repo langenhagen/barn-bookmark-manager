@@ -1,8 +1,8 @@
-/* Implementation for x11.hpp.
+/* Implementation for x_app.hpp.
 
 author: andreasl
 */
-#include "x11.hpp"
+#include "x_app.hpp"
 
 #include "bookmark.hpp"
 #include "log.hpp"

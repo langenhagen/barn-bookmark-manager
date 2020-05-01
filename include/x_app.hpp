@@ -1,4 +1,4 @@
-/* Common x11 gui code.
+/* Common x11 application code.
 
 author: andreasl
 */
