@@ -13,33 +13,31 @@ author: andreasl
 namespace barn {
 namespace bbm {
 
-class Bookmark;
-
 namespace x11 {
 
 struct AddCommentDialog : Dialog {
-    AddCommentDialog(std::shared_ptr<Bookmark> bookmark);
+    AddCommentDialog(App& app);
     void draw();
     int handle_key_press(XEvent& evt);
     int handle_key_release(XEvent& evt);
 };
 
 struct AddPathDialog : Dialog {
-    AddPathDialog(std::shared_ptr<Bookmark> bookmark);
+    AddPathDialog(App& app);
     void draw();
     int handle_key_press(XEvent& evt);
     int handle_key_release(XEvent& evt);
 };
 
 struct AddRatingDialog : Dialog {
-    AddRatingDialog(std::shared_ptr<Bookmark> bookmark);
+    AddRatingDialog(App& app);
     void draw();
     int handle_key_press(XEvent& evt);
     int handle_key_release(XEvent& evt);
 };
 
 struct AddTagsDialog : Dialog {
-    AddTagsDialog(std::shared_ptr<Bookmark> bookmark);
+    AddTagsDialog(App& app);
     void draw();
     int handle_key_press(XEvent& evt);
     int handle_key_release(XEvent& evt);

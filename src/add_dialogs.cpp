@@ -15,7 +15,7 @@ namespace barn {
 namespace bbm {
 namespace x11 {
 
-AddCommentDialog::AddCommentDialog(std::shared_ptr<Bookmark> bookmark) : Dialog(bookmark)
+AddCommentDialog::AddCommentDialog(App& app) : Dialog(app)
 {}
 
 void AddCommentDialog::draw() {
@@ -30,7 +30,7 @@ int AddCommentDialog::handle_key_release(XEvent& evt) {
     return 0;
 }
 
-AddPathDialog::AddPathDialog(std::shared_ptr<Bookmark> bookmark) : Dialog(bookmark)
+AddPathDialog::AddPathDialog(App& app) : Dialog(app)
 {}
 
 void AddPathDialog::draw() {
@@ -46,7 +46,7 @@ int AddPathDialog::handle_key_release(XEvent& evt) {
     return 0;
 }
 
-AddRatingDialog::AddRatingDialog(std::shared_ptr<Bookmark> bookmark) : Dialog(bookmark)
+AddRatingDialog::AddRatingDialog(App& app) : Dialog(app)
 {}
 
 void AddRatingDialog::draw() {
@@ -63,7 +63,7 @@ int AddRatingDialog::handle_key_release(XEvent& evt) {
     return 0;
 }
 
-AddTagsDialog::AddTagsDialog(std::shared_ptr<Bookmark> bookmark) : Dialog(bookmark)
+AddTagsDialog::AddTagsDialog(App& app) : Dialog(app)
 {}
 
 void AddTagsDialog::draw() {

@@ -20,7 +20,7 @@ namespace bbm {
 namespace x11 {
 
 /*Constructor.*/
-Dialog::Dialog(std::shared_ptr<Bookmark> bm) : bookmark(bm)
+Dialog::Dialog(App& application) : app(application)
 {}
 
 /*Constructor.*/

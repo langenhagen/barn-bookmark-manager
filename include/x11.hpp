@@ -13,17 +13,17 @@ author: andreasl
 namespace barn {
 namespace bbm {
 
-class Bookmark;
-
 namespace x11 {
+
+class App;
 
 /*Represents dialogs.*/
 struct Dialog {
 
-    /*the bookmark*/
-    std::shared_ptr<Bookmark> bookmark;
+    /*The surrounding app.*/
+    App& app;
 
-    Dialog(std::shared_ptr<Bookmark> bm);
+    Dialog(App& app);
 
     /*Draw the dialog.*/
     virtual void draw() = 0;
@@ -51,7 +51,7 @@ struct App {
     /*application stuff*/
     using DialogVector = std::vector<std::shared_ptr<Dialog>>;
     DialogVector dialogs;
-    typeof(DialogVector::iterator) current_dialog;
+    DialogVector::iterator::iterator_type dialog_it;
     constexpr static const float font_size = 16.0;
     unsigned int line_height;
 
