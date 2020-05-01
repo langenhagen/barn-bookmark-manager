@@ -27,7 +27,7 @@ struct Dialog {
     virtual int handle_key_release(XEvent& evt) = 0;  /*Handle key release events.*/
 };
 
-/*Simple single-window x11 application for dialog sequences.*/
+/*Single-window x11 application for dialog sequences.*/
 struct App {
     using DialogVector = std::vector<std::shared_ptr<Dialog>>;
     using DialogVectorIter = DialogVector::iterator::iterator_type;
@@ -36,12 +36,12 @@ struct App {
     int screen;  /*X11 screen number.*/
     Window root_win;  /*X11 root window.*/
     Window win;  /*X11 application window.*/
-    GC gc;  /*X11 graphics context*/
+    GC gc;  /*X11 graphics context.*/
     XftDraw* xft_drawable;  /*Xft text drawable.*/
     XftFont* font;   /*Xft text font.*/
     constexpr static const float font_size = 16.0;  /*Font size.*/
-    unsigned int line_height;  /*Font-dependent line height*/
-    DialogVector dialogs;  /*Application Dialog list*/
+    unsigned int line_height;  /*Font-dependent line height.*/
+    DialogVector dialogs;  /*Application Dialog list.*/
     DialogVectorIter dialog_it;  /*Current application dialog.*/
 
     bool is_ctrl_pressed = false;  /*Specifies if a ctrl button is pressed.*/
