@@ -122,7 +122,7 @@ bool save_bookmark(const Bookmark& bookmark, const fs::path& directory) {
         << YAML::Key << "rating" << YAML::Value << bookmark.rating
         << YAML::Key << "comment" << YAML::Value << YAML::Literal << bookmark.comment
         << YAML::Key << "tags" << YAML::Value << YAML::Flow << YAML::BeginSeq;
-        for( const std::string& tag : bookmark.tags) {
+        for ( const std::string& tag : bookmark.tags) {
             yaml << tag;
         }
         yaml << YAML::EndSeq << YAML::EndMap;

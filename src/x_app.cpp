@@ -100,7 +100,7 @@ void App::setup_xft_font() {
 int App::grab_keyboard() {
     /*try to grab keyboard 1000 times.
     We may have to wait for another process to ungrab.*/
-    for(int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 1000; ++i) {
         const int grab_result = XGrabKeyboard(
             this->display,
             this->root_win,
@@ -108,7 +108,7 @@ int App::grab_keyboard() {
             GrabModeAsync,
             GrabModeAsync,
             CurrentTime);
-        if(grab_result == GrabSuccess) {
+        if (grab_result == GrabSuccess) {
             return 0;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
