@@ -25,9 +25,9 @@ namespace x11 {
 Dialog::Dialog(App& application) : app(application)
 {}
 
-App::App(const std::shared_ptr<Settings>& s)
+App::App(const std::shared_ptr<Settings>& settings)
 :
-settings(s),
+settings(settings),
 display(XOpenDisplay(nullptr)),
 screen(DefaultScreen(display)),
 root_win(RootWindow(display, screen)),
