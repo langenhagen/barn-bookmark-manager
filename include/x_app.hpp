@@ -42,7 +42,7 @@ struct App {
     using DialogVector = std::vector<std::shared_ptr<Dialog>>;
     using DialogVectorIter = DialogVector::iterator::iterator_type;
 
-    const Settings& settings; /*Application settings.*/
+    const std::shared_ptr<Settings> settings; /*Application settings.*/
 
     Display* display;  /*X11 display.*/
     int screen;  /*X11 screen number.*/
@@ -60,7 +60,7 @@ struct App {
 
     bool is_ctrl_pressed = false;  /*Specifies if a ctrl button is pressed.*/
 
-    App(const Settings& settings);  /*Constructor.*/
+    App(const std::shared_ptr<Settings>& settings);  /*Constructor.*/
     ~App();  /*Destructor.*/
 
     Window setup_window();  /*Create an x11 window.*/

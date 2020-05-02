@@ -17,12 +17,15 @@ author: andreasl
 
 namespace barn {
 namespace bbm {
+
+struct Settings;
+
 namespace x11 {
 
 Dialog::Dialog(App& application) : app(application)
 {}
 
-App::App(const Settings& s) : settings(s) {
+App::App(const std::shared_ptr<Settings>& s) : settings(s) {
     this->display = XOpenDisplay(nullptr);
     this->screen = DefaultScreen(this->display);
     this->root_win = RootWindow(this->display, this->screen);
