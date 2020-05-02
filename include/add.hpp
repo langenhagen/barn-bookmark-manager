@@ -28,29 +28,29 @@ bool save_bookmark(const Bookmark& bookmark, const fs::path& directory);
 struct AddCommentDialog : x11::Dialog {
     AddCommentDialog(x11::App& app);
     void draw();
-    int handle_key_press(XEvent& evt);
-    int handle_key_release(XEvent& evt);
+    x11::AppState handle_key_press(XEvent& evt);
+    x11::AppState handle_key_release(XEvent& evt);
 };
 
 struct AddPathDialog : x11::Dialog {
     AddPathDialog(x11::App& app);
     void draw();
-    int handle_key_press(XEvent& evt);
-    int handle_key_release(XEvent& evt);
+    x11::AppState handle_key_press(XEvent& evt);
+    x11::AppState handle_key_release(XEvent& evt);
 };
 
 struct AddRatingDialog : x11::Dialog {
     AddRatingDialog(x11::App& app);
     void draw();
-    int handle_key_press(XEvent& evt);
-    int handle_key_release(XEvent& evt);
+    x11::AppState handle_key_press(XEvent& evt);
+    x11::AppState handle_key_release(XEvent& evt);
 };
 
 struct AddTagsDialog : x11::Dialog {
     AddTagsDialog(x11::App& app);
     void draw();
-    int handle_key_press(XEvent& evt);
-    int handle_key_release(XEvent& evt);
+    x11::AppState handle_key_press(XEvent& evt);
+    x11::AppState handle_key_release(XEvent& evt);
 };
 
 } // namespace bbm

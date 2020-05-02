@@ -13,13 +13,13 @@ SearchBookmarkDialog::SearchBookmarkDialog(x11::App& app) : x11::Dialog(app)
 void SearchBookmarkDialog::draw() {
     // TODO
 }
-int SearchBookmarkDialog::handle_key_press(XEvent& evt) {
+x11::AppState SearchBookmarkDialog::handle_key_press(XEvent& evt) {
     // TODO
-    return 0;
+    return x11::AppState::EXIT;
 }
-int SearchBookmarkDialog::handle_key_release(XEvent& evt) {
+x11::AppState SearchBookmarkDialog::handle_key_release(XEvent& evt) {
     // TODO
-    return 0;
+    return x11::AppState::EXIT;
 }
 
 } // namespace bbm

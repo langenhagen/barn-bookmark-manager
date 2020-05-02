@@ -25,12 +25,26 @@ namespace x11 {
 Dialog::Dialog(App& application) : app(application)
 {}
 
-App::App(const std::shared_ptr<Settings>& s) : settings(s) {
-    this->display = XOpenDisplay(nullptr);
-    this->screen = DefaultScreen(this->display);
-    this->root_win = RootWindow(this->display, this->screen);
-    this->win = setup_window();
-    this->gc = XCreateGC(this->display, this->win, 0, 0);
+App::App(const std::shared_ptr<Settings>& s)
+:
+settings(s),
+display(XOpenDisplay(nullptr)),
+screen(DefaultScreen(display)),
+root_win(RootWindow(display, screen)),
+win(setup_window()),
+gc(XCreateGC(display, win, 0, 0)),
+xft_drawable(XftDrawCreate(display, win, DefaultVisual(display, 0), DefaultColormap(display, 0))),
+font(XftFontOpen(
+    display,
+    screen,
+    XFT_FAMILY,
+    XftTypeString,
+    "monospace",
+    XFT_SIZE,
+    XftTypeDouble,
+    font_size,
+    nullptr)),
+line_height(font->ascent + font->descent) {
 
     XSetStandardProperties(
         this->display,
@@ -41,8 +55,6 @@ App::App(const std::shared_ptr<Settings>& s) : settings(s) {
         nullptr,
         0,
         nullptr);
-
-    setup_xft_font();
 }
 
 App::~App() {
@@ -76,28 +88,7 @@ Window App::setup_window() {
         &attrs);
 }
 
-void App::setup_xft_font() {
-    this->xft_drawable = XftDrawCreate(
-        this->display,
-        this->win,
-        DefaultVisual(this->display, 0),
-        DefaultColormap(this->display, 0));
-
-    this->font = XftFontOpen(
-        this->display,
-        this->screen,
-        XFT_FAMILY,
-        XftTypeString,
-        "monospace",
-        XFT_SIZE,
-        XftTypeDouble,
-        this->font_size,
-        nullptr);
-
-    this->line_height = this->font->ascent + this->font->descent;
-}
-
-int App::grab_keyboard() {
+bool App::grab_keyboard() {
     /*try to grab keyboard 1000 times.
     We may have to wait for another process to ungrab.*/
     for (int i = 0; i < 1000; ++i) {
@@ -109,19 +100,19 @@ int App::grab_keyboard() {
             GrabModeAsync,
             CurrentTime);
         if (grab_result == GrabSuccess) {
-            return 0;
+            return true;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     log(ERROR) << "Could not grab keyboard" << std::endl;
-    return 1;
+    return false;
 }
 
-void App::resize_window(int rows, int cols) {
+int App::resize_window(int rows, int cols) {
     const Screen* const screen DefaultScreenOfDisplay(this->display);
     const auto width = this->font->max_advance_width * cols;
     const auto height = this->line_height * rows;
-    XMoveResizeWindow(
+    return XMoveResizeWindow(
         this->display,
         this->win,
         (screen->width - width) / 2,
@@ -132,46 +123,94 @@ void App::resize_window(int rows, int cols) {
 
 void App::redraw() {
     XClearWindow(this->display, this->win);
+    dialog_it->draw();
 }
 
-int App::handle_key_press(XEvent& evt) {
-    log(INFO) << "handle_key_press" << std::endl;
-    return 1;
+bool App::is_ctrl_pressed() const {
+    return this->ctrl_l || this->ctrl_r;
+}
+bool App::is_shift_pressed() const {
+    return this->shift_l || this->shift_r;
 }
 
-int App::handle_key_release(XEvent& evt) {
-    log(INFO) << "handle_key_release" << std::endl;
-    return 1;
+AppState App::handle_key_press(XEvent& evt) {
+    switch(evt.xkey.keycode) {
+        case 37: /*ctrl left*/
+            this->ctrl_l = true;
+            break;
+        case 105: /*ctrl right*/
+            this->ctrl_r = true;
+            break;
+        case 50: /*shift left*/
+            this->shift_l = true;
+            break;
+        case 62: /*shift right*/
+            this->shift_r = true;
+            break;
+    }
+    return dialog_it->handle_key_press(evt);
 }
 
-int App::run() {
+AppState App::handle_key_release(XEvent& evt) {
+    switch(evt.xkey.keycode) {
+        case 37: /*ctrl left*/
+            this->ctrl_l = false;
+            break;
+        case 105: /*ctrl right*/
+            this->ctrl_r = false;
+            break;
+        case 50: /*shift left*/
+            this->shift_l = false;
+            break;
+        case 62: /*shift right*/
+            this->shift_r = false;
+            break;
+    }
+    return dialog_it->handle_key_release(evt);
+}
+
+void App::run() {
+    if (!grab_keyboard()) {
+        return;
+    } else if (dialog_it == dialogs.end()) {
+        log(WARN) << "Past last dialog." << std::endl;
+        return;
+    }
     XMapRaised(this->display, this->win);
 
-    // TODO show the dialogs
-
     XEvent evt;
-    while(!XNextEvent(this->display, &evt)) {
-        switch(evt.type) {
-        case Expose:
-            if(evt.xexpose.count == 0) {
-                redraw();
-            }
-            break;
-        case VisibilityNotify:
-            if (evt.xvisibility.state != VisibilityUnobscured) {
-                XRaiseWindow(this->display, this->win);
-            }
-            break;
-        case KeyPress:
-            if(handle_key_press(evt)) {
-                return 0;
-            }
-            break;
-        case KeyRelease:
-            if(handle_key_release(evt)) {
-                return 0;
-            }
-            break;
+    AppState state = AppState::KEEP_RUNNING;
+    while (state != AppState::EXIT && !XNextEvent(this->display, &evt)) {
+        switch (evt.type) {
+            case Expose:
+                if (evt.xexpose.count == 0) {
+                    redraw();
+                }
+                break;
+            case VisibilityNotify:
+                if (evt.xvisibility.state != VisibilityUnobscured) {
+                    XRaiseWindow(this->display, this->win);
+                }
+                break;
+            case KeyPress:
+                state = handle_key_press(evt);
+                break;
+            case KeyRelease:
+                state = handle_key_release(evt);
+                break;
+        }
+        switch (state) {
+            case AppState::PROCEED:
+                ++dialog_it;
+                if (dialog_it == dialogs.end()) {
+                    state = AppState::EXIT;
+                }
+                break;
+            case AppState::BACK:
+                if (dialog_it != dialogs.begin()) {
+                    --dialog_it;
+                }
+                break;
         }
     }
 }

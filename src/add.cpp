@@ -136,14 +136,14 @@ AddCommentDialog::AddCommentDialog(x11::App& app) : x11::Dialog(app)
 void AddCommentDialog::draw() {
     // TODO
 }
-int AddCommentDialog::handle_key_press(XEvent& evt) {
+x11::AppState AddCommentDialog::handle_key_press(XEvent& evt) {
     // TODO
-    return 0;
+    return x11::AppState::EXIT;
 }
 
-int AddCommentDialog::handle_key_release(XEvent& evt) {
+x11::AppState AddCommentDialog::handle_key_release(XEvent& evt) {
     // TODO
-    return 0;
+    return x11::AppState::EXIT;
 }
 
 AddPathDialog::AddPathDialog(x11::App& app) : x11::Dialog(app)
@@ -152,14 +152,15 @@ AddPathDialog::AddPathDialog(x11::App& app) : x11::Dialog(app)
 void AddPathDialog::draw() {
     // TODO
 }
-int AddPathDialog::handle_key_press(XEvent& evt) {
+
+x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {
     // TODO
-    return 0;
+    return x11::AppState::EXIT;
 }
 
-int AddPathDialog::handle_key_release(XEvent& evt) {
+x11::AppState AddPathDialog::handle_key_release(XEvent& evt) {
     // TODO
-    return 0;
+    return x11::AppState::EXIT;
 }
 
 AddRatingDialog::AddRatingDialog(x11::App& app) : x11::Dialog(app)
@@ -169,14 +170,14 @@ void AddRatingDialog::draw() {
     // TODO
 }
 
-int AddRatingDialog::handle_key_press(XEvent& evt) {
+x11::AppState AddRatingDialog::handle_key_press(XEvent& evt) {
     // TODO
-    return 0;
+    return x11::AppState::EXIT;
 }
 
-int AddRatingDialog::handle_key_release(XEvent& evt) {
+x11::AppState AddRatingDialog::handle_key_release(XEvent& evt) {
     // TODO
-    return 0;
+    return x11::AppState::EXIT;
 }
 
 AddTagsDialog::AddTagsDialog(x11::App& app) : x11::Dialog(app)
@@ -186,11 +187,11 @@ void AddTagsDialog::draw() {
     // TODO
 }
 
-int AddTagsDialog::handle_key_press(XEvent& evt) {
+x11::AppState AddTagsDialog::handle_key_press(XEvent& evt) {
     // TODO
 }
 
-int AddTagsDialog::handle_key_release(XEvent& evt) {
+x11::AppState AddTagsDialog::handle_key_release(XEvent& evt) {
     // TODO
 }
 
