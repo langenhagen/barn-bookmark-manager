@@ -125,7 +125,7 @@ int App::resize_window(int rows, int cols) {
 
 void App::redraw() {
     XClearWindow(this->display, this->win);
-    dialog_it->draw();
+    (*dialog_it)->draw();
 }
 
 bool App::is_ctrl_pressed() const {
@@ -150,7 +150,7 @@ AppState App::handle_key_press(XEvent& evt) {
             this->shift_r = true;
             break;
     }
-    return dialog_it->handle_key_press(evt);
+    return (*dialog_it)->handle_key_press(evt);
 }
 
 AppState App::handle_key_release(XEvent& evt) {
@@ -168,10 +168,11 @@ AppState App::handle_key_release(XEvent& evt) {
             this->shift_r = false;
             break;
     }
-    return dialog_it->handle_key_release(evt);
+    return (*dialog_it)->handle_key_release(evt);
 }
 
 void App::run() {
+    dialog_it = dialogs.begin();
     if (!grab_keyboard()) {
         return;
     } else if (dialog_it == dialogs.end()) {
@@ -179,6 +180,7 @@ void App::run() {
         return;
     }
     XMapRaised(this->display, this->win);
+
 
     XEvent evt;
     AppState state = AppState::KEEP_RUNNING;

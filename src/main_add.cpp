@@ -10,6 +10,7 @@ author: andreasl
 #include "log.hpp"
 
 #include <utility>
+#include <memory>
 #include <vector>
 
 int main(int argc, const char* argv[]) {
@@ -25,9 +26,11 @@ int main(int argc, const char* argv[]) {
     }
     auto context = std::make_shared<Context>(Context{{std::move(url), std::move(title)}});
     x11::App app(settings, context);
+    app.dialogs.emplace_back(std::make_shared<AddPathDialog>(app));
     app.run();
 
-    save_bookmark(std::move(context->bookmark), settings->bookmarks_root_path / "subpath");
-
+    if (context->do_store) {
+        save_bookmark(std::move(context->bookmark), settings->bookmarks_root_path / "subpath");
+    }
     return exitcode::SUCCESS;
 }

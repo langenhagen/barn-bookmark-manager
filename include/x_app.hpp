@@ -59,8 +59,8 @@ struct App {
     bool shift_l = false;  /*Indicates whether left shift is pressed.*/
     bool shift_r = false;  /*Indicates whether right shift is pressed.*/
 
-    std::vector<Dialog> dialogs;  /*Application Dialog list.*/
-    std::vector<Dialog>::iterator dialog_it;  /*Current application dialog.*/
+    std::vector<std::shared_ptr<Dialog>> dialogs;  /*Application Dialog list.*/
+    std::vector<std::shared_ptr<Dialog>>::iterator dialog_it;  /*Current dialog.*/
 
     /*Constructor.*/
     App(const std::shared_ptr<Settings>& settings, std::shared_ptr<Context>& context);

@@ -76,7 +76,6 @@ bool fetch_url_and_title(std::string& url, std::string& title) {
 
     Window win;
     xdo_get_active_window(xdo.get(), &win);
-
     unsigned char* win_name;
     int name_len;
     int win_type;
@@ -89,6 +88,7 @@ bool fetch_url_and_title(std::string& url, std::string& title) {
     }
 
     /*focus the chrome address bar*/
+    std::this_thread::sleep_for(std::chrono::milliseconds(280)); /*sleeping seems necessary*/
     xdo_send_keysequence_window(xdo.get(), win, "Control_L+l", 0);
     std::this_thread::sleep_for(std::chrono::milliseconds(10)); /*sleeping seems necessary*/
 
@@ -136,6 +136,7 @@ AddCommentDialog::AddCommentDialog(x11::App& app) : x11::Dialog(app)
 void AddCommentDialog::draw() {
     // TODO
 }
+
 x11::AppState AddCommentDialog::handle_key_press(XEvent& evt) {
     // TODO
     return x11::AppState::EXIT;
@@ -150,17 +151,45 @@ AddPathDialog::AddPathDialog(x11::App& app) : x11::Dialog(app)
 {}
 
 void AddPathDialog::draw() {
-    // TODO
+    if (!is_initalized) {
+        app.resize_window(1, app.context->bookmark.url.size());
+        is_initalized = true;
+    }
+
+    const auto& url = app.context->bookmark.url;
+    XRenderColor color = {65535, 65535, 65535, 65535};
+    XftColor xft_color;
+    XftColorAllocValue(
+        app.display,
+        DefaultVisual(app.display, app.screen),
+        DefaultColormap(app.display, app.screen),
+        &color,
+        &xft_color);
+    XftDrawString8(
+        app.xft_drawable,
+        &xft_color,
+        app.font,
+        0,
+        app.font->ascent,
+        (unsigned char*)url.c_str(),
+        url.length());
+    XftColorFree(
+        app.display,
+        DefaultVisual(app.display, 0),
+        DefaultColormap(app.display, 0),
+        &xft_color);
 }
 
 x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {
-    // TODO
-    return x11::AppState::EXIT;
+    if (evt.xkey.keycode == 9 /*esc*/) {
+        return x11::AppState::EXIT;
+    }
+    return x11::AppState::KEEP_RUNNING;
 }
 
 x11::AppState AddPathDialog::handle_key_release(XEvent& evt) {
     // TODO
-    return x11::AppState::EXIT;
+    return x11::AppState::KEEP_RUNNING;
 }
 
 AddRatingDialog::AddRatingDialog(x11::App& app) : x11::Dialog(app)
