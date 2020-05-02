@@ -18,7 +18,10 @@ struct DateTime {
     int hour;  /*Hour of day in 24-hours in [0, 23].*/
     int minute;  /*Minute of hour in [0, 59].*/
 
-    /*Constructor*/
+    /*Default Constructor representing the current date & time.*/
+    DateTime();
+
+    /*Constructor from integers.*/
     explicit DateTime(int year_, int month_, int day_of_month_, int hour_ = 0, int minute_ = 0);
 
     /*Constructor from tm.*/

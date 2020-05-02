@@ -17,8 +17,9 @@ int main(int argc, const char* argv[]) {
 
     const auto options = parse_options(argc,argv);
     const auto settings = std::make_shared<Settings>(load_settings(options.settings_path));
+    auto context = std::make_shared<Context>();
 
-    x11::App app(settings);
+    x11::App app(settings, context);
     app.run();
 
     return exitcode::SUCCESS;

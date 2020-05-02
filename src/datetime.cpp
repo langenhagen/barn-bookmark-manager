@@ -12,6 +12,9 @@ author: andreasl
 namespace barn {
 namespace bbm {
 
+DateTime::DateTime() : DateTime(DateTime::now())
+{}
+
 DateTime::DateTime(int year_, int month_, int day_of_month_, int hour_, int minute_)
     : year(year_), month(month_), day_of_month(day_of_month_), hour(hour_), minute(minute_)
 {}

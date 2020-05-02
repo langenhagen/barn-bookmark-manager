@@ -18,6 +18,7 @@ author: andreasl
 namespace barn {
 namespace bbm {
 
+struct Context;
 struct Settings;
 
 namespace x11 {
@@ -25,9 +26,10 @@ namespace x11 {
 Dialog::Dialog(App& application) : app(application)
 {}
 
-App::App(const std::shared_ptr<Settings>& settings)
+App::App(const std::shared_ptr<Settings>& settings, std::shared_ptr<Context>& context)
 :
 settings(settings),
+context(context),
 display(XOpenDisplay(nullptr)),
 screen(DefaultScreen(display)),
 root_win(RootWindow(display, screen)),

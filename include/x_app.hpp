@@ -13,6 +13,7 @@ author: andreasl
 namespace barn {
 namespace bbm {
 
+struct Context;
 struct Settings;
 
 namespace x11 {
@@ -41,6 +42,8 @@ struct Dialog {
 /*Single-window x11 application for dialog sequences.*/
 struct App {
     const std::shared_ptr<Settings> settings;  /*Application settings.*/
+    std::shared_ptr<Context> context;  /*The application's data.*/
+
     Display* display;  /*X11 display.*/
     int screen;  /*X11 screen number.*/
     Window root_win;  /*X11 root window.*/
@@ -59,7 +62,8 @@ struct App {
     std::vector<Dialog> dialogs;  /*Application Dialog list.*/
     std::vector<Dialog>::iterator dialog_it;  /*Current application dialog.*/
 
-    App(const std::shared_ptr<Settings>& settings);  /*Constructor.*/
+    /*Constructor.*/
+    App(const std::shared_ptr<Settings>& settings, std::shared_ptr<Context>& context);
     ~App();  /*Destructor.*/
 
     bool is_ctrl_pressed() const;  /*Indicate if a ctrl-button is pressed.*/
