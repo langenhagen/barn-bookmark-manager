@@ -41,7 +41,6 @@ struct Dialog {
 /*Single-window x11 application for dialog sequences.*/
 struct App {
     const std::shared_ptr<Settings> settings;  /*Application settings.*/
-
     Display* display;  /*X11 display.*/
     int screen;  /*X11 screen number.*/
     Window root_win;  /*X11 root window.*/
@@ -52,19 +51,19 @@ struct App {
     constexpr static const float font_size = 16.0;  /*Font size.*/
     unsigned int line_height;  /*Font-dependent line height.*/
 
+    bool ctrl_l = false;  /*Indicates whether left control is pressed.*/
+    bool ctrl_r = false;  /*Indicates whether right control is pressed.*/
+    bool shift_l = false;  /*Indicates whether left shift is pressed.*/
+    bool shift_r = false;  /*Indicates whether right shift is pressed.*/
+
     std::vector<Dialog> dialogs;  /*Application Dialog list.*/
     std::vector<Dialog>::iterator dialog_it;  /*Current application dialog.*/
 
-    bool ctrl_l = false;  /*Indicates whether left control is pressed.*/
-    bool ctrl_r = false;  /*Indicates whether right control is pressed.*/
-    bool shift_l = false;   /*Indicates whether left shift is pressed.*/
-    bool shift_r = false;  /*Indicates whether right shift is pressed.*/
+    App(const std::shared_ptr<Settings>& settings);  /*Constructor.*/
+    ~App();  /*Destructor.*/
 
     bool is_ctrl_pressed() const;  /*Indicate if a ctrl-button is pressed.*/
     bool is_shift_pressed() const;  /*Indicate if a shift-button is pressed.*/
-
-    App(const std::shared_ptr<Settings>& settings);  /*Constructor.*/
-    ~App();  /*Destructor.*/
 
     Window setup_window();  /*Create an x11 window.*/
     bool grab_keyboard();  /*Grab keyboard focus.*/
