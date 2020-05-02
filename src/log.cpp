@@ -29,9 +29,9 @@ std::ostream& log(const Severity level) {
     if (level == Severity::INFO) {
         return std::cout;
     } else if (level == Severity::WARN) {
-        return std::cout << "Warning: ";
+        return std::cerr << "Warning: ";
     } if (level == Severity::ERROR) {
-        return std::cout << "Error: ";
+        return std::cerr << "Error: ";
     }
 #else
     return null_stream;
