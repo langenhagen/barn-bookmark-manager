@@ -3,4 +3,4 @@
 #
 # author: andreasl
 
-sudo apt install build-essential cmake libx11-dev libxdo-dev
+sudo apt install build-essential cmake libx11-dev libxdo-dev xclip
