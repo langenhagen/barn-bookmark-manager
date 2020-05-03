@@ -69,6 +69,28 @@ bool write(const YAML::Emitter& yaml, const fs::path& directory) {
     return true;
 }
 
+/*Create x11 key event.*/
+XKeyEvent create_key_event(
+    Display* display,
+    Window& win,
+    Window& root,
+    bool press,
+    int keycode,
+    int modifiers)
+{
+    XKeyEvent evt;
+    evt.display = display;
+    evt.window = win;
+    evt.root = root;
+    evt.subwindow = None;
+    evt.time = CurrentTime;
+    evt.same_screen = True;
+    evt.keycode = XKeysymToKeycode(display, keycode);
+    evt.state = modifiers;
+    evt.type = press ? KeyPress : KeyRelease;
+    return evt;
+}
+
 } // namespace
 
 bool fetch_url_and_title(std::string& url, std::string& title) {
@@ -88,16 +110,30 @@ bool fetch_url_and_title(std::string& url, std::string& title) {
     }
 
     /*focus the chrome address bar*/
-    std::this_thread::sleep_for(std::chrono::milliseconds(280)); /*sleeping seems necessary*/
-    xdo_send_keysequence_window(xdo.get(), win, "Control_L+l", 0);
-    std::this_thread::sleep_for(std::chrono::milliseconds(10)); /*sleeping seems necessary*/
+    Display* display = XOpenDisplay(nullptr);
+    Window root = XDefaultRootWindow(display);
+    int revert;
+    XGetInputFocus(display, &win, &revert);
 
-    /*copy the contents*/
-    xdo_send_keysequence_window(xdo.get(), win, "Control_L+c", 0);
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    XEvent focus_evt;
+    focus_evt.xkey = create_key_event(display, win, root, true, XK_l, ControlMask);
+    XSendEvent(focus_evt.xkey.display, focus_evt.xkey.window, True, KeyPressMask, &focus_evt);
 
+    XFlush(display);
+    std::this_thread::sleep_for(std::chrono::milliseconds(3));
+
+    /*copy the url*/
+    XEvent copy_evt;
+    copy_evt.xkey = create_key_event(display, win, root, true, XK_c, ControlMask);
+    XSendEvent(copy_evt.xkey.display, copy_evt.xkey.window, True, KeyPressMask, &copy_evt);
+
+    XFlush(display);
+    XCloseDisplay(display);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(3));
     url = ::barn::x11::cp::get_text_from_clipboard();
     title = std::string(reinterpret_cast<const char*>(win_name));
+
     return true;
 }
 
