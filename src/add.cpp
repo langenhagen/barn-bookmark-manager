@@ -11,6 +11,7 @@ author: andreasl
 
 #include "yaml-cpp/yaml.h"
 
+#include <algorithm>
 #include <chrono>
 #include <cstring>
 #include <experimental/filesystem>
@@ -71,13 +72,12 @@ bool write(const YAML::Emitter& yaml, const fs::path& directory) {
 
 /*Create x11 key event.*/
 XKeyEvent create_key_event(
-    Display* display,
-    Window& win,
-    Window& root,
-    bool press,
-    int keycode,
-    int modifiers)
-{
+        Display* display,
+        Window& win,
+        Window& root,
+        bool press,
+        int keycode,
+        int modifiers) {
     XKeyEvent evt;
     evt.display = display;
     evt.window = win;
@@ -89,6 +89,41 @@ XKeyEvent create_key_event(
     evt.state = modifiers;
     evt.type = press ? KeyPress : KeyRelease;
     return evt;
+}
+
+XftColor alloc_color(const x11::App& app, const XRenderColor& color) {
+    XftColor xft_color;
+    XftColorAllocValue(
+        app.display,
+        DefaultVisual(app.display, app.screen),
+        DefaultColormap(app.display, app.screen),
+        &color,
+        &xft_color);
+    return xft_color;
+}
+
+void free_color(const x11::App& app, XftColor& xft_color) {
+    XftColorFree(
+        app.display,
+        DefaultVisual(app.display, app.screen),
+        DefaultColormap(app.display, app.screen),
+        &xft_color);
+}
+
+void draw_text(
+        const x11::App& app,
+        const XftColor& xft_color,
+        const std::string& str,
+        const float row,
+        const float col) {
+    XftDrawStringUtf8(
+        app.xft_drawable,
+        &xft_color,
+        app.font,
+        col * app.font->max_advance_width,
+        row * app.line_height,
+        (unsigned char*)str.c_str(),
+        str.length());
 }
 
 } // namespace
@@ -132,6 +167,7 @@ bool fetch_url_and_title(std::string& url, std::string& title) {
 
     std::this_thread::sleep_for(std::chrono::milliseconds(3));
     url = ::barn::x11::cp::get_text_from_clipboard();
+    win_name[name_len - 16] = '\0';
     title = std::string(reinterpret_cast<const char*>(win_name));
 
     return true;
@@ -151,7 +187,7 @@ bool save_bookmark(const Bookmark& bookmark, const fs::path& directory) {
     YAML::Emitter yaml;
     yaml.SetIndent(4);
     yaml << YAML::BeginMap
-        << YAML::Key << "name" << YAML::Value << bookmark.name
+        << YAML::Key << "title" << YAML::Value << bookmark.title
         << YAML::Key << "url" << YAML::Value << bookmark.url
         << YAML::Key << "created" << YAML::Value << bookmark.created.str()
         << YAML::Key << "last_access" << YAML::Value << bookmark.last_access.str()
@@ -188,32 +224,37 @@ AddPathDialog::AddPathDialog(x11::App& app) : x11::Dialog(app)
 
 void AddPathDialog::draw() {
     if (!is_initalized) {
-        app.resize_window(1, app.context->bookmark.url.size());
+        app.resize_window(14, 100);
+        has_querystring = true; // TODO check if url has querystring
         is_initalized = true;
     }
 
-    const auto& url = app.context->bookmark.url;
-    XRenderColor color = {65535, 65535, 65535, 65535};
-    XftColor xft_color;
-    XftColorAllocValue(
-        app.display,
-        DefaultVisual(app.display, app.screen),
-        DefaultColormap(app.display, app.screen),
-        &color,
-        &xft_color);
-    XftDrawString8(
-        app.xft_drawable,
-        &xft_color,
-        app.font,
-        0,
-        app.font->ascent,
-        (unsigned char*)url.c_str(),
-        url.length());
-    XftColorFree(
-        app.display,
-        DefaultVisual(app.display, 0),
-        DefaultColormap(app.display, 0),
-        &xft_color);
+    std::stringstream ss;
+    ss << app.line_height;
+
+    const auto title_padding = std::max((100 - app.context->bookmark.title.length())/2, 0ul);
+
+    auto gray = alloc_color(app, {30000, 30000, 30000, 65535});
+    auto white = alloc_color(app, {65535, 65535, 65535, 0});
+    draw_text(app, white, app.context->bookmark.title, 2, title_padding);
+    draw_text(app, gray, "Url:", 4, 2);
+    draw_text(app, white, app.context->bookmark.url, 5, 2);
+    free_color(app, white);
+
+    if (has_querystring) {
+        if(keep_querystring) {
+            draw_text(app, gray, "(q) Delete Querystring", 8, 1);
+        } else {
+            draw_text(app, gray, "(q) Keep Querystring", 8, 1);
+        }
+    }
+    free_color(app, gray);
+
+    auto grey = alloc_color(app, {30000, 30000, 30000, 65535});
+    draw_text(app, grey, "<Esc>: Cancel", 13, 1);
+    draw_text(app, grey, "<Enter>: Continue", 12, 81);
+    draw_text(app, grey, "<Ctrl> + <Enter>: Finish", 13, 74);
+    free_color(app, grey);
 }
 
 x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {

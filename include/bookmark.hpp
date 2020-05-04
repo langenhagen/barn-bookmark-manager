@@ -23,7 +23,7 @@ struct WebpageContent {
 /*Representation of a bookmark.*/
 struct Bookmark {
     std::string url;  /*Target URL.*/
-    std::string name;  /*Optional name of the bookmark.*/
+    std::string title;  /*Optional title of the bookmark.*/
     DateTime created;  /*Creation timestamp.*/
     DateTime last_access;  /*Optional last access time; fields 0 if invalid.*/
     int rating;  /*Optional 1-5 star rating; 0 means not rated.*/

@@ -110,10 +110,10 @@ bool App::grab_keyboard() {
     return false;
 }
 
-int App::resize_window(int rows, int cols) {
+int App::resize_window(const int rows, const int cols) {
     const Screen* const screen DefaultScreenOfDisplay(this->display);
-    const auto width = this->font->max_advance_width * cols;
-    const auto height = this->line_height * rows;
+    const auto width = cols * this->font->max_advance_width;
+    const auto height = rows * this->line_height;
     return XMoveResizeWindow(
         this->display,
         this->win,

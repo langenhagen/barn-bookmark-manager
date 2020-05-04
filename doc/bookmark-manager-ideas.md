@@ -46,7 +46,7 @@ Leave maintenance of folder structure to the user, i.e. leave empty folders unto
 - search with fuzzy search and include `tags`, `*.site.txt` files, bookmark paths, bookmark urls,
   names, recency
 - show list view of matches browseable with up-down arrow keys keys
-- show preview of the currently selected bookmark with url, name, comment, rating, and excerpt of
+- show preview of the currently selected bookmark with url, title, comment, rating, and excerpt of
   textual copy from `site.txt`
 - write updated array values to `folders`
 - write updated array values to `ids`
@@ -142,7 +142,7 @@ Store every info to a certain bookmark in such files.
 #### <id>.yaml
 Store all bookmark info in `<id>.yaml`.
 ```yaml
-name: A Nice Blog Post!
+title: A Nice Blog Post!
 url: https://andiweb.com/2020/02/28/a-nice-blogpost#even-nicer
 created: 2020-02-29 16:56
 last_access: 2020-02-29 17:02

@@ -51,7 +51,7 @@ struct App {
     GC gc;  /*X11 graphics context.*/
     XftDraw* xft_drawable;  /*Xft text drawable.*/
     XftFont* font;  /*Xft text font.*/
-    constexpr static const float font_size = 12.0;  /*Font size.*/
+    constexpr static const float font_size = 10.0;  /*Font size.*/
     unsigned int line_height;  /*Font-dependent line height.*/
 
     bool ctrl_l = false;  /*Indicates whether left control is pressed.*/
