@@ -167,27 +167,10 @@ bool save_bookmark(const Bookmark& bookmark, const fs::path& directory) {
     return write(yaml, directory);
 }
 
-AddCommentDialog::AddCommentDialog(x11::App& app) : x11::Dialog(app)
+ReviewURLDialog::ReviewURLDialog(x11::App& app) : x11::Dialog(app)
 {}
 
-void AddCommentDialog::draw() {
-    // TODO
-}
-
-x11::AppState AddCommentDialog::handle_key_press(XEvent& evt) {
-    // TODO
-    return x11::AppState::EXIT;
-}
-
-x11::AppState AddCommentDialog::handle_key_release(XEvent& evt) {
-    // TODO
-    return x11::AppState::EXIT;
-}
-
-AddPathDialog::AddPathDialog(x11::App& app) : x11::Dialog(app)
-{}
-
-void AddPathDialog::draw() {
+void ReviewURLDialog::draw() {
     if (!is_initalized) {
         app.resize_window(14, 100);
         has_querystring = true; // TODO check if url has querystring
@@ -216,16 +199,50 @@ void AddPathDialog::draw() {
     draw_text(app, app.fc_hint, "<Ctrl> + <Enter>: Finish", 13, 74);
 }
 
-x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {
+x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
     if (evt.xkey.keycode == 9 /*esc*/) {
         return x11::AppState::EXIT;
     }
     return x11::AppState::KEEP_RUNNING;
 }
 
+x11::AppState ReviewURLDialog::handle_key_release(XEvent& evt) {
+    // TODO
+    return x11::AppState::KEEP_RUNNING;
+}
+
+AddPathDialog::AddPathDialog(x11::App& app) : x11::Dialog(app)
+{}
+
+void AddPathDialog::draw() {
+    // TODO
+}
+
+x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {
+    // TODO
+    return x11::AppState::KEEP_RUNNING;
+}
+
 x11::AppState AddPathDialog::handle_key_release(XEvent& evt) {
     // TODO
     return x11::AppState::KEEP_RUNNING;
+}
+
+AddCommentDialog::AddCommentDialog(x11::App& app) : x11::Dialog(app)
+{}
+
+void AddCommentDialog::draw() {
+    // TODO
+}
+
+x11::AppState AddCommentDialog::handle_key_press(XEvent& evt) {
+    // TODO
+    return x11::AppState::EXIT;
+}
+
+x11::AppState AddCommentDialog::handle_key_release(XEvent& evt) {
+    // TODO
+    return x11::AppState::EXIT;
 }
 
 AddRatingDialog::AddRatingDialog(x11::App& app) : x11::Dialog(app)
@@ -237,12 +254,12 @@ void AddRatingDialog::draw() {
 
 x11::AppState AddRatingDialog::handle_key_press(XEvent& evt) {
     // TODO
-    return x11::AppState::EXIT;
+    return x11::AppState::KEEP_RUNNING;
 }
 
 x11::AppState AddRatingDialog::handle_key_release(XEvent& evt) {
     // TODO
-    return x11::AppState::EXIT;
+    return x11::AppState::KEEP_RUNNING;
 }
 
 AddTagsDialog::AddTagsDialog(x11::App& app) : x11::Dialog(app)
@@ -254,10 +271,12 @@ void AddTagsDialog::draw() {
 
 x11::AppState AddTagsDialog::handle_key_press(XEvent& evt) {
     // TODO
+    return x11::AppState::KEEP_RUNNING;
 }
 
 x11::AppState AddTagsDialog::handle_key_release(XEvent& evt) {
     // TODO
+    return x11::AppState::KEEP_RUNNING;
 }
 
 } // namespace bbm

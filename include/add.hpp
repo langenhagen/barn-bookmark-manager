@@ -30,19 +30,26 @@ bool fetch_url_and_title(std::string& url, std::string& title);
 /*Store Bookmark on disk.*/
 bool save_bookmark(const Bookmark& bookmark, const fs::path& directory);
 
-struct AddCommentDialog : x11::Dialog {
-    AddCommentDialog(x11::App& app);
+struct ReviewURLDialog : x11::Dialog {
+    bool is_initalized = false;
+    bool has_querystring = false;
+    bool keep_querystring = false;
+
+    ReviewURLDialog(x11::App& app);
     void draw();
     x11::AppState handle_key_press(XEvent& evt);
     x11::AppState handle_key_release(XEvent& evt);
 };
 
 struct AddPathDialog : x11::Dialog {
-    bool is_initalized = false;
-    bool has_querystring = false;
-    bool keep_querystring = false;
-
     AddPathDialog(x11::App& app);
+    void draw();
+    x11::AppState handle_key_press(XEvent& evt);
+    x11::AppState handle_key_release(XEvent& evt);
+};
+
+struct AddCommentDialog : x11::Dialog {
+    AddCommentDialog(x11::App& app);
     void draw();
     x11::AppState handle_key_press(XEvent& evt);
     x11::AppState handle_key_release(XEvent& evt);
