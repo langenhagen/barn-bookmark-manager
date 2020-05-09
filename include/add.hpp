@@ -27,6 +27,9 @@ struct Context {
 /*Fetch the url and the website tile from the focused Chrome top window.*/
 bool fetch_url_and_title(std::string& url, std::string& title);
 
+/*Add application dialogs from dialog sequence settings.*/
+void add_dialogs_to_app(x11::App& app);
+
 /*Store Bookmark on disk.*/
 bool save_bookmark(const Bookmark& bookmark, const fs::path& directory);
 

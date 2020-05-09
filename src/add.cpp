@@ -4,6 +4,7 @@ author: andreasl
 */
 #include "add.hpp"
 
+#include "add_settings.hpp"
 #include "bookmark.hpp"
 #include "log.hpp"
 #include "x_app.hpp"
@@ -92,6 +93,31 @@ XKeyEvent create_key_event(
 }
 
 } // namespace
+
+void add_dialogs_to_app(x11::App& app) {
+    for (const Dialog dialog : app.settings->dialog_sequence) {
+        switch (dialog) {
+                case Dialog::review_url:
+                    app.dialogs.emplace_back(std::make_shared<ReviewURLDialog>(app));
+                    break;
+                case Dialog::ask_for_comment:
+                    app.dialogs.emplace_back(std::make_shared<AddCommentDialog>(app));
+                    break;
+                case Dialog::ask_for_path:
+                    app.dialogs.emplace_back(std::make_shared<AddPathDialog>(app));
+                    break;
+                case Dialog::ask_for_rating:
+                    app.dialogs.emplace_back(std::make_shared<AddRatingDialog>(app));
+                    break;
+                case Dialog::ask_for_tags:
+                    app.dialogs.emplace_back(std::make_shared<AddTagsDialog>(app));
+                    break;
+                default:
+                    log(WARN) << "Unknown dialog type: "
+                        << static_cast<std::underlying_type<Dialog>::type>(dialog) << std::endl;
+        }
+    }
+}
 
 bool fetch_url_and_title(std::string& url, std::string& title) {
     std::unique_ptr<xdo_t, decltype(&xdo_free)> xdo(xdo_new(nullptr), &xdo_free);
