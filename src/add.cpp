@@ -97,24 +97,24 @@ XKeyEvent create_key_event(
 void add_dialogs_to_app(x11::App& app) {
     for (const Dialog dialog : app.settings->dialog_sequence) {
         switch (dialog) {
-                case Dialog::review_url:
-                    app.dialogs.emplace_back(std::make_shared<ReviewURLDialog>(app));
-                    break;
-                case Dialog::ask_for_comment:
-                    app.dialogs.emplace_back(std::make_shared<AddCommentDialog>(app));
-                    break;
-                case Dialog::ask_for_path:
-                    app.dialogs.emplace_back(std::make_shared<AddPathDialog>(app));
-                    break;
-                case Dialog::ask_for_rating:
-                    app.dialogs.emplace_back(std::make_shared<AddRatingDialog>(app));
-                    break;
-                case Dialog::ask_for_tags:
-                    app.dialogs.emplace_back(std::make_shared<AddTagsDialog>(app));
-                    break;
-                default:
-                    log(WARN) << "Unknown dialog type: "
-                        << static_cast<std::underlying_type<Dialog>::type>(dialog) << std::endl;
+            case Dialog::review_url:
+                app.dialogs.emplace_back(std::make_shared<ReviewURLDialog>(app));
+                break;
+            case Dialog::ask_for_comment:
+                app.dialogs.emplace_back(std::make_shared<AddCommentDialog>(app));
+                break;
+            case Dialog::ask_for_path:
+                app.dialogs.emplace_back(std::make_shared<AddPathDialog>(app));
+                break;
+            case Dialog::ask_for_rating:
+                app.dialogs.emplace_back(std::make_shared<AddRatingDialog>(app));
+                break;
+            case Dialog::ask_for_tags:
+                app.dialogs.emplace_back(std::make_shared<AddTagsDialog>(app));
+                break;
+            default:
+                log(WARN) << "Unknown dialog type: "
+                    << static_cast<std::underlying_type<Dialog>::type>(dialog) << std::endl;
         }
     }
 }
