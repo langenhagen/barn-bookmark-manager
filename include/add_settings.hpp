@@ -13,12 +13,13 @@ namespace fs = std::experimental::filesystem;
 namespace barn {
 namespace bbm {
 
-/*Dialogues for the add bookmark application flow.*/
+/*Dialogs for the add bookmark application flow.*/
 enum class Dialog {
-    ask_for_comment  /*bookmark comment dialog*/,
-    ask_for_path  /*bookmark folder dialog*/,
-    ask_for_rating  /*bookmark rating dialog*/,
-    ask_for_tags  /*bookmark tags dialog*/
+    review_url  /*Review URL dialog.*/,
+    ask_for_comment  /*Bookmark comment dialog.*/,
+    ask_for_path  /*Bookmark folder dialog.*/,
+    ask_for_rating  /*Bookmark rating dialog.*/,
+    ask_for_tags  /*Bookmark tags dialog.*/
 };
 
 /*Settings for the BBM Add app.*/
