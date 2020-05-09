@@ -72,20 +72,20 @@ bool write(const YAML::Emitter& yaml, const fs::path& directory) {
 
 /*Create x11 key event.*/
 XKeyEvent create_key_event(
-        Display* display,
+        Display* dpy,
         Window& win,
         Window& root,
         bool press,
         int keycode,
         int modifiers) {
     XKeyEvent evt;
-    evt.display = display;
+    evt.display = dpy;
     evt.window = win;
     evt.root = root;
     evt.subwindow = None;
     evt.time = CurrentTime;
     evt.same_screen = True;
-    evt.keycode = XKeysymToKeycode(display, keycode);
+    evt.keycode = XKeysymToKeycode(dpy, keycode);
     evt.state = modifiers;
     evt.type = press ? KeyPress : KeyRelease;
     return evt;
@@ -110,25 +110,25 @@ bool fetch_url_and_title(std::string& url, std::string& title) {
     }
 
     /*focus the chrome address bar*/
-    Display* display = XOpenDisplay(nullptr);
-    Window root = XDefaultRootWindow(display);
+    Display* dpy = XOpenDisplay(nullptr);
+    Window root = XDefaultRootWindow(dpy);
     int revert;
-    XGetInputFocus(display, &win, &revert);
+    XGetInputFocus(dpy, &win, &revert);
 
     XEvent focus_evt;
-    focus_evt.xkey = create_key_event(display, win, root, true, XK_l, ControlMask);
+    focus_evt.xkey = create_key_event(dpy, win, root, true, XK_l, ControlMask);
     XSendEvent(focus_evt.xkey.display, focus_evt.xkey.window, True, KeyPressMask, &focus_evt);
 
-    XFlush(display);
+    XFlush(dpy);
     std::this_thread::sleep_for(std::chrono::milliseconds(3));
 
     /*copy the url*/
     XEvent copy_evt;
-    copy_evt.xkey = create_key_event(display, win, root, true, XK_c, ControlMask);
+    copy_evt.xkey = create_key_event(dpy, win, root, true, XK_c, ControlMask);
     XSendEvent(copy_evt.xkey.display, copy_evt.xkey.window, True, KeyPressMask, &copy_evt);
 
-    XFlush(display);
-    XCloseDisplay(display);
+    XFlush(dpy);
+    XCloseDisplay(dpy);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(3));
     url = ::barn::x11::cp::get_text_from_clipboard();

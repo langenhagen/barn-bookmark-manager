@@ -30,14 +30,14 @@ App::App(const std::shared_ptr<Settings>& settings, std::shared_ptr<Context>& co
 :
 settings(settings),
 context(context),
-display(XOpenDisplay(nullptr)),
-screen(DefaultScreen(display)),
-root_win(RootWindow(display, screen)),
+dpy(XOpenDisplay(nullptr)),
+screen(DefaultScreen(dpy)),
+root_win(RootWindow(dpy, screen)),
 win(setup_window()),
-gc(XCreateGC(display, win, 0, 0)),
-xft_drawable(XftDrawCreate(display, win, DefaultVisual(display, 0), DefaultColormap(display, 0))),
+gc(XCreateGC(dpy, win, 0, 0)),
+xft_drawable(XftDrawCreate(dpy, win, DefaultVisual(dpy, 0), DefaultColormap(dpy, 0))),
 font(XftFontOpen(
-    display,
+    dpy,
     screen,
     XFT_FAMILY,
     XftTypeString,
@@ -48,11 +48,11 @@ font(XftFontOpen(
     nullptr)),
 app_bg(0x222222),
 line_height(font->ascent + font->descent),
-fc_text(alloc_color(display, screen, {65535, 65535, 65535, 0})),
-fc_label(alloc_color(display, screen, {30000, 30000, 30000, 65535})),
-fc_hint(alloc_color(display, screen, {30000, 30000, 30000, 65535})) {
+fc_text(alloc_color(dpy, screen, {65535, 65535, 65535, 0})),
+fc_label(alloc_color(dpy, screen, {30000, 30000, 30000, 65535})),
+fc_hint(alloc_color(dpy, screen, {30000, 30000, 30000, 65535})) {
     XSetStandardProperties(
-        this->display,
+        this->dpy,
         this->win,
         "Barn's Bookmark Manager",
         "",
@@ -63,13 +63,13 @@ fc_hint(alloc_color(display, screen, {30000, 30000, 30000, 65535})) {
 }
 
 App::~App() {
-    free_color(this->display, screen, this->fc_text);
-    free_color(this->display, screen, this->fc_label);
-    free_color(this->display, screen, this->fc_hint);
+    free_color(this->dpy, screen, this->fc_text);
+    free_color(this->dpy, screen, this->fc_label);
+    free_color(this->dpy, screen, this->fc_hint);
 
-    XFreeGC(this->display, this->gc);
-    XDestroyWindow(this->display, this->win);
-    XCloseDisplay(this->display);
+    XFreeGC(this->dpy, this->gc);
+    XDestroyWindow(this->dpy, this->win);
+    XCloseDisplay(this->dpy);
 }
 
 Window App::setup_window() {
@@ -83,7 +83,7 @@ Window App::setup_window() {
         | VisibilityChangeMask;
 
     return XCreateWindow(
-        this->display,
+        this->dpy,
         this->root_win,
         1,
         1,
@@ -102,7 +102,7 @@ bool App::grab_keyboard() {
     We may have to wait for another process to ungrab.*/
     for (int i = 0; i < 1000; ++i) {
         const int grab_result = XGrabKeyboard(
-            this->display,
+            this->dpy,
             this->root_win,
             True,
             GrabModeAsync,
@@ -118,11 +118,11 @@ bool App::grab_keyboard() {
 }
 
 int App::resize_window(const int rows, const int cols) {
-    const Screen* const screen DefaultScreenOfDisplay(this->display);
+    const Screen* const screen DefaultScreenOfDisplay(this->dpy);
     const auto width = cols * this->font->max_advance_width;
     const auto height = rows * this->line_height;
     return XMoveResizeWindow(
-        this->display,
+        this->dpy,
         this->win,
         (screen->width - width) / 2,
         (screen->height - height) / 3,
@@ -131,7 +131,7 @@ int App::resize_window(const int rows, const int cols) {
 }
 
 void App::redraw() {
-    XClearWindow(this->display, this->win);
+    XClearWindow(this->dpy, this->win);
     (*dialog_it)->draw();
 }
 
@@ -186,12 +186,12 @@ void App::run() {
         log(WARN) << "Past last dialog." << std::endl;
         return;
     }
-    XMapRaised(this->display, this->win);
+    XMapRaised(this->dpy, this->win);
 
 
     XEvent evt;
     AppState state = AppState::KEEP_RUNNING;
-    while (state != AppState::EXIT && !XNextEvent(this->display, &evt)) {
+    while (state != AppState::EXIT && !XNextEvent(this->dpy, &evt)) {
         switch (evt.type) {
             case Expose:
                 if (evt.xexpose.count == 0) {
@@ -200,7 +200,7 @@ void App::run() {
                 break;
             case VisibilityNotify:
                 if (evt.xvisibility.state != VisibilityUnobscured) {
-                    XRaiseWindow(this->display, this->win);
+                    XRaiseWindow(this->dpy, this->win);
                 }
                 break;
             case KeyPress:

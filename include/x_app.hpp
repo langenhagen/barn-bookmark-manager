@@ -44,7 +44,7 @@ struct App {
     const std::shared_ptr<Settings> settings;  /*Application settings.*/
     std::shared_ptr<Context> context;  /*The application's data.*/
 
-    Display* display;  /*X11 display.*/
+    Display* dpy;  /*X11 dpy.*/
     int screen;  /*X11 screen number.*/
     Window root_win;  /*X11 root window.*/
     Window win;  /*X11 application window.*/
