@@ -8,7 +8,6 @@ author: andreasl
 #include "x_app.hpp"
 
 #include <experimental/filesystem>
-#include <memory>
 #include <string>
 
 #include <X11/Xlib.h>

@@ -13,7 +13,6 @@ author: andreasl
 #include <exception>
 #include <experimental/filesystem>
 #include <fstream>
-#include <string>
 
 namespace fs = std::experimental::filesystem;
 
