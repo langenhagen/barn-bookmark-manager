@@ -91,41 +91,6 @@ XKeyEvent create_key_event(
     return evt;
 }
 
-XftColor alloc_color(const x11::App& app, const XRenderColor& color) {
-    XftColor xft_color;
-    XftColorAllocValue(
-        app.display,
-        DefaultVisual(app.display, app.screen),
-        DefaultColormap(app.display, app.screen),
-        &color,
-        &xft_color);
-    return xft_color;
-}
-
-void free_color(const x11::App& app, XftColor& xft_color) {
-    XftColorFree(
-        app.display,
-        DefaultVisual(app.display, app.screen),
-        DefaultColormap(app.display, app.screen),
-        &xft_color);
-}
-
-void draw_text(
-        const x11::App& app,
-        const XftColor& xft_color,
-        const std::string& str,
-        const float row,
-        const float col) {
-    XftDrawStringUtf8(
-        app.xft_drawable,
-        &xft_color,
-        app.font,
-        col * app.font->max_advance_width,
-        row * app.line_height,
-        (unsigned char*)str.c_str(),
-        str.length());
-}
-
 } // namespace
 
 bool fetch_url_and_title(std::string& url, std::string& title) {
@@ -234,27 +199,21 @@ void AddPathDialog::draw() {
 
     const auto title_padding = std::max((100 - app.context->bookmark.title.length())/2, 0ul);
 
-    auto gray = alloc_color(app, {30000, 30000, 30000, 65535});
-    auto white = alloc_color(app, {65535, 65535, 65535, 0});
-    draw_text(app, white, app.context->bookmark.title, 2, title_padding);
-    draw_text(app, gray, "Url:", 4, 2);
-    draw_text(app, white, app.context->bookmark.url, 5, 2);
-    free_color(app, white);
+    draw_text(app, app.fc_text, app.context->bookmark.title, 2, title_padding);
+    draw_text(app, app.fc_label, "Url:", 4, 2);
+    draw_text(app, app.fc_text, app.context->bookmark.url, 5, 2);
 
     if (has_querystring) {
         if(keep_querystring) {
-            draw_text(app, gray, "(q) Delete Querystring", 8, 1);
+            draw_text(app, app.fc_label, "(q) Delete Querystring", 8, 1);
         } else {
-            draw_text(app, gray, "(q) Keep Querystring", 8, 1);
+            draw_text(app, app.fc_label, "(q) Keep Querystring", 8, 1);
         }
     }
-    free_color(app, gray);
 
-    auto grey = alloc_color(app, {30000, 30000, 30000, 65535});
-    draw_text(app, grey, "<Esc>: Cancel", 13, 1);
-    draw_text(app, grey, "<Enter>: Continue", 12, 81);
-    draw_text(app, grey, "<Ctrl> + <Enter>: Finish", 13, 74);
-    free_color(app, grey);
+    draw_text(app, app.fc_hint, "<Esc>: Cancel", 13, 1);
+    draw_text(app, app.fc_hint, "<Enter>: Continue", 12, 81);
+    draw_text(app, app.fc_hint, "<Ctrl> + <Enter>: Finish", 13, 74);
 }
 
 x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {

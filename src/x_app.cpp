@@ -46,8 +46,11 @@ font(XftFontOpen(
     XftTypeDouble,
     font_size,
     nullptr)),
-line_height(font->ascent + font->descent) {
-
+app_bg(0x222222),
+line_height(font->ascent + font->descent),
+fc_text(alloc_color(display, screen, {65535, 65535, 65535, 0})),
+fc_label(alloc_color(display, screen, {30000, 30000, 30000, 65535})),
+fc_hint(alloc_color(display, screen, {30000, 30000, 30000, 65535})) {
     XSetStandardProperties(
         this->display,
         this->win,
@@ -60,6 +63,10 @@ line_height(font->ascent + font->descent) {
 }
 
 App::~App() {
+    free_color(this->display, screen, this->fc_text);
+    free_color(this->display, screen, this->fc_label);
+    free_color(this->display, screen, this->fc_hint);
+
     XFreeGC(this->display, this->gc);
     XDestroyWindow(this->display, this->win);
     XCloseDisplay(this->display);
@@ -217,6 +224,41 @@ void App::run() {
                 break;
         }
     }
+}
+
+XftColor alloc_color(Display* dpy, const int screen, const XRenderColor& color) {
+    XftColor xft_color;
+    XftColorAllocValue(
+        dpy,
+        DefaultVisual(dpy, screen),
+        DefaultColormap(dpy, screen),
+        &color,
+        &xft_color);
+    return xft_color;
+}
+
+void free_color(Display* dpy, const int screen, XftColor& xft_color) {
+    XftColorFree(
+        dpy,
+        DefaultVisual(dpy, screen),
+        DefaultColormap(dpy, screen),
+        &xft_color);
+}
+
+void draw_text(
+        const x11::App& app,
+        const XftColor& xft_color,
+        const std::string& str,
+        const float row,
+        const float col) {
+    XftDrawStringUtf8(
+        app.xft_drawable,
+        &xft_color,
+        app.font,
+        col * app.font->max_advance_width,
+        row * app.line_height,
+        (unsigned char*)str.c_str(),
+        str.length());
 }
 
 } // namespace x11
