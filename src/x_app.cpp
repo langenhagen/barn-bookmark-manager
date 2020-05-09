@@ -26,6 +26,14 @@ namespace x11 {
 Dialog::Dialog(App& application) : app(application)
 {}
 
+AppState Dialog::handle_key_press(XEvent& evt) {
+    return AppState::PROCEED;
+}
+
+AppState Dialog::handle_key_release(XEvent& evt) {
+    return AppState::PROCEED;
+}
+
 App::App(const std::shared_ptr<Settings>& settings, std::shared_ptr<Context>& context)
 :
 settings(settings),

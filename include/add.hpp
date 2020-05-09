@@ -39,35 +39,26 @@ struct ReviewURLDialog : x11::Dialog {
     ReviewURLDialog(x11::App& app);
     void draw();
     x11::AppState handle_key_press(XEvent& evt);
-    x11::AppState handle_key_release(XEvent& evt);
 };
 
 struct AddPathDialog : x11::Dialog {
     AddPathDialog(x11::App& app);
     void draw();
-    x11::AppState handle_key_press(XEvent& evt);
-    x11::AppState handle_key_release(XEvent& evt);
 };
 
 struct AddCommentDialog : x11::Dialog {
     AddCommentDialog(x11::App& app);
     void draw();
-    x11::AppState handle_key_press(XEvent& evt);
-    x11::AppState handle_key_release(XEvent& evt);
 };
 
 struct AddRatingDialog : x11::Dialog {
     AddRatingDialog(x11::App& app);
     void draw();
-    x11::AppState handle_key_press(XEvent& evt);
-    x11::AppState handle_key_release(XEvent& evt);
 };
 
 struct AddTagsDialog : x11::Dialog {
     AddTagsDialog(x11::App& app);
     void draw();
-    x11::AppState handle_key_press(XEvent& evt);
-    x11::AppState handle_key_release(XEvent& evt);
 };
 
 } // namespace bbm

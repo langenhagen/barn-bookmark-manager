@@ -238,26 +238,11 @@ x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
     }
 }
 
-x11::AppState ReviewURLDialog::handle_key_release(XEvent& evt) {
-    // TODO
-    return x11::AppState::KEEP_RUNNING;
-}
-
 AddPathDialog::AddPathDialog(x11::App& app) : x11::Dialog(app)
 {}
 
 void AddPathDialog::draw() {
     // TODO
-}
-
-x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {
-    // TODO
-    return x11::AppState::PROCEED;
-}
-
-x11::AppState AddPathDialog::handle_key_release(XEvent& evt) {
-    // TODO
-    return x11::AppState::PROCEED;
 }
 
 AddCommentDialog::AddCommentDialog(x11::App& app) : x11::Dialog(app)
@@ -267,16 +252,6 @@ void AddCommentDialog::draw() {
     // TODO
 }
 
-x11::AppState AddCommentDialog::handle_key_press(XEvent& evt) {
-    // TODO
-    return x11::AppState::PROCEED;
-}
-
-x11::AppState AddCommentDialog::handle_key_release(XEvent& evt) {
-    // TODO
-    return x11::AppState::PROCEED;
-}
-
 AddRatingDialog::AddRatingDialog(x11::App& app) : x11::Dialog(app)
 {}
 
@@ -284,31 +259,11 @@ void AddRatingDialog::draw() {
     // TODO
 }
 
-x11::AppState AddRatingDialog::handle_key_press(XEvent& evt) {
-    // TODO
-    return x11::AppState::PROCEED;
-}
-
-x11::AppState AddRatingDialog::handle_key_release(XEvent& evt) {
-    // TODO
-    return x11::AppState::PROCEED;
-}
-
 AddTagsDialog::AddTagsDialog(x11::App& app) : x11::Dialog(app)
 {}
 
 void AddTagsDialog::draw() {
     // TODO
-}
-
-x11::AppState AddTagsDialog::handle_key_press(XEvent& evt) {
-    // TODO
-    return x11::AppState::PROCEED;
-}
-
-x11::AppState AddTagsDialog::handle_key_release(XEvent& evt) {
-    // TODO
-    return x11::AppState::PROCEED;
 }
 
 } // namespace bbm

@@ -36,8 +36,8 @@ struct Dialog {
 
     Dialog(App& app);  /*Constructor.*/
     virtual void draw() = 0;  /*Draw the window.*/
-    virtual AppState handle_key_press(XEvent& evt) = 0;  /*Handle key press events.*/
-    virtual AppState handle_key_release(XEvent& evt) = 0;  /*Handle key release events.*/
+    virtual AppState handle_key_press(XEvent& evt);  /*Handle key press events.*/
+    virtual AppState handle_key_release(XEvent& evt);  /*Handle key release events.*/
 };
 
 /*Single-window x11 application for dialog sequences.*/
