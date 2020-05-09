@@ -226,10 +226,16 @@ void ReviewURLDialog::draw() {
 }
 
 x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
-    if (evt.xkey.keycode == 9 /*esc*/) {
-        return x11::AppState::EXIT;
+    switch(evt.xkey.keycode) {
+        case 9: /*esc*/
+            app.context->do_store = false;
+            return x11::AppState::EXIT;
+        case 36: /*enter*/
+            if (this->app.is_ctrl_pressed()) {
+                return x11::AppState::EXIT;
+            }
+            return x11::AppState::PROCEED;
     }
-    return x11::AppState::KEEP_RUNNING;
 }
 
 x11::AppState ReviewURLDialog::handle_key_release(XEvent& evt) {

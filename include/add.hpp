@@ -20,7 +20,7 @@ namespace bbm {
 /*The BBM Add app context.*/
 struct Context {
     Bookmark bookmark;  /*The bookmark.*/
-    bool do_store = false;  /*Whether or not to store the bookmark.*/
+    bool do_store = true;  /*Whether or not to store the bookmark.*/
 };
 
 /*Fetch the url and the website tile from the focused Chrome top window.*/
