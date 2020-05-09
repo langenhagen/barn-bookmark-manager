@@ -31,7 +31,6 @@ bool fetch_url_and_title(std::string& url, std::string& title);
 bool save_bookmark(const Bookmark& bookmark, const fs::path& directory);
 
 struct ReviewURLDialog : x11::Dialog {
-    bool is_initalized = false;
     bool has_querystring = false;
     bool keep_querystring = false;
 

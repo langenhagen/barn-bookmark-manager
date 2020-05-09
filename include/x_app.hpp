@@ -32,6 +32,7 @@ enum class AppState {
 /*Represents dialogs.*/
 struct Dialog {
     App& app;  /*Enclosing application.*/
+    bool is_initalized = false;  /*Indicate whether the dialog has been set up.*/
 
     Dialog(App& app);  /*Constructor.*/
     virtual void draw() = 0;  /*Draw the window.*/
