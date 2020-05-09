@@ -27,6 +27,9 @@ int main(int argc, const char* argv[]) {
     auto context = std::make_shared<Context>(Context{{std::move(url), std::move(title)}});
     x11::App app(settings, context);
     app.dialogs.emplace_back(std::make_shared<ReviewURLDialog>(app));
+
+    // TODO add further dialogs according to settings
+
     app.run();
 
     if (context->do_store) {
