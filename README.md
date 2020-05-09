@@ -72,7 +72,7 @@ maximize flexibility.
 - implement functionality
 - consider cleanup() function for x11 and stuff prior to exit
 - add an optimized Release build
-- adjust THIRD_PARTY
+- review THIRD_PARTY
 - add usage section
 - implement gui
 - provide example .config folder structure
