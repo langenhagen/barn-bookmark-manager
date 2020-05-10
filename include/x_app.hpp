@@ -52,10 +52,13 @@ struct App {
     GC gc;  /*X11 graphics context.*/
     XftDraw* xft_drawable;  /*Xft text drawable.*/
     XftFont* font;  /*Xft text font.*/
+    unsigned int win_width;  /*Window width.*/
+    unsigned int win_height;  /*Window height.*/
     constexpr static const float font_size = 10.0;  /*Font size.*/
     unsigned int line_height;  /*Font-dependent line height.*/
 
-    const int app_bg;  /*Application background color.*/
+    const int bc_app;  /*Application background color.*/
+    const int fc_app_frame;  /*Application frame color.*/
     XftColor fc_text;  /*Text color.*/
     XftColor fc_label;  /*Explanatory text color.*/
     XftColor fc_hint;  /*Hint text color.*/
@@ -78,6 +81,7 @@ struct App {
     Window setup_window();  /*Create an x11 window.*/
     bool grab_keyboard();  /*Grab keyboard focus.*/
     int resize_window(int rows, int cols);  /*Resize the application window.*/
+    void draw_frame();  /*Draw a small frame at the window edges*/
     void redraw();  /*Clean redraw the window.*/
     AppState handle_key_press(XEvent& evt);  /*Handle key press events.*/
     AppState handle_key_release(XEvent& evt);  /*Handle key release events.*/

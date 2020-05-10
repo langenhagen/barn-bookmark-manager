@@ -63,8 +63,9 @@ font(XftFontOpen(
     XftTypeDouble,
     font_size,
     nullptr)),
-app_bg(0x222222),
 line_height(font->ascent + font->descent),
+bc_app(0x222222),
+fc_app_frame(0xbbbbbb),
 fc_text(alloc_color(dpy, screen, {65535, 65535, 65535, 0})),
 fc_label(alloc_color(dpy, screen, {30000, 30000, 30000, 65535})),
 fc_hint(alloc_color(dpy, screen, {30000, 30000, 30000, 65535})) {
@@ -92,7 +93,7 @@ App::~App() {
 Window App::setup_window() {
     XSetWindowAttributes attrs;
     attrs.override_redirect = True;
-    attrs.background_pixel = 0x222222;
+    attrs.background_pixel = this->bc_app;
     attrs.event_mask =
         ExposureMask
         | KeyPressMask
@@ -136,19 +137,25 @@ bool App::grab_keyboard() {
 
 int App::resize_window(const int rows, const int cols) {
     const Screen* const screen DefaultScreenOfDisplay(this->dpy);
-    const auto width = cols * this->font->max_advance_width;
-    const auto height = rows * this->line_height;
+    this->win_width = cols * this->font->max_advance_width;
+    this->win_height = rows * this->line_height;
     return XMoveResizeWindow(
         this->dpy,
         this->win,
-        (screen->width - width) / 2,
-        (screen->height - height) / 3,
-        width,
-        height);
+        (screen->width - this->win_width) / 2,
+        (screen->height - this->win_height) / 3,
+        this->win_width,
+        this->win_height);
+}
+
+void App::draw_frame() {
+    XSetForeground(this->dpy, this->gc, this->fc_app_frame);
+    XDrawRectangle(this->dpy, this->win, this->gc, 0, 0, this->win_width - 1, this->win_height -1 );
 }
 
 void App::redraw() {
     XClearWindow(this->dpy, this->win);
+    draw_frame();
     (*dialog_it)->draw();
 }
 

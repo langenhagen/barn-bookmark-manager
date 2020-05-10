@@ -197,16 +197,15 @@ ReviewURLDialog::ReviewURLDialog(x11::App& app) : x11::Dialog(app)
 {}
 
 void ReviewURLDialog::draw() {
+    constexpr static const int win_width = 100;
     if (!is_initalized) {
-        app.resize_window(14, 100);
+        app.resize_window(14, win_width);
         has_querystring = true; // TODO check if url has querystring
         is_initalized = true;
     }
 
-    std::stringstream ss;
-    ss << app.line_height;
-
-    const auto title_padding = std::max((100 - app.context->bookmark.title.length())/2, 0ul);
+    const int title_length = app.context->bookmark.title.length();
+    const auto title_padding = std::max((win_width - title_length)/2, 1);
 
     draw_text(app, app.fc_text, app.context->bookmark.title, 2, title_padding);
     draw_text(app, app.fc_label, "Url:", 4, 2);
