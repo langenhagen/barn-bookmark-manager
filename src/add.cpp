@@ -229,13 +229,12 @@ x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
     switch(evt.xkey.keycode) {
         case 9: /*esc*/
             app.context->do_store = false;
-            return x11::AppState::EXIT;
-        case 36: /*enter*/
-            if (this->app.is_ctrl_pressed()) {
-                return x11::AppState::EXIT;
-            }
-            return x11::AppState::PROCEED;
+            break;
+        case 24: /*q*/
+            // TODO handle querystring
+            break;
     }
+    return Dialog::handle_key_press(evt);
 }
 
 AddPathDialog::AddPathDialog(x11::App& app) : x11::Dialog(app)

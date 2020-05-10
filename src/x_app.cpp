@@ -27,11 +27,20 @@ Dialog::Dialog(App& application) : app(application)
 {}
 
 AppState Dialog::handle_key_press(XEvent& evt) {
-    return AppState::PROCEED;
+    switch(evt.xkey.keycode) {
+        case 9: /*esc*/
+            return x11::AppState::EXIT;
+        case 36: /*enter*/
+            if (this->app.is_ctrl_pressed()) {
+                return x11::AppState::EXIT;
+            }
+            return x11::AppState::PROCEED;
+    }
+    return x11::AppState::KEEP_RUNNING;
 }
 
 AppState Dialog::handle_key_release(XEvent& evt) {
-    return AppState::PROCEED;
+    return AppState::KEEP_RUNNING;
 }
 
 App::App(const std::shared_ptr<Settings>& settings, std::shared_ptr<Context>& context)
@@ -196,7 +205,6 @@ void App::run() {
     }
     XMapRaised(this->dpy, this->win);
 
-
     XEvent evt;
     AppState state = AppState::KEEP_RUNNING;
     while (state != AppState::EXIT && !XNextEvent(this->dpy, &evt)) {
@@ -223,7 +231,9 @@ void App::run() {
                 ++dialog_it;
                 if (dialog_it == dialogs.end()) {
                     state = AppState::EXIT;
+                    break;
                 }
+                redraw();
                 break;
             case AppState::BACK:
                 if (dialog_it != dialogs.begin()) {
