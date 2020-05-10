@@ -199,30 +199,40 @@ ReviewURLDialog::ReviewURLDialog(x11::App& app) : x11::Dialog(app)
 
 void ReviewURLDialog::draw() {
     constexpr static const int win_width = 100;
+    const std::string& url = app.context->bookmark.url;
     if (!is_initalized) {
         app.resize_window(14, win_width);
-        has_querystring = true; // TODO check if url has querystring
+        querystring_start_index = url.find_first_of('?');
+        if(querystring_start_index != std::string::npos) {
+            url_without_querystring = url.substr(0, querystring_start_index);
+        }
         is_initalized = true;
     }
 
-    const int title_length = app.context->bookmark.title.length();
+    const int title_length(app.context->bookmark.title.length());
     const int title_padding = std::max((win_width - title_length)/2, 1);
 
-    draw_text(app, app.fc_text, app.context->bookmark.title, 2, title_padding);
-    draw_text(app, app.fc_label, "Url:", 4, 2);
-    draw_text(app, app.fc_text, app.context->bookmark.url, 5, 2);
+    app.draw_text(app.fc_text, app.context->bookmark.title, 2, title_padding);
+    app.draw_text(app.fc_label, "Url:", 4, 2);
 
-    if (has_querystring) {
-        if(keep_querystring) {
-            draw_text(app, app.fc_label, "(q) Delete Querystring", 8, 1);
+    if (querystring_start_index != std::string::npos) {
+        app.draw_text(app.fc_text, url_without_querystring, 5, 2);
+        const std::string querystring = url.substr(querystring_start_index);
+        const XGlyphInfo extents = app.get_text_extents(url_without_querystring);
+        if (keep_querystring) {
+            app.draw_text(app.fc_text, querystring, 5, 2, 0, extents.width);
+            app.draw_text(app.fc_label, "(q) Delete Querystring", 8, 1);
         } else {
-            draw_text(app, app.fc_label, "(q) Keep Querystring", 8, 1);
+            app.draw_text(app.fc_hint, querystring, 5, 2, 0, extents.width);
+            app.draw_text(app.fc_label, "(q) Keep Querystring", 8, 1);
         }
+    } else {
+        app.draw_text(app.fc_text, app.context->bookmark.url, 5, 2);
     }
 
-    draw_text(app, app.fc_hint, "<Esc>: Cancel", 13, 1);
-    draw_text(app, app.fc_hint, "<Enter>: Continue", 12, 81);
-    draw_text(app, app.fc_hint, "<Ctrl> + <Enter>: Finish", 13, 74);
+    app.draw_text(app.fc_hint, "<Esc>: Cancel", 13, 1);
+    app.draw_text(app.fc_hint, "<Enter>: Continue", 12, 81);
+    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", 13, 74);
 }
 
 x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
@@ -231,7 +241,13 @@ x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
             app.context->do_store = false;
             break;
         case 24: /*q*/
-            // TODO handle querystring
+            keep_querystring = !keep_querystring;
+            app.redraw();
+            break;
+        case 36: /*Enter*/
+            if (!keep_querystring) {
+                app.context->bookmark.url = url_without_querystring;
+            }
             break;
     }
     return Dialog::handle_key_press(evt);

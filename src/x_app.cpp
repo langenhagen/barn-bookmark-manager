@@ -66,9 +66,9 @@ font(XftFontOpen(
 line_height(font->ascent + font->descent),
 bc_app(0x222222),
 fc_app_frame(0xbbbbbb),
-fc_text(alloc_color(dpy, screen, {65535, 65535, 65535, 0})),
-fc_label(alloc_color(dpy, screen, {30000, 30000, 30000, 65535})),
-fc_hint(alloc_color(dpy, screen, {30000, 30000, 30000, 65535})) {
+fc_text(alloc_color({65535, 65535, 65535, 0})),
+fc_label(alloc_color({30000, 30000, 30000, 65535})),
+fc_hint(alloc_color({30000, 30000, 30000, 65535})) {
     XSetStandardProperties(
         this->dpy,
         this->win,
@@ -81,9 +81,9 @@ fc_hint(alloc_color(dpy, screen, {30000, 30000, 30000, 65535})) {
 }
 
 App::~App() {
-    free_color(this->dpy, screen, this->fc_text);
-    free_color(this->dpy, screen, this->fc_label);
-    free_color(this->dpy, screen, this->fc_hint);
+    free_color(this->fc_label);
+    free_color(this->fc_text);
+    free_color(this->fc_hint);
 
     XFreeGC(this->dpy, this->gc);
     XDestroyWindow(this->dpy, this->win);
@@ -148,20 +148,49 @@ int App::resize_window(const int rows, const int cols) {
         this->win_height);
 }
 
-void App::draw_frame() {
+XGlyphInfo App::get_text_extents(const std::string& str) {
+    XGlyphInfo extents;
+    XftTextExtents8(
+        this->dpy,
+        this->font,
+        reinterpret_cast<const XftChar8*>(str.c_str()),
+        str.length(),
+        &extents);
+    return extents;
+}
+
+void App::draw_rect_frame() {
     XSetForeground(this->dpy, this->gc, this->fc_app_frame);
     XDrawRectangle(this->dpy, this->win, this->gc, 0, 0, this->win_width - 1, this->win_height -1 );
 }
 
+void App::draw_text(
+        const XftColor& color,
+        const std::string& str,
+        const float row,
+        const float col,
+        const int y_px_offset,
+        const int x_px_offset) {
+    XftDrawStringUtf8(
+        this->xft_drawable,
+        &color,
+        this->font,
+        col * this->font->max_advance_width + x_px_offset,
+        row * this->line_height + y_px_offset,
+        (FcChar8*)str.c_str(),
+        str.length());
+}
+
 void App::redraw() {
     XClearWindow(this->dpy, this->win);
-    draw_frame();
+    draw_rect_frame();
     (*dialog_it)->draw();
 }
 
 bool App::is_ctrl_pressed() const {
     return this->ctrl_l || this->ctrl_r;
 }
+
 bool App::is_shift_pressed() const {
     return this->shift_l || this->shift_r;
 }
@@ -251,39 +280,23 @@ void App::run() {
     }
 }
 
-XftColor alloc_color(Display* dpy, const int screen, const XRenderColor& color) {
+XftColor App::alloc_color(const XRenderColor& color) {
     XftColor xft_color;
     XftColorAllocValue(
-        dpy,
-        DefaultVisual(dpy, screen),
-        DefaultColormap(dpy, screen),
+        this->dpy,
+        DefaultVisual(this->dpy, this->screen),
+        DefaultColormap(this->dpy, this->screen),
         &color,
         &xft_color);
     return xft_color;
 }
 
-void free_color(Display* dpy, const int screen, XftColor& xft_color) {
+void App::free_color(XftColor& xft_color) {
     XftColorFree(
-        dpy,
-        DefaultVisual(dpy, screen),
-        DefaultColormap(dpy, screen),
+        this->dpy,
+        DefaultVisual(this->dpy, this->screen),
+        DefaultColormap(this->dpy, this->screen),
         &xft_color);
-}
-
-void draw_text(
-        const x11::App& app,
-        const XftColor& xft_color,
-        const std::string& str,
-        const float row,
-        const float col) {
-    XftDrawStringUtf8(
-        app.xft_drawable,
-        &xft_color,
-        app.font,
-        col * app.font->max_advance_width,
-        row * app.line_height,
-        (unsigned char*)str.c_str(),
-        str.length());
 }
 
 } // namespace x11

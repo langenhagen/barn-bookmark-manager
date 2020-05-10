@@ -75,32 +75,32 @@ struct App {
     App(const std::shared_ptr<Settings>& settings, std::shared_ptr<Context>& context);
     ~App();  /*Destructor.*/
 
-    bool is_ctrl_pressed() const;  /*Indicate if a ctrl-button is pressed.*/
-    bool is_shift_pressed() const;  /*Indicate if a shift-button is pressed.*/
-
     Window setup_window();  /*Create an x11 window.*/
     bool grab_keyboard();  /*Grab keyboard focus.*/
     int resize_window(int rows, int cols);  /*Resize the application window.*/
-    void draw_frame();  /*Draw a small frame at the window edges*/
-    void redraw();  /*Clean redraw the window.*/
-    AppState handle_key_press(XEvent& evt);  /*Handle key press events.*/
-    AppState handle_key_release(XEvent& evt);  /*Handle key release events.*/
-    void run();  /*Start and run the application.*/
-};
-
-/*Allocate an Xft color.*/
-XftColor alloc_color(Display* dpy, const int screen, const XRenderColor& color);
-
-/*Free a given Xft color.*/
-void free_color(Display* dpy, const int screen, XftColor& xft_color);
-
-/*Draw text*/
-void draw_text(
-        const x11::App& app,
-        const XftColor& xft_color,
+    XGlyphInfo get_text_extents(const std::string& str);  /*Get the given text dimensions.*/
+    void draw_rect_frame();  /*Draw a small frame at the window edges*/
+    /*Draw text at the given row/column.*/
+    void draw_text(
+        const XftColor& color,
         const std::string& str,
         const float row,
-        const float col);
+        const float col,
+        const int y_px_offset = 0,
+        const int x_px_offset = 0);
+    void redraw();  /*Clean redraw the window.*/
+
+    bool is_ctrl_pressed() const;  /*Indicate if a ctrl-button is pressed.*/
+    bool is_shift_pressed() const;  /*Indicate if a shift-button is pressed.*/
+    AppState handle_key_press(XEvent& evt);  /*Handle key press events.*/
+    AppState handle_key_release(XEvent& evt);  /*Handle key release events.*/
+
+    void run();  /*Start and run the application.*/
+
+    XftColor alloc_color(const XRenderColor& color);  /*Allocate an Xft color.*/
+    void free_color(XftColor& xft_color);  /*Free a given Xft color.*/
+
+};
 
 } // namespace x11
 } // namespace bbm

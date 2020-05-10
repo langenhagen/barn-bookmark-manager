@@ -33,8 +33,9 @@ void add_dialogs_to_app(x11::App& app);
 bool save_bookmark(const Bookmark& bookmark, const fs::path& directory);
 
 struct ReviewURLDialog : x11::Dialog {
-    bool has_querystring = false;
-    bool keep_querystring = false;
+    bool keep_querystring = true;
+    size_t querystring_start_index;
+    std::string url_without_querystring;
 
     ReviewURLDialog(x11::App& app);
     void draw();
