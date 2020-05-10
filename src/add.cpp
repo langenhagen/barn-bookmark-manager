@@ -130,7 +130,8 @@ bool fetch_url_and_title(std::string& url, std::string& title) {
     xdo_get_window_name(xdo.get(), win, &win_name, &name_len, &win_type);
 
     constexpr const unsigned char chrome_win_suffix[17] = " - Google Chrome";
-    if (std::memcmp(win_name + name_len - 16, chrome_win_suffix, 16)) {
+    constexpr const int suffix_len = sizeof(chrome_win_suffix)/sizeof(*chrome_win_suffix) - 1;
+    if (std::memcmp(win_name + name_len - suffix_len, chrome_win_suffix, suffix_len)) {
         log(ERROR) << "Window \"" << win_name << "\" is not a Google Chrome window." << std::endl;
         return false;
     }
@@ -158,7 +159,7 @@ bool fetch_url_and_title(std::string& url, std::string& title) {
 
     std::this_thread::sleep_for(std::chrono::milliseconds(3));
     url = ::barn::x11::cp::get_text_from_clipboard();
-    win_name[name_len - 16] = '\0';
+    win_name[name_len - suffix_len] = '\0';
     title = std::string(reinterpret_cast<const char*>(win_name));
 
     return true;
