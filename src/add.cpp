@@ -205,7 +205,7 @@ void ReviewURLDialog::draw() {
     }
 
     const int title_length = app.context->bookmark.title.length();
-    const auto title_padding = std::max((win_width - title_length)/2, 1);
+    const int title_padding = std::max((win_width - title_length)/2, 1);
 
     draw_text(app, app.fc_text, app.context->bookmark.title, 2, title_padding);
     draw_text(app, app.fc_label, "Url:", 4, 2);
