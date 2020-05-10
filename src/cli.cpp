@@ -35,7 +35,7 @@ Options parse_options(int argc, const char* argv[]) {
     }
     if (argc == 1) {
         const fs::path path = fs::path(std::getenv("HOME"))
-            / ".config" / "barn-bookmarks" / "settings.yaml";
+            / ".config" / "barn-bookmarks" / "settings.yml";
         return Options{std::move(path)};
     }
     if (std::strcmp(argv[1], "--version") == 0 || std::strcmp(argv[1], "-v") == 0) {

@@ -31,7 +31,7 @@ Leave maintenance of folder structure to the user, i.e. leave empty folders unto
 - [ask for 1-5 star rating (keys: `1`, `2`, `3`, `4`, `5`, `<ENTER>` means no rating)]
 - create bookmark id `<id>`
 - add bookmark id `<id>` to file `ids` as most recent entry, i.e. add it to the end
-- store the bookmark info into `<id>.yaml` and download the website's text to `<id>.site.txt`
+- store the bookmark info into `<id>.yml` and download the website's text to `<id>.site.txt`
 - `ctrl+<ENTER>` or `<ENTER>` is Ok/Continue, `<ESC>` is Abort
 
 
@@ -54,7 +54,7 @@ Leave maintenance of folder structure to the user, i.e. leave empty folders unto
 
 ## Maintain Bookmarks
 - to edit a bookmark, query a bookmark and select edit (press `e`).
-- drop into the bookmark's `<id>.yaml` file with your set text editor.
+- drop into the bookmark's `<id>.yml` file with your set text editor.
 
 - to move a bookmark, query a bookmark and select move (press `m`).
 - drop into a file explorer with the current bookmark folder open
@@ -64,7 +64,7 @@ Leave maintenance of folder structure to the user, i.e. leave empty folders unto
 ## Remove Bookmarks
 - query a bookmark and select delete (key: `d`)
 - remove the bookmark from the file `ids`
-- delete the bookmark files `<id>.{yaml,site.txt}`
+- delete the bookmark files `<id>.{yml,site.txt}`
 - keep possibly empty filesystem folders and entries in `folders` and `tags`, i.e. don't touch them
 
 
@@ -77,27 +77,27 @@ A `mysql` or `mongodb` database may make sense when implementing mobile apps.
     └── barn-bookmarks/                         # barn-bookmarks root folder
         ├── folders                             # paths to bookmarks
         ├── ids
-        ├── settings.yaml
+        ├── settings.yml
         ├── tags
         └── bookmarks/
             ├── some/
-            │   ├── 1a2b3c.yaml
+            │   ├── 1a2b3c.yml
             │   ├── 1a2b3c.site.txt
-            │   ├── 2b3c4d.yaml
+            │   ├── 2b3c4d.yml
             │   ├── 2b3c4d.site.txt
             │   └── folder/
             │       └── structure/
-            │           ├── 3c4d5e.yaml
+            │           ├── 3c4d5e.yml
             │           └── 3c4d5e.site.txt
             ├── emptyfolder/
-            ├── 4d5e6f.yaml
+            ├── 4d5e6f.yml
             └── 4d5e6f.site.txt
 ```
 
 
 ## File Structures
 
-### settings.yaml
+### settings.yml
 See implementation.
 
 ### ids
@@ -136,12 +136,12 @@ mgmt
 py
 ```
 
-### <id>.{yaml,site.txt}
+### <id>.{yml,site.txt}
 Store every info to a certain bookmark in such files.
 
-#### <id>.yaml
-Store all bookmark info in `<id>.yaml`.
-```yaml
+#### <id>.yml
+Store all bookmark info in `<id>.yml`.
+```yml
 title: A Nice Blog Post!
 url: https://andiweb.com/2020/02/28/a-nice-blogpost#even-nicer
 created: 2020-02-29 16:56

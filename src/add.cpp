@@ -49,7 +49,7 @@ const std::string generate_id() {
 
 /*Write Yaml to file.*/
 bool write(const YAML::Emitter& yaml, const fs::path& directory) {
-    const std::string filename = generate_id() + ".yaml";
+    const std::string filename = generate_id() + ".yml";
     const fs::path file = directory / filename;
     try {
         if (fs::exists(file)) {
