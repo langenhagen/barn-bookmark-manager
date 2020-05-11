@@ -23,7 +23,7 @@ struct Settings;
 
 namespace x11 {
 
-Dialog::Dialog(App& application) : app(application)
+Dialog::Dialog(App& app) : app(app)
 {}
 
 AppState Dialog::handle_key_press(XEvent& evt) {
