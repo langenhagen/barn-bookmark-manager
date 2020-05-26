@@ -95,11 +95,10 @@ struct App {
     AppState handle_key_press(XEvent& evt);  /*Handle key press events.*/
     AppState handle_key_release(XEvent& evt);  /*Handle key release events.*/
 
-    void run();  /*Start and run the application.*/
+    void run();  /*Run the application.*/
 
     XftColor alloc_color(const XRenderColor& color);  /*Allocate an Xft color.*/
     void free_color(XftColor& xft_color);  /*Free a given Xft color.*/
-
 };
 
 } // namespace x11
