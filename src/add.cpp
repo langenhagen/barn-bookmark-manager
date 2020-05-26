@@ -244,7 +244,7 @@ x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
             keep_querystring = !keep_querystring;
             app.redraw();
             break;
-        case 36: /*Enter*/
+        case 23: /*Tab*/
             if (!keep_querystring) {
                 app.context->bookmark.url = url_without_querystring;
             }
@@ -253,11 +253,37 @@ x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
     return Dialog::handle_key_press(evt);
 }
 
-AddPathDialog::AddPathDialog(x11::App& app) : x11::Dialog(app)
+AddPathDialog::AddPathDialog(x11::App& app) : x11::Dialog(app), txt_path(app, 10, 20, 240, 90, 7)
 {}
 
 void AddPathDialog::draw() {
-    // TODO
+    constexpr static const int win_width = 100;
+    const std::string& url = app.context->bookmark.url;
+    if (!is_initalized) {
+        app.resize_window(14, win_width);
+        txt_path.set_focus(true);
+        is_initalized = true;
+    }
+
+    app.draw_text(app.fc_label, "Url:", 4, 2);
+    txt_path.draw();
+
+    app.draw_text(app.fc_hint, "<Esc>: Cancel", 13, 1);
+    app.draw_text(app.fc_hint, "<Enter>: Continue", 12, 81);
+    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", 13, 74);
+}
+
+x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {
+    switch(evt.xkey.keycode) {
+        case 9: /*esc*/
+            app.context->do_store = false;
+            break;
+    }
+    txt_path.handle_key_press(evt);
+    if (txt_path.has_focus()) {
+        app.redraw();
+    }
+    return Dialog::handle_key_press(evt);
 }
 
 AddCommentDialog::AddCommentDialog(x11::App& app) : x11::Dialog(app)
