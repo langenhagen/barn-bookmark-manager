@@ -10,4 +10,5 @@ set(BBM_FETCH_SOURCES
     "src/fetch.cpp"
     "src/log.cpp"
     "src/x_app.cpp"
+    "src/x_copy_paste.cpp"
 )
