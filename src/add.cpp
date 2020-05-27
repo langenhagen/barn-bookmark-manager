@@ -94,31 +94,6 @@ XKeyEvent create_key_event(
 
 } // namespace
 
-void add_dialogs_to_app(x11::App& app) {
-    for (const Dialog dialog : app.settings->dialog_sequence) {
-        switch (dialog) {
-            case Dialog::review_url:
-                app.dialogs.emplace_back(std::make_shared<ReviewURLDialog>(app));
-                break;
-            case Dialog::ask_for_comment:
-                app.dialogs.emplace_back(std::make_shared<AddCommentDialog>(app));
-                break;
-            case Dialog::ask_for_path:
-                app.dialogs.emplace_back(std::make_shared<AddPathDialog>(app));
-                break;
-            case Dialog::ask_for_rating:
-                app.dialogs.emplace_back(std::make_shared<AddRatingDialog>(app));
-                break;
-            case Dialog::ask_for_tags:
-                app.dialogs.emplace_back(std::make_shared<AddTagsDialog>(app));
-                break;
-            default:
-                log(WARN) << "Unknown dialog type: "
-                    << static_cast<std::underlying_type<Dialog>::type>(dialog) << std::endl;
-        }
-    }
-}
-
 bool fetch_url_and_title(std::string& url, std::string& title) {
     std::unique_ptr<xdo_t, decltype(&xdo_free)> xdo(xdo_new(nullptr), &xdo_free);
 
@@ -165,6 +140,39 @@ bool fetch_url_and_title(std::string& url, std::string& title) {
     return true;
 }
 
+void add_dialogs_to_app(x11::App& app) {
+    for (const Dialog dialog : app.settings->dialog_sequence) {
+        switch (dialog) {
+            case Dialog::review_url:
+                app.dialogs.emplace_back(std::make_shared<ReviewURLDialog>(app));
+                break;
+            case Dialog::ask_for_comment:
+                app.dialogs.emplace_back(std::make_shared<AddCommentDialog>(app));
+                break;
+            case Dialog::ask_for_path:
+                app.dialogs.emplace_back(std::make_shared<AddPathDialog>(app));
+                break;
+            case Dialog::ask_for_rating:
+                app.dialogs.emplace_back(std::make_shared<AddRatingDialog>(app));
+                break;
+            case Dialog::ask_for_tags:
+                app.dialogs.emplace_back(std::make_shared<AddTagsDialog>(app));
+                break;
+            default:
+                log(WARN) << "Unknown dialog type: "
+                    << static_cast<std::underlying_type<Dialog>::type>(dialog) << std::endl;
+        }
+    }
+}
+
+std::string remove_querystring(const std::string& url) {
+    const size_t querystring_start_index = url.find_first_of('?');
+    if (querystring_start_index != std::string::npos) {
+        return url.substr(0, querystring_start_index);
+    }
+    return url;
+}
+
 bool save_bookmark(const Bookmark& bookmark, const fs::path& directory) {
     /*create bookmark folder*/
     try {
@@ -202,10 +210,7 @@ void ReviewURLDialog::draw() {
     const std::string& url = app.context->bookmark.url;
     if (!is_initalized) {
         app.resize_window(14, win_width);
-        querystring_start_index = url.find_first_of('?');
-        if(querystring_start_index != std::string::npos) {
-            url_without_querystring = url.substr(0, querystring_start_index);
-        }
+        url_without_querystring = remove_querystring(url);
         is_initalized = true;
     }
 
@@ -215,11 +220,11 @@ void ReviewURLDialog::draw() {
     app.draw_text(app.fc_text, app.context->bookmark.title, 2, title_padding);
     app.draw_text(app.fc_label, "Url:", 4, 2);
 
-    if (querystring_start_index != std::string::npos) {
+    if (url_without_querystring.size() != url.size()) {
         app.draw_text(app.fc_text, url_without_querystring, 5, 2);
-        const std::string querystring = url.substr(querystring_start_index);
+        const std::string querystring = url.substr(url_without_querystring.size());
         const XGlyphInfo extents = app.get_text_extents(url_without_querystring);
-        if (keep_querystring) {
+        if (app.context->keep_querystring) {
             app.draw_text(app.fc_text, querystring, 5, 2, 0, extents.width);
             app.draw_text(app.fc_label, "(q) Delete Querystring", 8, 1);
         } else {
@@ -241,13 +246,8 @@ x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
             app.context->do_store = false;
             break;
         case 24: /*q*/
-            keep_querystring = !keep_querystring;
+            app.context->keep_querystring = !app.context->keep_querystring;
             app.redraw();
-            break;
-        case 23: /*Tab*/
-            if (!keep_querystring) {
-                app.context->bookmark.url = url_without_querystring;
-            }
             break;
     }
     return Dialog::handle_key_press(evt);

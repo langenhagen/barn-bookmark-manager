@@ -20,6 +20,7 @@ namespace bbm {
 /*The BBM Add app context.*/
 struct Context {
     Bookmark bookmark;  /*The bookmark.*/
+    bool keep_querystring = true;  /*Whether or not to keep a possible querystring.*/
     bool do_store = true;  /*Whether or not to store the bookmark.*/
 };
 
@@ -29,12 +30,13 @@ bool fetch_url_and_title(std::string& url, std::string& title);
 /*Add application dialogs from dialog sequence settings.*/
 void add_dialogs_to_app(x11::App& app);
 
+/*Get a url without querystring.*/
+std::string remove_querystring(const std::string& url);
+
 /*Store Bookmark on disk.*/
 bool save_bookmark(const Bookmark& bookmark, const fs::path& directory);
 
 struct ReviewURLDialog : x11::Dialog {
-    bool keep_querystring = true;
-    size_t querystring_start_index;
     std::string url_without_querystring;
 
     ReviewURLDialog(x11::App& app);

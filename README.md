@@ -64,7 +64,6 @@ maximize flexibility.
 
 
 ## TODO
-- Allow to go back a dialog. Don't immediately remove querystring, but emember to do it at the end.
 - handle compile time options nicely
 - remove querystring feature
 - refactor scripts

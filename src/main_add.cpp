@@ -31,6 +31,9 @@ int main(int argc, const char* argv[]) {
     app.run();
 
     if (context->do_store) {
+        if (context->keep_querystring == false) {
+            context->bookmark.url = remove_querystring(context->bookmark.url);
+        }
         save_bookmark(std::move(context->bookmark), settings->bookmarks_root_path / "subpath");
     }
     return exitcode::SUCCESS;
