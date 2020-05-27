@@ -46,6 +46,7 @@ struct ReviewURLDialog : x11::Dialog {
 
 struct AddPathDialog : x11::Dialog {
     x11::TextBox txt_path;
+
     AddPathDialog(x11::App& app);
     void draw();
     x11::AppState handle_key_press(XEvent& evt);
