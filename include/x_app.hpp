@@ -138,10 +138,12 @@ private:  /*constants*/
     constexpr static const unsigned long _fc_border_inactive = 0x666666;  /*Inactive border color.*/
 
 public:  /*vars*/
-    const unsigned int y;  /*Widget y position.*/
-    const unsigned int x;  /*Widget x position.*/
-    const unsigned int width;  /*Widget width in pixels.*/
-    const unsigned int height; /*Widget height in pixels.*/
+    const unsigned int row;  /*Widget y position in rows.*/
+    const unsigned int col;  /*Widget x position in cols.*/
+    const int y_px_offset;  /*Widget y offset in pixels.*/
+    const int x_px_offset;  /*Widget x offset in pixels.*/
+    const unsigned int height; /*Widget height in cols.*/
+    const unsigned int width;  /*Widget width in rows.*/
     const unsigned int max_n_lines;  /*The maximum number of lines that are allowed for input.*/
 
 private:  /*vars*/
@@ -156,17 +158,18 @@ public:  /*methods*/
     /*Constructor.*/
     TextBox(
         App& app,
-        const unsigned int y,
-        const unsigned int x,
-        const unsigned int width,
+        const unsigned int row,
+        const unsigned int col,
+        const int y_px_offset,
+        const int x_px_offset,
         const unsigned int height,
+        const unsigned int width,
         const unsigned int max_n_lines = 0);
 
     bool has_focus() const;  /*Check whether the widget has focus.*/
     void set_focus(const bool has_focus);  /*Specify whether the widget has focus.*/
 
     void draw();  /*Draw the widget.*/
-    void start_selection();  /*Set the variable selection_start to the current cursor position.*/
     std::string get_text();  /*Get the text from the widget.*/
 
     void move_cursor(int inc);  /*Move the cursor by increment forward/backward.*/
@@ -181,6 +184,12 @@ public:  /*methods*/
     int handle_key_release(XEvent& evt);  /*Handle key release events.*/
 
 private: /*methods*/
+    unsigned int _y() const;  /*Get the y ordinate in pixels.*/
+    unsigned int _x() const;  /*Get the x abscissa in pixels.*/
+    unsigned int _height() const;  /*Get the x abscissa in pixels.*/
+    unsigned int _width() const;  /*Get the y ordinate in pixels.*/
+
+    void _start_selection();  /*Set the variable selection_start to the current cursor position.*/
     void _invalidate_selection();  /*Set selection-related member variables to invalid values.*/
     /*Get the TextCoords of beginning and end of the current selection.*/
     std::pair<const TextCoord&, const TextCoord&> _get_selection_bounds() const;

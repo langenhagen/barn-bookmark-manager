@@ -60,28 +60,50 @@ bool operator==(const TextCoord& lhs, const TextCoord& rhs) {
 
 TextBox::TextBox(
     App& app,
-    const unsigned int y,
-    const unsigned int x,
-    const unsigned int width,
+    const unsigned int row,
+    const unsigned int col,
+    const int y_px_offset,
+    const int x_px_offset,
     const unsigned int height,
+    const unsigned int width,
     const unsigned int max_n_lines)
 :
-y(y),
-x(x),
-width(width),
+row(row),
+col(col),
+y_px_offset(y_px_offset),
+x_px_offset(x_px_offset),
 height(height),
+width(width),
 max_n_lines(max_n_lines),
 _app(app)
 {
     _lines.emplace_back();
 }
 
-void TextBox::start_selection() {
+unsigned int TextBox::_y() const {
+    return this->row * _app.line_height + this->y_px_offset;
+}
+
+unsigned int TextBox::_x() const {
+    return this->col * _app.font->max_advance_width + this->x_px_offset;
+}
+
+unsigned int TextBox::_width() const {
+    return this->width * _app.font->max_advance_width + 2 * _padding;
+}
+
+unsigned int TextBox::_height() const {
+    return this->height * _app.line_height +  2 * _padding;
+}
+
+void TextBox::_start_selection() {
     if (_sel_start.y == -1) {
         _sel_start.y = _cur.y;
         _sel_start.x = _cur.x;
     }
 }
+
+
 
 void TextBox::_invalidate_selection() {
     if (_sel_start.y != -1) {
@@ -187,19 +209,20 @@ void TextBox::_adjust_offset(const IntCoord& cur_coords) {
         /*cursor above visible area*/
         const int increment = (_padding - cur_coords.y + _off.y) / _app.line_height;
         _off.y -= increment * _app.line_height;
-    } else if (cur_coords.y + _app.line_height - _off.y > this->height - _padding) {
+    } else if (cur_coords.y + _app.line_height - _off.y > this->_height() - _padding) {
         /*cursor below visible area*/
         const int increment =
-            (cur_coords.y + _app.line_height - _off.y - this->height + _padding) / _app.line_height;
+            (cur_coords.y + _app.line_height - _off.y - this->_height() + _padding) /
+            _app.line_height;
         _off.y += (increment + 1) * _app.line_height;
     }
     if (cur_coords.x - _off.x < _padding) {
         /*cursor left of the visible area*/
         const int increment = _padding - cur_coords.x + _off.x;
         _off.x -= increment;
-    } else if (cur_coords.x + _cur_width - _off.x > this->width - _padding) {
+    } else if (cur_coords.x + _cur_width - _off.x > this->_width() - _padding) {
         /*cursor right of the visible area*/
-        const int increment = cur_coords.x + _cur_width - _off.x - this->width + _padding;
+        const int increment = cur_coords.x + _cur_width - _off.x - this->_width() + _padding;
         _off.x += increment;
     }
 }
@@ -210,10 +233,10 @@ void TextBox::_draw_background() {
         _app.dpy,
         _app.win,
         _app.gc,
-        this->x,
-        this->y,
-        this->width,
-        this->height);
+        this->_x(),
+        this->_y(),
+        this->_width(),
+        this->_height());
 
     const unsigned long fc_border = _has_focus ? _fc_border : _fc_border_inactive;
     XSetForeground(_app.dpy, _app.gc, fc_border);
@@ -221,10 +244,10 @@ void TextBox::_draw_background() {
         _app.dpy,
         _app.win,
         _app.gc,
-        this->x,
-        this->y,
-        this->width,
-        this->height);
+        this->_x(),
+        this->_y(),
+        this->_width(),
+        this->_height());
 }
 
 void TextBox::_draw_text() {
@@ -242,9 +265,9 @@ void TextBox::_draw_text() {
             _app.xft_drawable,
             &xft_color,
             _app.font,
-            this->x + _padding - _off.x,
-            _app.line_height * i + _app.font->ascent + this->y + _padding - _off.y,
-            reinterpret_cast<unsigned char*>(line.buf)  ,
+            this->_x() + _padding - _off.x,
+            _app.line_height * i + _app.font->ascent + this->_y() + _padding - _off.y,
+            reinterpret_cast<unsigned char*>(line.buf),
             line.len);
     }
     XftColorFree(
@@ -260,8 +283,8 @@ void TextBox::_draw_cursor(const IntCoord& coords) {
         _app.dpy,
         _app.win,
         _app.gc,
-        coords.x + this->x - _off.x,
-        coords.y + this->y - _off.y,
+        coords.x + this->_x() - _off.x,
+        coords.y + this->_y() - _off.y,
         _cur_width,
         _app.line_height);
 }
@@ -314,8 +337,8 @@ void TextBox::_draw_selection() {
             _app.dpy,
             _app.win,
             _app.gc,
-            x + this->x + _padding - _off.x,
-            _app.line_height * i + this->y + _padding - _off.y,
+            x + this->_x() + _padding - _off.x,
+            _app.line_height * i + this->_y() + _padding - _off.y,
             width,
             _app.line_height);
     }
@@ -570,10 +593,10 @@ void TextBox::draw() {
     _draw_background();
 
     XRectangle rect{
-        static_cast<short>(this->x + _padding),
-        static_cast<short>(this->y + _padding),
-        static_cast<unsigned short>(this->width - 2 * _padding),
-        static_cast<unsigned short>(this->height - 2 * _padding)};
+        static_cast<short>(this->_x() + _padding),
+        static_cast<short>(this->_y() + _padding),
+        static_cast<unsigned short>(this->_width() - 2 * _padding),
+        static_cast<unsigned short>(this->_height() - 2 * _padding)};
     XSetClipRectangles(_app.dpy, _app.gc, 0, 0, &rect, 1, Unsorted);
     XftDrawSetClipRectangles(_app.xft_drawable, 0, 0, &rect, 1);
 
@@ -599,7 +622,7 @@ int TextBox::handle_key_press(XEvent& evt) {
     switch (evt.xkey.keycode) {
         case 50: /*shift left*/
         case 62: /*shift right*/
-            start_selection();
+            _start_selection();
             return 0;
         case 53: /*ctrl + x*/
             if (_app.is_ctrl_pressed()) {
@@ -699,13 +722,12 @@ AppState Dialog::handle_key_press(XEvent& evt) {
     switch(evt.xkey.keycode) {
         case 9: /*esc*/
             return x11::AppState::EXIT;
-        case 23: /*Tab*/
+        case 23: /*tab*/
             if (app.is_shift_pressed()) {
                 return x11::AppState::BACK;
-            } else {
-                return x11::AppState::PROCEED;
             }
-        case 36: /*Ctrl + Enter*/
+            return x11::AppState::PROCEED;
+        case 36: /*ctrl + enter*/
             if (this->app.is_ctrl_pressed()) {
                 return x11::AppState::EXIT;
             }
