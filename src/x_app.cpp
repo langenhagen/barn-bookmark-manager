@@ -873,7 +873,7 @@ void App::draw_text(
         &color,
         this->font,
         col * this->font->max_advance_width + x_px_offset,
-        row * this->line_height + y_px_offset,
+        (row + 1) * this->line_height + y_px_offset,
         (FcChar8*)str.c_str(),
         str.length());
 }
@@ -961,16 +961,20 @@ void App::run() {
         }
         switch (state) {
             case AppState::PROCEED:
+                (*dialog_it)->is_initalized = false;
                 ++dialog_it;
                 if (dialog_it == dialogs.end()) {
                     state = AppState::EXIT;
                     break;
                 }
+                state = AppState::KEEP_RUNNING;
                 redraw();
                 break;
             case AppState::BACK:
                 if (dialog_it != dialogs.begin()) {
+                    (*dialog_it)->is_initalized = false;
                     --dialog_it;
+                    state = AppState::KEEP_RUNNING;
                     redraw();
                 }
                 break;

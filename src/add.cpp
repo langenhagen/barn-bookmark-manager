@@ -217,27 +217,27 @@ void ReviewURLDialog::draw() {
     const int title_length(app.context->bookmark.title.length());
     const int title_padding = std::max((win_width - title_length)/2, 1);
 
-    app.draw_text(app.fc_text, app.context->bookmark.title, 2, title_padding);
-    app.draw_text(app.fc_label, "Url:", 4, 2);
+    app.draw_text(app.fc_text, app.context->bookmark.title, 1, title_padding);
+    app.draw_text(app.fc_label, "Url:", 3, 2);
 
     if (url_without_querystring.size() != url.size()) {
-        app.draw_text(app.fc_text, url_without_querystring, 5, 2);
+        app.draw_text(app.fc_text, url_without_querystring, 4, 2);
         const std::string querystring = url.substr(url_without_querystring.size());
         const XGlyphInfo extents = app.get_text_extents(url_without_querystring);
         if (app.context->keep_querystring) {
-            app.draw_text(app.fc_text, querystring, 5, 2, 0, extents.width);
-            app.draw_text(app.fc_label, "(q) Delete Querystring", 8, 1);
+            app.draw_text(app.fc_text, querystring, 4, 2, 0, extents.width);
+            app.draw_text(app.fc_label, "(q) Delete Querystring", 7, 1);
         } else {
-            app.draw_text(app.fc_hint, querystring, 5, 2, 0, extents.width);
-            app.draw_text(app.fc_label, "(q) Keep Querystring", 8, 1);
+            app.draw_text(app.fc_hint, querystring, 4, 2, 0, extents.width);
+            app.draw_text(app.fc_label, "(q) Keep Querystring", 7, 1);
         }
     } else {
-        app.draw_text(app.fc_text, app.context->bookmark.url, 5, 2);
+        app.draw_text(app.fc_text, app.context->bookmark.url, 4, 2);
     }
 
-    app.draw_text(app.fc_hint, "<Esc>: Cancel", 13, 1);
-    app.draw_text(app.fc_hint, "<Enter>: Continue", 12, 81);
-    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", 13, 74);
+    app.draw_text(app.fc_hint, "<Esc>: Cancel", 12, 1);
+    app.draw_text(app.fc_hint, "<Tab>: Continue", 11, 83);
+    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", 12, 74);
 }
 
 x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
@@ -256,24 +256,23 @@ x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
 AddPathDialog::AddPathDialog(x11::App& app)
 :
 x11::Dialog(app),
-txt_path(app, 4, 2, 5, 0, 1, 40, 1)
+txt_path(app, 2, 2, 5, 0, 1, 94, 1)
 {}
 
 void AddPathDialog::draw() {
     constexpr static const int win_width = 100;
-    const std::string& url = app.context->bookmark.url;
     if (!is_initalized) {
-        app.resize_window(14, win_width);
+        app.resize_window(10, win_width);
         txt_path.set_focus(true);
         is_initalized = true;
     }
 
-    app.draw_text(app.fc_label, "Path:", 4, 2);
+    app.draw_text(app.fc_label, "Path:", 1, 2);
     txt_path.draw();
 
-    app.draw_text(app.fc_hint, "<Esc>: Cancel", 13, 1);
-    app.draw_text(app.fc_hint, "<Enter>: Continue", 12, 81);
-    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", 13, 74);
+    app.draw_text(app.fc_hint, "<Esc>: Cancel", 8, 1);
+    app.draw_text(app.fc_hint, "<Tab>: Continue", 7, 83);
+    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", 8, 74);
 }
 
 x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {
@@ -296,21 +295,36 @@ AddCommentDialog::AddCommentDialog(x11::App& app) : x11::Dialog(app)
 {}
 
 void AddCommentDialog::draw() {
-    // TODO
+    constexpr static const int win_width = 100;
+    const std::string& url = app.context->bookmark.url;
+    if (!is_initalized) {
+        app.resize_window(11, win_width);
+        is_initalized = true;
+    }
 }
 
 AddRatingDialog::AddRatingDialog(x11::App& app) : x11::Dialog(app)
 {}
 
 void AddRatingDialog::draw() {
-    // TODO
+    constexpr static const int win_width = 100;
+    const std::string& url = app.context->bookmark.url;
+    if (!is_initalized) {
+        app.resize_window(10, win_width);
+        is_initalized = true;
+    }
 }
 
 AddTagsDialog::AddTagsDialog(x11::App& app) : x11::Dialog(app)
 {}
 
 void AddTagsDialog::draw() {
-    // TODO
+    constexpr static const int win_width = 100;
+    const std::string& url = app.context->bookmark.url;
+    if (!is_initalized) {
+        app.resize_window(9, win_width);
+        is_initalized = true;
+    }
 }
 
 } // namespace bbm
