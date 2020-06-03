@@ -22,6 +22,7 @@ struct Context {
     Bookmark bookmark;  /*The bookmark.*/
     bool keep_querystring = true;  /*Whether or not to keep a possible querystring.*/
     bool do_store = true;  /*Whether or not to store the bookmark.*/
+    fs::path bookmark_dir;  /*Directory where to store the bookmark.*/
 };
 
 /*Fetch the url and the website tile from the focused Chrome top window.*/

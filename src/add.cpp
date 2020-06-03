@@ -285,6 +285,7 @@ x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {
         default:
             txt_path.handle_key_press(evt);
             app.redraw();
+            app.context->bookmark_dir = txt_path.get_text();
             break;
     }
     return Dialog::handle_key_press(evt);
