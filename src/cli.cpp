@@ -20,15 +20,15 @@ void show_help(const std::string& app_name) {
 }
 
 void show_version(const std::string& app_name) {
-    constexpr auto version = ::barn::bbm::get_app_version();
-    constexpr auto build_timestamp = ::barn::bbm::get_build_timestamp();
+    constexpr const char* version = ::barn::bbm::get_app_version();
+    constexpr const char* build_timestamp = ::barn::bbm::get_build_timestamp();
     std::cout << app_name << " version: " << version << " build: " << build_timestamp << std::endl;
 }
 
 Options parse_options(int argc, const char* argv[]) {
     namespace fs = std::experimental::filesystem;
 
-    const auto app_name = fs::path(argv[0]).filename().string();
+    const std::string app_name = fs::path(argv[0]).filename().string();
     if (argc > 2) {
         show_help(std::move(app_name));
         exit(exitcode::WRONG_CLI_ARGUMENTS);

@@ -241,7 +241,7 @@ void ReviewURLDialog::draw() {
 }
 
 x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
-    switch(evt.xkey.keycode) {
+    switch (evt.xkey.keycode) {
         case 9: /*esc*/
             app.context->do_store = false;
             break;
@@ -267,7 +267,7 @@ void AddPathDialog::draw() {
         is_initalized = true;
     }
 
-    app.draw_text(app.fc_label, "Path:", 1, 2);
+    app.draw_text(app.fc_label, "Directory:", 1, 2);
     txt_path.draw();
 
     app.draw_text(app.fc_hint, "<Esc>: Cancel", 8, 1);
@@ -284,9 +284,8 @@ x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {
             break;
         default:
             txt_path.handle_key_press(evt);
-            if (txt_path.has_focus()) {
-                app.redraw();
-            }
+            app.redraw();
+            break;
     }
     return Dialog::handle_key_press(evt);
 }
