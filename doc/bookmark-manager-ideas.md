@@ -2,14 +2,6 @@
 Thoughts on a potential self-implemented bookmark manager.
 
 
-## Steps
-Next step:
-
-1. Add bookmark app
-    - settings / dynamicity
-2. show bookmark app
-
-
 ## Overall Traits
 The bookmark app is a separate application. The bookmarks app is not integrated into your browser.
 The desktop app is completely controllable via keyboard.
