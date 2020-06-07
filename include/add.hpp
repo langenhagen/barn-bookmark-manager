@@ -54,8 +54,11 @@ struct AddPathDialog : x11::Dialog {
 };
 
 struct AddCommentDialog : x11::Dialog {
+    x11::TextBox txt_comment;
+
     AddCommentDialog(x11::App& app);
     void draw();
+    x11::AppState handle_key_press(XEvent& evt);
 };
 
 struct AddRatingDialog : x11::Dialog {

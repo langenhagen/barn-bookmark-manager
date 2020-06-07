@@ -291,16 +291,42 @@ x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {
     return Dialog::handle_key_press(evt);
 }
 
-AddCommentDialog::AddCommentDialog(x11::App& app) : x11::Dialog(app)
+AddCommentDialog::AddCommentDialog(x11::App& app)
+:
+x11::Dialog(app),
+txt_comment(app, 2, 2, 5, 0, 7, 94, 99)
 {}
 
 void AddCommentDialog::draw() {
     constexpr static const int win_width = 100;
-    const std::string& url = app.context->bookmark.url;
     if (!is_initalized) {
-        app.resize_window(11, win_width);
+        app.resize_window(14, win_width);
+        txt_comment.set_focus(true);
         is_initalized = true;
     }
+
+    app.draw_text(app.fc_label, "Comment:", 1, 2);
+    txt_comment.draw();
+
+    app.draw_text(app.fc_hint, "<Esc>: Cancel", 12, 1);
+    app.draw_text(app.fc_hint, "<Tab>: Continue", 11, 83);
+    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", 12, 74);
+}
+
+x11::AppState AddCommentDialog::handle_key_press(XEvent& evt) {
+    switch(evt.xkey.keycode) {
+        case 9: /*esc*/
+            app.context->do_store = false;
+            break;
+        case 23: /*tab*/
+            break;
+        default:
+            txt_comment.handle_key_press(evt);
+            app.redraw();
+            app.context->bookmark.comment = txt_comment.get_text();
+            break;
+    }
+    return Dialog::handle_key_press(evt);
 }
 
 AddRatingDialog::AddRatingDialog(x11::App& app) : x11::Dialog(app)
