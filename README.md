@@ -65,7 +65,7 @@ maximize flexibility.
 
 ## TODO
 - handle compile time options nicely
-- remove querystring feature
+- remove dependency libxdo, possibly with help of https://gist.github.com/kui/2622504
 - refactor scripts
 - adjust .clang-format
 - adjust .gitignore
