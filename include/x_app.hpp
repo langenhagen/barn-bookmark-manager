@@ -79,7 +79,7 @@ struct App {
     bool grab_keyboard();  /*Grab keyboard focus.*/
     int resize_window(int rows, int cols);  /*Resize the application window.*/
     XGlyphInfo get_text_extents(const std::string& str);  /*Get the given text dimensions.*/
-    void draw_rect_frame();  /*Draw a small frame at the window edges*/
+    void draw_frame();  /*Draw a small frame at the window edges*/
     /*Draw text at the given row/column.*/
     void draw_text(
         const XftColor& color,

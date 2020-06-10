@@ -856,7 +856,7 @@ XGlyphInfo App::get_text_extents(const std::string& str) {
     return extents;
 }
 
-void App::draw_rect_frame() {
+void App::draw_frame() {
     XSetForeground(this->dpy, this->gc, this->fc_app_frame);
     XDrawRectangle(this->dpy, this->win, this->gc, 0, 0, this->win_width - 1, this->win_height -1 );
 }
@@ -880,7 +880,7 @@ void App::draw_text(
 
 void App::redraw() {
     XClearWindow(this->dpy, this->win);
-    draw_rect_frame();
+    draw_frame();
     (*dialog_it)->draw();
 }
 
