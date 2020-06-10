@@ -207,9 +207,10 @@ ReviewURLDialog::ReviewURLDialog(x11::App& app) : x11::Dialog(app)
 
 void ReviewURLDialog::draw() {
     constexpr static const int win_width = 100;
+    constexpr static const int win_height = 14;
     const std::string& url = app.context->bookmark.url;
     if (!is_initalized) {
-        app.resize_window(14, win_width);
+        app.resize_window(win_height, win_width);
         url_without_querystring = remove_querystring(url);
         is_initalized = true;
     }
@@ -235,9 +236,9 @@ void ReviewURLDialog::draw() {
         app.draw_text(app.fc_text, app.context->bookmark.url, 4, 2);
     }
 
-    app.draw_text(app.fc_hint, "<Esc>: Cancel", 12, 1);
-    app.draw_text(app.fc_hint, "<Tab>: Continue", 11, 83);
-    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", 12, 74);
+    app.draw_text(app.fc_hint, "<Esc>: Cancel", win_height-2, 1);
+    app.draw_text(app.fc_hint, "<Tab>: Continue", win_height-3, win_width-17);
+    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", win_height-2, win_width-26);
 }
 
 x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
@@ -261,8 +262,9 @@ txt_path(app, 2, 2, 5, 0, 1, 94, 1)
 
 void AddPathDialog::draw() {
     constexpr static const int win_width = 100;
+    constexpr static const int win_height = 10;
     if (!is_initalized) {
-        app.resize_window(10, win_width);
+        app.resize_window(win_height, win_width);
         txt_path.set_focus(true);
         is_initalized = true;
     }
@@ -270,13 +272,13 @@ void AddPathDialog::draw() {
     app.draw_text(app.fc_label, "Directory:", 1, 2);
     txt_path.draw();
 
-    app.draw_text(app.fc_hint, "<Esc>: Cancel", 8, 1);
-    app.draw_text(app.fc_hint, "<Tab>: Continue", 7, 83);
-    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", 8, 74);
+    app.draw_text(app.fc_hint, "<Esc>: Cancel", win_height-2, 1);
+    app.draw_text(app.fc_hint, "<Tab>: Continue", win_height-3, win_width-17);
+    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", win_height-2, win_width-26);
 }
 
 x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {
-    switch(evt.xkey.keycode) {
+    switch (evt.xkey.keycode) {
         case 9: /*esc*/
             app.context->do_store = false;
             break;
@@ -299,8 +301,9 @@ txt_comment(app, 2, 2, 5, 0, 7, 94, 99)
 
 void AddCommentDialog::draw() {
     constexpr static const int win_width = 100;
+    constexpr static const int win_height = 14;
     if (!is_initalized) {
-        app.resize_window(14, win_width);
+        app.resize_window(win_height, win_width);
         txt_comment.set_focus(true);
         is_initalized = true;
     }
@@ -308,13 +311,13 @@ void AddCommentDialog::draw() {
     app.draw_text(app.fc_label, "Comment:", 1, 2);
     txt_comment.draw();
 
-    app.draw_text(app.fc_hint, "<Esc>: Cancel", 12, 1);
-    app.draw_text(app.fc_hint, "<Tab>: Continue", 11, 83);
-    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", 12, 74);
+    app.draw_text(app.fc_hint, "<Esc>: Cancel", win_height-2, 1);
+    app.draw_text(app.fc_hint, "<Tab>: Continue", win_height-3, win_width-17);
+    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", win_height-2, win_width-26);
 }
 
 x11::AppState AddCommentDialog::handle_key_press(XEvent& evt) {
-    switch(evt.xkey.keycode) {
+    switch (evt.xkey.keycode) {
         case 9: /*esc*/
             app.context->do_store = false;
             break;
@@ -333,12 +336,62 @@ AddRatingDialog::AddRatingDialog(x11::App& app) : x11::Dialog(app)
 {}
 
 void AddRatingDialog::draw() {
-    constexpr static const int win_width = 100;
+    constexpr static const int win_width = 46;
+    constexpr static const int win_height = 10;
     const std::string& url = app.context->bookmark.url;
     if (!is_initalized) {
-        app.resize_window(10, win_width);
+        app.resize_window(win_height, win_width);
         is_initalized = true;
     }
+
+    app.draw_text(app.fc_label, "Rating (0-5):", 1, 2);
+
+    constexpr static const int radius = 30;
+    constexpr static const int x_offset = 65;
+    constexpr static const int y_padding = 50;
+    constexpr static const int x_padding = 20;
+    for (int i=0; i<app.context->bookmark.rating; ++i) {
+        app.draw_filled_star(radius, y_padding, x_padding + i * x_offset);
+    }
+    for (int i=app.context->bookmark.rating; i<5; ++i) {
+        app.draw_star(radius, y_padding, x_padding + i * x_offset);
+    }
+
+    app.draw_text(app.fc_hint, "<Esc>: Cancel", win_height-2, 1);
+    app.draw_text(app.fc_hint, "<Tab>: Continue", win_height-3, win_width-17);
+    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", win_height-2, win_width-26);
+}
+
+x11::AppState AddRatingDialog::handle_key_press(XEvent& evt) {
+    switch (evt.xkey.keycode) {
+        case 9: /*esc*/
+            app.context->do_store = false;
+            break;
+        case 23: /*tab*/
+            break;
+        case 10: /*1*/
+            app.context->bookmark.rating = 1;
+            break;
+        case 11: /*2*/
+            app.context->bookmark.rating = 2;
+            break;
+        case 12: /*3*/
+            app.context->bookmark.rating = 3;
+            break;
+        case 13: /*4*/
+            app.context->bookmark.rating = 4;
+            break;
+        case 14: /*5*/
+            app.context->bookmark.rating = 5;
+            break;
+        case 19: /*0*/
+            app.context->bookmark.rating = 0;
+            break;
+        default:
+            break;
+    }
+    app.redraw();
+    return Dialog::handle_key_press(evt);
 }
 
 AddTagsDialog::AddTagsDialog(x11::App& app) : x11::Dialog(app)

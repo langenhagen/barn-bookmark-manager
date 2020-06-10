@@ -88,6 +88,8 @@ struct App {
         const float col,
         const int y_px_offset = 0,
         const int x_px_offset = 0);
+    void draw_star(int outer_radius, int y, int x);  /*Draw a star shaped polygon.*/
+    void draw_filled_star(int outer_radius, int y, int x);  /*Draw a filled star shaped polygon.*/
     void redraw();  /*Clean redraw the window.*/
 
     bool is_ctrl_pressed() const;  /*Indicate if a ctrl-button is pressed.*/

@@ -64,6 +64,7 @@ struct AddCommentDialog : x11::Dialog {
 struct AddRatingDialog : x11::Dialog {
     AddRatingDialog(x11::App& app);
     void draw();
+    x11::AppState handle_key_press(XEvent& evt);
 };
 
 struct AddTagsDialog : x11::Dialog {

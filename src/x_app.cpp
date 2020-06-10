@@ -11,7 +11,9 @@ author: andreasl
 #include <X11/Xlib.h>
 #include <X11/Xft/Xft.h>
 
+#include <array>
 #include <chrono>
+#include <cmath>
 #include <cstring>
 #include <memory>
 #include <string>
@@ -876,6 +878,49 @@ void App::draw_text(
         (row + 1) * this->line_height + y_px_offset,
         (FcChar8*)str.c_str(),
         str.length());
+}
+
+void App::draw_star(int outer_radius, int y, int x) {
+    static const double pi = std::acos(-1);
+    const int inner_radius = outer_radius * 0.375;
+    std::array<XPoint, 11> points;
+    for (int i=0; i<points.max_size(); ++i) {
+        const double radius = i % 2 == 0 ? inner_radius : outer_radius;
+        const short int point_x = std::sin(pi/5*i) * radius + x + outer_radius;
+        const short int point_y = std::cos(pi/5*i) * radius + y + outer_radius;
+        points[i] = {point_x, point_y};
+    }
+
+    XSetForeground(this->dpy, this->gc, this->fc_app_frame);
+    XDrawLines(
+        this->dpy,
+        this->win,
+        this->gc,
+        points.data(),
+        points.max_size(),
+        CoordModeOrigin);
+}
+
+void App::draw_filled_star(int outer_radius, int y, int x) {
+    static const double pi = std::acos(-1);
+    const int inner_radius = outer_radius * 0.375;
+    std::array<XPoint, 11> points;
+    for (int i=0; i<points.max_size(); ++i) {
+        const double radius = i % 2 == 0 ? inner_radius : outer_radius;
+        const short int point_x = std::sin(pi/5*i) * radius + x + outer_radius;
+        const short int point_y = std::cos(pi/5*i) * radius + y + outer_radius;
+        points[i] = {point_x, point_y};
+    }
+
+    XSetForeground(this->dpy, this->gc, this->fc_app_frame);
+    XFillPolygon(
+        this->dpy,
+        this->win,
+        this->gc,
+        points.data(),
+        points.max_size(),
+        Nonconvex,
+        CoordModeOrigin);
 }
 
 void App::redraw() {
