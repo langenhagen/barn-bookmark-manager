@@ -26,12 +26,13 @@ std::ostream null_stream(&null_buffer);
 
 std::ostream& log(const Severity level) {
 #ifdef BBM_ENABLE_LOGGING
-    if (level == Severity::INFO) {
-        return std::cout;
-    } else if (level == Severity::WARN) {
-        return std::cerr << "Warning: ";
-    } else if (level == Severity::ERROR) {
-        return std::cerr << "Error: ";
+    switch (level) {
+        case Severity::INFO:
+            return std::cout;
+        case Severity::WARN:
+            return std::cerr << "Warning: ";
+        case Severity::ERROR:
+            return std::cerr << "Error: ";
     }
     return std::cout;
 #else
