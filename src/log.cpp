@@ -30,9 +30,10 @@ std::ostream& log(const Severity level) {
         return std::cout;
     } else if (level == Severity::WARN) {
         return std::cerr << "Warning: ";
-    } if (level == Severity::ERROR) {
+    } else if (level == Severity::ERROR) {
         return std::cerr << "Error: ";
     }
+    return std::cout;
 #else
     return null_stream;
 #endif

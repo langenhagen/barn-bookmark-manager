@@ -66,12 +66,11 @@ SettingsType load_settings(const fs::path& path) {
             }
         } catch (const std::exception& e) {
             log(ERROR) << e.what() << std::endl;
-            exit(exitcode::SYSTEM_ERROR);
         }
     } catch (const YAML::Exception& e) {
         log(ERROR) << e.what() << std::endl;
-        exit(exitcode::SYSTEM_ERROR);
     }
+    exit(exitcode::SYSTEM_ERROR);
 }
 
 } // namespace bbm
