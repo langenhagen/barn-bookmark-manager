@@ -92,6 +92,13 @@ XKeyEvent create_key_event(
     return evt;
 }
 
+void draw_keyboard_hints(x11::App& app, const int win_height, const int win_width) {
+    app.draw_text(app.fc_hint, "<Shift> + <Tab>: Back", win_height-3, 1);
+    app.draw_text(app.fc_hint, "<Esc>: Cancel", win_height-2, 1);
+    app.draw_text(app.fc_hint, "<Tab>: Continue", win_height-3, win_width-17);
+    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", win_height-2, win_width-26);
+}
+
 } // namespace
 
 bool fetch_url_and_title(std::string& url, std::string& title) {
@@ -235,10 +242,7 @@ void ReviewURLDialog::draw() {
     } else {
         app.draw_text(app.fc_text, app.context->bookmark.url, 4, 2);
     }
-
-    app.draw_text(app.fc_hint, "<Esc>: Cancel", win_height-2, 1);
-    app.draw_text(app.fc_hint, "<Tab>: Continue", win_height-3, win_width-17);
-    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", win_height-2, win_width-26);
+    draw_keyboard_hints(app, win_height, win_width);
 }
 
 x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
@@ -271,10 +275,7 @@ void AddPathDialog::draw() {
 
     app.draw_text(app.fc_label, "Directory:", 1, 2);
     txt_path.draw();
-
-    app.draw_text(app.fc_hint, "<Esc>: Cancel", win_height-2, 1);
-    app.draw_text(app.fc_hint, "<Tab>: Continue", win_height-3, win_width-17);
-    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", win_height-2, win_width-26);
+    draw_keyboard_hints(app, win_height, win_width);
 }
 
 x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {
@@ -310,10 +311,7 @@ void AddCommentDialog::draw() {
 
     app.draw_text(app.fc_label, "Comment:", 1, 2);
     txt_comment.draw();
-
-    app.draw_text(app.fc_hint, "<Esc>: Cancel", win_height-2, 1);
-    app.draw_text(app.fc_hint, "<Tab>: Continue", win_height-3, win_width-17);
-    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", win_height-2, win_width-26);
+    draw_keyboard_hints(app, win_height, win_width);
 }
 
 x11::AppState AddCommentDialog::handle_key_press(XEvent& evt) {
@@ -336,7 +334,7 @@ AddRatingDialog::AddRatingDialog(x11::App& app) : x11::Dialog(app)
 {}
 
 void AddRatingDialog::draw() {
-    constexpr static const int win_width = 46;
+    constexpr static const int win_width = 55;
     constexpr static const int win_height = 10;
     const std::string& url = app.context->bookmark.url;
     if (!is_initalized) {
@@ -347,7 +345,7 @@ void AddRatingDialog::draw() {
     app.draw_text(app.fc_label, "Rating (0-5):", 1, 2);
 
     constexpr static const int radius = 30;
-    constexpr static const int x_offset = 65;
+    constexpr static const int x_offset = 81;
     constexpr static const int y_padding = 50;
     constexpr static const int x_padding = 20;
     for (int i=0; i<app.context->bookmark.rating; ++i) {
@@ -356,10 +354,7 @@ void AddRatingDialog::draw() {
     for (int i=app.context->bookmark.rating; i<5; ++i) {
         app.draw_star(radius, y_padding, x_padding + i * x_offset);
     }
-
-    app.draw_text(app.fc_hint, "<Esc>: Cancel", win_height-2, 1);
-    app.draw_text(app.fc_hint, "<Tab>: Continue", win_height-3, win_width-17);
-    app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", win_height-2, win_width-26);
+    draw_keyboard_hints(app, win_height, win_width);
 }
 
 x11::AppState AddRatingDialog::handle_key_press(XEvent& evt) {
@@ -394,16 +389,37 @@ x11::AppState AddRatingDialog::handle_key_press(XEvent& evt) {
     return Dialog::handle_key_press(evt);
 }
 
-AddTagsDialog::AddTagsDialog(x11::App& app) : x11::Dialog(app)
+AddTagsDialog::AddTagsDialog(x11::App& app)
+:
+x11::Dialog(app),
+txt_tags(app, 2, 2, 5, 0, 7, 94, 99)
 {}
 
 void AddTagsDialog::draw() {
     constexpr static const int win_width = 100;
+    constexpr static const int win_height = 9;
     const std::string& url = app.context->bookmark.url;
     if (!is_initalized) {
-        app.resize_window(9, win_width);
+        app.resize_window(win_height, win_width);
         is_initalized = true;
     }
+    draw_keyboard_hints(app, win_height, win_width);
+}
+
+x11::AppState AddTagsDialog::handle_key_press(XEvent& evt) {
+    switch (evt.xkey.keycode) {
+        case 9: /*esc*/
+            app.context->do_store = false;
+            break;
+        case 23: /*tab*/
+            break;
+        default:
+            txt_tags.handle_key_press(evt);
+            app.redraw();
+            // app.context->bookmark.tags = TODO
+            break;
+    }
+    return Dialog::handle_key_press(evt);
 }
 
 } // namespace bbm

@@ -68,8 +68,10 @@ struct AddRatingDialog : x11::Dialog {
 };
 
 struct AddTagsDialog : x11::Dialog {
+    x11::TextBox txt_tags;
     AddTagsDialog(x11::App& app);
     void draw();
+    x11::AppState handle_key_press(XEvent& evt);
 };
 
 } // namespace bbm
