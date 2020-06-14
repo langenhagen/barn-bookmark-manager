@@ -92,7 +92,8 @@ XKeyEvent create_key_event(
     return evt;
 }
 
-void draw_keyboard_hints(x11::App& app, const int win_height, const int win_width) {
+/*Draw the usage hint labels.*/
+void draw_usage_hints(x11::App& app, const int win_height, const int win_width) {
     app.draw_text(app.fc_hint, "<Shift> + <Tab>: Back", win_height-3, 1);
     app.draw_text(app.fc_hint, "<Esc>: Cancel", win_height-2, 1);
     app.draw_text(app.fc_hint, "<Tab>: Continue", win_height-3, win_width-17);
@@ -242,7 +243,7 @@ void ReviewURLDialog::draw() {
     } else {
         app.draw_text(app.fc_text, app.context->bookmark.url, 4, 2);
     }
-    draw_keyboard_hints(app, win_height, win_width);
+    draw_usage_hints(app, win_height, win_width);
 }
 
 x11::AppState ReviewURLDialog::handle_key_press(XEvent& evt) {
@@ -275,7 +276,7 @@ void AddPathDialog::draw() {
 
     app.draw_text(app.fc_label, "Directory:", 1, 2);
     txt_path.draw();
-    draw_keyboard_hints(app, win_height, win_width);
+    draw_usage_hints(app, win_height, win_width);
 }
 
 x11::AppState AddPathDialog::handle_key_press(XEvent& evt) {
@@ -311,7 +312,7 @@ void AddCommentDialog::draw() {
 
     app.draw_text(app.fc_label, "Comment:", 1, 2);
     txt_comment.draw();
-    draw_keyboard_hints(app, win_height, win_width);
+    draw_usage_hints(app, win_height, win_width);
 }
 
 x11::AppState AddCommentDialog::handle_key_press(XEvent& evt) {
@@ -354,7 +355,7 @@ void AddRatingDialog::draw() {
     for (int i=app.context->bookmark.rating; i<5; ++i) {
         app.draw_star(radius, y_padding, x_padding + i * x_offset);
     }
-    draw_keyboard_hints(app, win_height, win_width);
+    draw_usage_hints(app, win_height, win_width);
 }
 
 x11::AppState AddRatingDialog::handle_key_press(XEvent& evt) {
@@ -403,7 +404,7 @@ void AddTagsDialog::draw() {
         app.resize_window(win_height, win_width);
         is_initalized = true;
     }
-    draw_keyboard_hints(app, win_height, win_width);
+    draw_usage_hints(app, win_height, win_width);
 }
 
 x11::AppState AddTagsDialog::handle_key_press(XEvent& evt) {
