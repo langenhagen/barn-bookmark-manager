@@ -17,11 +17,13 @@ author: andreasl
 #include <cstring>
 #include <experimental/filesystem>
 #include <fstream>
+#include <iterator>
 #include <memory>
 #include <random>
 #include <sstream>
 #include <string>
 #include <thread>
+#include <vector>
 
 extern "C" {
 #include <xdo.h>
@@ -98,6 +100,13 @@ void draw_usage_hints(x11::App& app, const int win_height, const int win_width) 
     app.draw_text(app.fc_hint, "<Esc>: Cancel", win_height-2, 1);
     app.draw_text(app.fc_hint, "<Tab>: Continue", win_height-3, win_width-17);
     app.draw_text(app.fc_hint, "<Ctrl> + <Enter>: Finish", win_height-2, win_width-26);
+}
+
+std::vector<std::string> split_text(const std::string& text) {
+    std::istringstream iss(text);
+    return std::vector<std::string>(
+        std::istream_iterator<std::string>{iss},
+        std::istream_iterator<std::string>());
 }
 
 } // namespace
@@ -393,17 +402,21 @@ x11::AppState AddRatingDialog::handle_key_press(XEvent& evt) {
 AddTagsDialog::AddTagsDialog(x11::App& app)
 :
 x11::Dialog(app),
-txt_tags(app, 2, 2, 5, 0, 7, 94, 99)
+txt_tags(app, 2, 2, 5, 0, 4, 74, 99)
 {}
 
 void AddTagsDialog::draw() {
-    constexpr static const int win_width = 100;
-    constexpr static const int win_height = 9;
+    constexpr static const int win_width = 80;
+    constexpr static const int win_height = 11;
     const std::string& url = app.context->bookmark.url;
     if (!is_initalized) {
         app.resize_window(win_height, win_width);
+        txt_tags.set_focus(true);
         is_initalized = true;
     }
+
+    app.draw_text(app.fc_label, "Tags:", 1, 2);
+    txt_tags.draw();
     draw_usage_hints(app, win_height, win_width);
 }
 
@@ -417,7 +430,7 @@ x11::AppState AddTagsDialog::handle_key_press(XEvent& evt) {
         default:
             txt_tags.handle_key_press(evt);
             app.redraw();
-            // app.context->bookmark.tags = TODO
+            app.context->bookmark.tags = split_text(txt_tags.get_text());
             break;
     }
     return Dialog::handle_key_press(evt);
