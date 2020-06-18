@@ -23,11 +23,11 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(experimental_libraries stdc++fs)
 endif()
 
-# TODO revisit when threading becomes a topic
-#set(THREADS_PREFER_PTHREAD_FLAG ON)
-#find_package(Threads REQUIRED)
+find_package(CURL REQUIRED)
+find_package(LibXml2 REQUIRED)
 find_package(X11 REQUIRED)
 find_package(Freetype REQUIRED)
+
 include("cmake/yaml-cpp.cmake")
 
 configure_file("templates/version_info.hpp.in" "include/version_info.hpp")
@@ -39,13 +39,17 @@ add_executable(bbm-add "${BBM_ADD_SOURCES}")
 target_include_directories(bbm-add
     PRIVATE
         "${CMAKE_CURRENT_BINARY_DIR}/include"
+        "${CURL_INCLUDE_DIR}"
         "${FREETYPE_INCLUDE_DIRS}"
+        "${LIBXML2_INCLUDE_DIR}"
         "${X11_INCLUDE_PATH}"
         "${YAML_CPP_INCLUDE_PATH}"
         "include")
 
 target_link_libraries(bbm-add
     "${experimental_libraries}"
+    "${CURL_LIBRARIES}"
+    "${LIBXML2_LIBRARIES}"
     "${X11_LIBRARIES}"
     "xdo"
     "Xft"

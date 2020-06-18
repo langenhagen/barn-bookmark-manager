@@ -7,6 +7,7 @@ author: andreasl
 #include "add_settings.hpp"
 #include "bookmark.hpp"
 #include "log.hpp"
+#include "scrape.hpp"
 #include "x_app.hpp"
 #include "x_copy_paste.hpp"
 
@@ -36,6 +37,18 @@ namespace bbm {
 
 namespace {
 
+/*Create a folder with nice error handling.*/
+bool create_dirs(const fs::path& directory) {
+    try {
+        fs::create_directories(directory);
+    } catch (const std::exception& e) {
+        log(ERROR) << "Could not read or create directory " << directory << "\n"
+            << e.what() << std::endl;
+        return false;
+    }
+    return true;
+}
+
 /*Create random id to a given string.*/
 const std::string generate_id() {
     std::stringstream ss;
@@ -49,8 +62,8 @@ const std::string generate_id() {
     return ss.str();
 }
 
-/*Write Yaml to file.*/
-bool write(const YAML::Emitter& yaml, const fs::path& directory) {
+/*Write Yaml to file and return the path to the file or an empty path in case of error.*/
+fs::path write(const YAML::Emitter& yaml, const fs::path& directory) {
     const std::string filename = generate_id() + ".yml";
     const fs::path file = directory / filename;
     try {
@@ -60,17 +73,16 @@ bool write(const YAML::Emitter& yaml, const fs::path& directory) {
             return write(yaml, directory);
         }
     } catch (const std::exception& e) {
-        log(ERROR) << "Could not read or create file " << file << "\n"
-            << e.what() << std::endl;
-        return false;
+        log(ERROR) << "Could not read or create file " << file << "\n" << e.what() << std::endl;
+        return fs::path();
     }
     std::ofstream out(file);
     out << yaml.c_str();
     if (!out) {
         log(ERROR) << "Could not write bookmark to file: " << file << std::endl;
-        return false;
+        return fs::path();
     }
-    return true;
+    return file;
 }
 
 /*Create x11 key event.*/
@@ -190,14 +202,9 @@ std::string remove_querystring(const std::string& url) {
     return url;
 }
 
-bool save_bookmark(const Bookmark& bookmark, const fs::path& directory) {
-    /*create bookmark folder*/
-    try {
-        fs::create_directories(directory);
-    } catch (const std::exception& e) {
-        log(ERROR) << "Could not read or create directory " << directory << "\n"
-            << e.what() << std::endl;
-        return false;
+fs::path save(const Bookmark& bookmark, const fs::path& directory) {
+    if (!create_dirs(directory)) {
+        return fs::path();
     }
 
     /*create yaml*/
@@ -217,6 +224,34 @@ bool save_bookmark(const Bookmark& bookmark, const fs::path& directory) {
         yaml << YAML::EndSeq << YAML::EndMap;
 
     return write(yaml, directory);
+}
+
+fs::path save_website_text(const std::string& url, const fs::path& file) {
+    if (!create_dirs(file.parent_path())) {
+        return fs::path();
+    }
+    try {
+        if (fs::exists(file)) {
+            log(ERROR) << "Website file " << file << " already exists." << std::endl;
+            return fs::path();
+        }
+    } catch (const std::exception& e) {
+        log(ERROR) << "Could not read file " << file << "\n" << e.what() << std::endl;
+        return fs::path();
+    }
+
+    web::DownloadResult result = web::get_website_text(url);
+    if (result.code != web::DownloadResultErrorCode::OK) {
+        return fs::path();
+    }
+
+    std::ofstream out(file);
+    out << result.content;
+    if (!out) {
+        log(ERROR) << "Could not write website text to file: " << file << std::endl;
+        return fs::path();
+    }
+    return file;
 }
 
 ReviewURLDialog::ReviewURLDialog(x11::App& app) : x11::Dialog(app)

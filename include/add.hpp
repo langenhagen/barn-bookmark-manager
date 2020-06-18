@@ -34,8 +34,11 @@ void add_dialogs_to_app(x11::App& app);
 /*Get a url without querystring.*/
 std::string remove_querystring(const std::string& url);
 
-/*Store Bookmark on disk.*/
-bool save_bookmark(const Bookmark& bookmark, const fs::path& directory);
+/*Store bookmark on disk and return the path to the file or an empty path in case of error.*/
+fs::path save(const Bookmark& bookmark, const fs::path& directory);
+
+/*Store website on disk and return the path to the file or an empty path in case of error.*/
+fs::path save_website_text(const std::string& url, const fs::path& file);
 
 struct ReviewURLDialog : x11::Dialog {
     std::string url_without_querystring;

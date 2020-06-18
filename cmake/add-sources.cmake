@@ -9,6 +9,7 @@ set(BBM_ADD_SOURCES
     "src/datetime.cpp"
     "src/add.cpp"
     "src/log.cpp"
+    "src/scrape.cpp"
     "src/x_app.cpp"
     "src/x_copy_paste.cpp"
 )
