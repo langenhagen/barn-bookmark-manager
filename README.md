@@ -83,4 +83,5 @@ maximize flexibility.
 - preceed namespace std with scope resolution operator, like ::std
 - come up with solution that allows building offline, i.e. provide yaml-cpp version as .tar.gz file
 - implement README.md
+- write blog post
 - promote on reddit
