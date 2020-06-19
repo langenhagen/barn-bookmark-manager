@@ -25,6 +25,7 @@ static Settings load(const fs::path& path) {
     const YAML::Node& node = YAML::LoadFile(path.string());
     Settings settings;
     settings.bookmarks_root_path = node["bookmarks_root_path"].as<std::string>();
+    settings.download_websites = node["download_websites"].as<bool>();
     settings.editor = node["editor"].as<std::string>();
 
     settings.dialog_sequence.clear();

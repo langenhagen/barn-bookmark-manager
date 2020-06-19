@@ -25,6 +25,7 @@ enum class Dialog {
 /*Settings for the BBM Add app.*/
 struct Settings {
     fs::path bookmarks_root_path;  /*Root directory to the bookmarks.*/
+    bool download_websites;  /*Whether or not to download the website text.*/
     std::string editor;  /*Text editor to drop in for modification of bookmarks.*/
     std::vector<Dialog> dialog_sequence;  /*Ordered selection of applied dialog.*/
 };
