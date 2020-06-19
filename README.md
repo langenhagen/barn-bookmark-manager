@@ -67,6 +67,8 @@ maximize flexibility.
 
 
 ## TODO
+- handle missing settings nicely
+- use $EDITOR instead of vim in settings, with vim as fallback
 - handle compile time options nicely
 - remove dependency libxdo, possibly with help of https://gist.github.com/kui/2622504
 - refactor scripts
