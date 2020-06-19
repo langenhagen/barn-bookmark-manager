@@ -30,7 +30,7 @@ bool write_default_settings(const fs::path& path) {
         exit(exitcode::SYSTEM_ERROR);
     }
     YAML::Node node;
-    const auto bookmarks_path = directory / "bookmarks";
+    const fs::path bookmarks_path = directory / "bookmarks";
     node["bookmarks_root_path"] = bookmarks_path.string();  /*root directory to the bookmarks*/
     node["editor"] = "vim";  /*text editor to drop in for modification of bookmarks*/
     node["open_browser_command"] = "xdg-open";  /*command to open a hyperlink*/
