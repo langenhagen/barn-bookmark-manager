@@ -4,10 +4,10 @@ author: andreasl
 */
 #include "add.hpp"
 
-#include "add_settings.hpp"
 #include "bookmark.hpp"
 #include "log.hpp"
 #include "scrape.hpp"
+#include "settings.hpp"
 #include "x_app.hpp"
 #include "x_copy_paste.hpp"
 
@@ -170,7 +170,7 @@ bool fetch_url_and_title(std::string& url, std::string& title) {
 }
 
 void add_dialogs_to_app(x11::App& app) {
-    for (const Dialog dialog : app.settings->dialog_sequence) {
+    for (const Dialog dialog : app.settings->add_bookmark_dialog_sequence) {
         switch (dialog) {
             case Dialog::review_url:
                 app.dialogs.emplace_back(std::make_shared<ReviewURLDialog>(app));

@@ -3,11 +3,11 @@
 author: andreasl
 */
 #include "add.hpp"
-#include "add_settings.hpp"
 #include "bookmark.hpp"
 #include "cli.hpp"
 #include "datetime.hpp"
 #include "log.hpp"
+#include "settings.hpp"
 
 #include <experimental/filesystem>
 #include <utility>

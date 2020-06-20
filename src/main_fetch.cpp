@@ -4,7 +4,7 @@ author: andreasl
 */
 #include "cli.hpp"
 #include "fetch.hpp"
-#include "fetch_settings.hpp"
+#include "settings.hpp"
 
 #include <memory>
 

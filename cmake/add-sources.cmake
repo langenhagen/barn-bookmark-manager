@@ -4,12 +4,12 @@
 
 set(BBM_ADD_SOURCES
     "src/main_add.cpp"
-    "src/add_settings.cpp"
     "src/cli.cpp"
     "src/datetime.cpp"
     "src/add.cpp"
     "src/log.cpp"
     "src/scrape.cpp"
+    "src/settings.cpp"
     "src/x_app.cpp"
     "src/x_copy_paste.cpp"
 )
