@@ -20,13 +20,12 @@ namespace barn {
 namespace bbm {
 
 /*Write the default settings to the given file paths.*/
-bool write_default_settings(const fs::path& path) {
+void write_default_settings(const fs::path& path) {
     const auto directory(fs::path(path).remove_filename());
     try {
         fs::create_directories(directory);
     } catch (const std::exception& e) {
-        log(ERROR) << "Could not create directory " << directory << ":\n"
-            << e.what() << std::endl;
+        log(ERROR) << "Could not create directory " << directory << ":\n" << e.what() << std::endl;
         exit(exitcode::SYSTEM_ERROR);
     }
     YAML::Node node;
@@ -47,9 +46,8 @@ bool write_default_settings(const fs::path& path) {
     out << node;
     if (!out) {
         log(ERROR) << "Could not write settings to file: " << path << std::endl;
-        return false;
+        exit(exitcode::SYSTEM_ERROR);
     }
-    return true;
 }
 
 /*Common template function to load settings from file.*/

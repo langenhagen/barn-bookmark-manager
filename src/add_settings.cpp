@@ -28,7 +28,6 @@ static Settings load(const fs::path& path) {
     settings.download_websites = node["download_websites"].as<bool>();
     settings.editor = node["editor"].as<std::string>();
 
-    settings.dialog_sequence.clear();
     static const std::unordered_map<std::string, Dialog> str_to_dialog {
         {"review_url", Dialog::review_url},
         {"ask_for_comment", Dialog::ask_for_comment},
