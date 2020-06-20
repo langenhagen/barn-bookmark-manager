@@ -6,6 +6,7 @@ author: andreasl
 
 #include "version_info.hpp"
 
+#include <cstdlib>
 #include <cstring>
 #include <experimental/filesystem>
 #include <iostream>
