@@ -13,4 +13,5 @@ sudo apt install \
     libxft-dev \
     libxdo-dev \
     libxml2 \
+    ninja-build \
     xclip
