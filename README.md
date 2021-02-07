@@ -6,7 +6,7 @@ A simple, efficient, flexible & standalone website bookmark manager.
 
 ## Installation
 You can build and run this project directly on your system.
-Detailed instructions are provided below.
+See detailed instructions below.
 
 ### Prerequisites & Dependencies
 If you choose to compile and run Barn's Bookmark Manager directly on your system, please note
