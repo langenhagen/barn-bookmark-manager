@@ -3,7 +3,6 @@
 # Omit the cmake configure step.
 #
 # author: andreasl
-
 set -e
 
 project_dir="$(git rev-parse --show-toplevel)"

@@ -1,41 +1,45 @@
 #!/bin/bash
-# TODO refactor
-# TODO doc
+# Find files C/C++ files with uncommitted changes and check these files with `clang-format`.
+#
+# Usage:
+#   check-clang-format.sh          # check uncommitted files
+#   check-clang-format,sh --all    # check all files
 #
 # author: andreasl
 
-if [ "$1" == "--all" ]
-then
-    HAS_ALL=1
-    # run on all C++ source files
-    SOURCE_FILES=$(find -f include src test \( -name "*.h" -or -name "*.hpp" -or -name "*.hxx" \
-        -or -name "*.c" -or -name "*.cpp" -or -name "*.cxx" -or -name "*.cc" \))
+command -v clang-format >/dev/null || { printf 'Error: clang-format required!\n'; exit 1; }
+
+[ "$1" == "--all" ] && check_all=true
+
+if [ "$check_all" == true ]; then
+    # run on all C/C++ sources
+    found="$(find include src test \( -name "*.h" -or -name "*.hpp" -or -name "*.hxx" \
+        -or -name "*.c" -or -name "*.cpp" -or -name "*.cxx" -or -name "*.cc" \))"
 else
-    HAS_ALL=0
-    # run only on changed/modified C++ source code
-    SOURCE_FILES=$(git status --porcelain | awk '/^.*\.(h|hpp|hxx|c|cpp|cxx|cc)$/ {print $2}')
+    # run only on changed/modified C/C++ sources
+    found="$(git status --porcelain | grep -E '\.(h|hpp|hxx|c|cpp|cxx|cc)$' \
+        | grep -Eo '[^ ].*' | cut -f2- -d' ' | grep -Eo '[^ ].*')"
 fi
 
-FILES_TO_FIX_COUNT=0
-for FILE in ${SOURCE_FILES}
-do
-    DIFF=$(clang-format "${FILE}" | diff -u "${FILE}" -)
-    if [ -n "${DIFF}" ] ; then
-        echo "${DIFF}"
-        FILES_TO_FIX_COUNT=$((FILES_TO_FIX_COUNT+1))
+mapfile -t files <<< "$found"
+
+n_unformatted_files=0
+for file in "${files[@]}"; do
+    diff=$(clang-format "$file" | diff -u "$file" -)
+    if [ -n "$diff" ]; then
+        printf -- "${diff}\n"
+        (( n_unformatted_files += 1 ))
     fi
 done
 
-
-if [ "${FILES_TO_FIX_COUNT}" -gt 0 ]; then
-    echo "some files need style fixes"
-    exit -1
+if [ "$n_unformatted_files" -gt 0 ]; then
+    printf '%d files need style fixes\n' "$n_unformatted_files"
 else
-    if [ "${HAS_ALL}" -eq 1 ]; then
-        echo "all files are ok"
+    if [ "$check_all" == true ]; then
+        printf 'All files are ok\n'
     else
-        echo "changed files are ok"
+        printf 'Changed files are ok\n'
     fi
-
-    exit 0
 fi
+
+exit "$n_unformatted_files"

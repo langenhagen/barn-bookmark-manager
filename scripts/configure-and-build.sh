@@ -3,7 +3,6 @@
 # Then run cmake configure and build the application.
 #
 # author: andreasl
-
 set -e
 
 build_dir="$(git rev-parse --show-toplevel)/build/"
