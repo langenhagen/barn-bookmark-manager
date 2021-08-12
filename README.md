@@ -52,7 +52,7 @@ Happy coding!
 
 
 ## License
-See LICENSE file.
+See [LICENSE](LICENSE) file.
 
 
 ## Design Decisions
